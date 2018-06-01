@@ -50,8 +50,6 @@ scikit-learn==0.19.1
 scipy==1.0.0
 six==1.11.0
 sklearn==0.0
-unattended-upgrades==0.1
-unity-scope-zotero==0.1
 urllib3==1.22
 usb-creator==0.3.0
 Werkzeug==0.14.1

@@ -1,0 +1,119 @@
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" /> </head>
+
+<body>
+
+    <div id="pieChart"></div>
+ 
+    <script src="{{
+  url_for('static', filename='js/d3.min.js') }}"></script>
+
+
+    <script src="{{
+  url_for('static', filename='js/d3pie.min.js') }}"></script>
+    <script>
+        var pie = new d3pie("pieChart", {
+            "header": {
+                "title": {
+                    "text": "World Cup Russia",
+                    "fontSize": 24,
+                    "font": "open sans"
+                },
+                "subtitle": {
+                    "text": "",
+                    "color": "#999999",
+                    "fontSize": 12,
+                    "font": "open sans"
+                },
+                "titleSubtitlePadding": 9
+            },
+            "footer": {
+                "color": "#999999",
+                "fontSize": 10,
+                "font": "open sans",
+                "location": "bottom-left"
+            },
+            "size": {
+                "canvasWidth": 590,
+                "pieInnerRadius": "60%",
+                "pieOuterRadius": "100%"
+            },
+            "data": {
+                "sortOrder": "value-desc",
+                "content": [
+
+
+                   {% for data in teams %}
+                   {
+                       "label": "{{data['name']}}", 
+                       "image": "{{data['crestUrl']}}",
+                        "value": {{data['value']}}, 
+                        "color": "{{data['color']}}"
+                   },
+        {% endfor %}
+
+        {% for data in groups %}
+        {
+            "label": "{{data['name']}}",
+                "image": "{{data['crestUrl']}}",
+                    "value": 40,
+            "color": "{{data['color']}}"
+        },
+        {% endfor %}
+                   {
+                        "label": "", 
+                        "value": 0, 
+                        "color": ""
+                   }
+                ]
+            },
+        "labels": {
+            "outer": {
+                "format": "none",
+                    "pieDistance": 32
+            },
+            "inner": {
+                "format": "label"
+            },
+            "mainLabel": {
+                "fontSize": 11
+            },
+            "percentage": {
+                "color": "#ffffff",
+                    "decimalPlaces": 0
+            },
+            "value": {
+                "color": "#adadad",
+                    "fontSize": 11
+            },
+            "lines": {
+                "enabled": true,
+                    "style": "straight"
+            },
+            "truncation": {
+                "enabled": true
+            }
+        },
+        "effects": {
+            "pullOutSegmentOnClick": {
+                "effect": "elastic",
+                    "speed": 400,
+                        "size": 8
+            }
+        },
+        "misc": {
+            "gradient": {
+                "enabled": true,
+                    "percentage": 100
+            }
+        },
+        "callbacks": { }
+        });
+       
+    </script>
+
+</body>
+
+</html>

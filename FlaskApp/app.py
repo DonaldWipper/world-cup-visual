@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask.ext.mysql import MySQL
+from flask_mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 #import FlaskApp.sql

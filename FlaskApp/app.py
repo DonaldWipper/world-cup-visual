@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-import FlaskApp.sql
+#import FlaskApp.sql
 from flask import request, flash
 import json
 import requests
@@ -17,7 +17,7 @@ info = []
 profiles = []
 cur_profile_index = 0
 
-global_path = "https://github.com/DonaldWipper/world-cup-visual/blob/master/csv"
+global_path = "FlaskApp"
 local_path = "../csv"
 path = global_path
 
@@ -70,7 +70,7 @@ def getDataFromCSV(name):
 @app.route("/", methods=['GET', 'POST'])
 def main():
     initSQL()
-    '''
+    
     teams = getDataFromCSV(path + '/teams_wc.csv')
     matches = getDataFromCSV(path + '/matches.csv')
     tournaments = getDataFromCSV(path + '/tournaments.csv')
@@ -89,7 +89,7 @@ def main():
         t["color"] = "#4daa4b"
 
     return render_template("world_cup2.html", teams = teams, groups = groups)
-    ''' 
+     
 
 if __name__ == "__main__":
     app.run()

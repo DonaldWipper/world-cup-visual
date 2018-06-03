@@ -1,5 +1,7 @@
 import MySQLdb
- 
+import json
+import urllib
+
 '''
 db = MySQLdb.connect(host="localhost",    # your host 
                      user="root",         # username
@@ -46,7 +48,16 @@ print(str)
 # Select data from table using SQL query.
 cur.execute(str)
  '''
-
+#get settings
+def read_params(fn): 
+    d ={} 
+    try:
+        with open(fn, 'r',encoding="utf-8") as file: 
+            d = json.load(file) 
+    except FileNotFoundError:
+         print ("Error. Can't find file " + fn)
+         d = {}
+    return d 
 
 class database:
     def __init__(self, host_, user_, passwd_, db_):
@@ -57,7 +68,10 @@ class database:
         self.db = MySQLdb.connect(host=host_,    # your host 
                      user=user_,                 # username
                      passwd=passwd_,             # password
-                     db=db_)                     # name of the database
+                     db=db_
+                     
+
+                     )                     # name of the database
         self.db.set_character_set('utf8mb4')
         
     def __repr__(self):
@@ -65,7 +79,12 @@ class database:
         
     def __str__(self):
         return "<%s dv named %s>" % (self.host, self.name)
-        
+    
+    def get_dbs_info(self):
+        cur = self.db.cursor()
+        query = 'SHOW DATABASES;'
+        cur.execute(query)      
+
     def insert_values (self, table_name, headers, values):
         cur = self.db.cursor()
         size = len(headers)
@@ -156,14 +175,22 @@ class database:
         query = 'DROP TABLE ' + table_name   
         cur.execute(query)
         self.db.commit() 
-                  
-db = database("localhost", "root", "111", "tinderdb")   
+
+
+settings  = read_params("/home/dmitry/settings2.json")
+
+url = 'mysql://b1df3776b2b56c:8b4b450a@us-cdbr-iron-east-04.cleardb.net/heroku_0c1d0ea4e380413?reconnect=true'
+#result=  urllib.urlparse(url)
+print(url)
+
+db = database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])   
+db.get_dbs_info()
 #db.check_if_exists("PROFILES", "id", "6adbb44d-be67-4e59-b8db-84982829a370")
 #db.drop_table("PROFILES")
 #db.insert_values("PROFILES", ("id", "name", "bio"), ("3", "al", "5j5j5k"))
 #db.insert_values("PROFILES", ("id", "name", "bio"), ("2", "al2", "rj4j"))
 #db.show_top("PROFILES", 100)
-db.get_count("PROFILES")
+#db.get_count("PROFILES")
     
 
 

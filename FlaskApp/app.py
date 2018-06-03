@@ -1,27 +1,47 @@
 from flask import Flask, render_template
-#from flask.ext.mysql import MySQL
+from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-#import sql
+import FlaskApp.sql
 from flask import request, flash
 import json
+import requests
 import csv
 #https://127.0.0.1:5000/
-#mysql = MySQL()
+
+
+mysql = MySQL()
 cursor = None
 
 info = []
 profiles = []
 cur_profile_index = 0
 
-
-
+global_path = "https://github.com/DonaldWipper/world-cup-visual/blob/master/csv"
+local_path = "../csv"
+path = global_path
 
 
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+
+
+ 
+def initSQL():
+    global mysql, cursor
+    settings  = read_params("/home/dmitry/settings.json")
+    # MySQL configurations
+    app.config['MYSQL_DATABASE_USER'] = settings['sql_user']
+    app.config['MYSQL_DATABASE_PASSWORD'] = settings['sql_passwd']
+    app.config['MYSQL_DATABASE_DB'] = settings['sql_db']
+    app.config['MYSQL_DATABASE_HOST'] = settings['sql_host']
+    mysql.init_app(app)
+ 
+    conn = mysql.connect()
+    cursor = conn.cursor() 
+
 
 #get settings
 def read_params(fn): 
@@ -39,19 +59,22 @@ def read_params(fn):
 
 def getDataFromCSV(name):
     result = []
-    with open(name) as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:    
-            result.append(row)
+    csvfile = requests.get(name).csv
+    #csvfile = open(name)
+    reader = csv.DictReader(csvfile)
+    for row in reader:   
+        print(row)  
+        result.append(row)
     return result
 
 @app.route("/", methods=['GET', 'POST'])
 def main():
-    #initSQL()
-    teams = getDataFromCSV('../csv/teams_wc.csv')
-    matches = getDataFromCSV('../csv/matches.csv')
-    tournaments = getDataFromCSV('../csv/tournaments.csv')
-    standings = getDataFromCSV('../csv/standings.csv')
+    initSQL()
+    '''
+    teams = getDataFromCSV(path + '/teams_wc.csv')
+    matches = getDataFromCSV(path + '/matches.csv')
+    tournaments = getDataFromCSV(path + '/tournaments.csv')
+    standings = getDataFromCSV(path + '/standings.csv')
 
     groups = []
     for name in list(set([g["group"] for g in standings])):
@@ -66,7 +89,7 @@ def main():
         t["color"] = "#4daa4b"
 
     return render_template("world_cup2.html", teams = teams, groups = groups)
-
+    ''' 
 
 if __name__ == "__main__":
     app.run()

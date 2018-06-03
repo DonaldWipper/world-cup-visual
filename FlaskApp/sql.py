@@ -177,7 +177,7 @@ class database:
         self.db.commit() 
 
 
-settings  = read_params("/home/dmitry/settings2.json")
+settings  = read_params("FlaskApp/settings2.json")
 
 url = 'mysql://b1df3776b2b56c:8b4b450a@us-cdbr-iron-east-04.cleardb.net/heroku_0c1d0ea4e380413?reconnect=true'
 #result=  urllib.urlparse(url)

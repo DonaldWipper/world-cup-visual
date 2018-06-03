@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_mysql import MySQL
+#from flask_mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 #import FlaskApp.sql
@@ -10,7 +10,7 @@ import csv
 #https://127.0.0.1:5000/
 
 
-mysql = MySQL()
+#mysql = MySQL()
 cursor = None
 
 info = []
@@ -28,7 +28,7 @@ app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 
- 
+ '''
 def initSQL():
     global mysql, cursor
     settings  = read_params("/home/dmitry/settings.json")
@@ -41,7 +41,7 @@ def initSQL():
  
     conn = mysql.connect()
     cursor = conn.cursor() 
-
+'''
 
 #get settings
 def read_params(fn): 
@@ -69,7 +69,7 @@ def getDataFromCSV(name):
 
 @app.route("/", methods=['GET', 'POST'])
 def main():
-    initSQL()
+    #initSQL()
     
     teams = getDataFromCSV(path + '/teams_wc.csv')
     matches = getDataFromCSV(path + '/matches.csv')

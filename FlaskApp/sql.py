@@ -1,6 +1,7 @@
 import MySQLdb
 import json
 import urllib
+import csv
 
 '''
 db = MySQLdb.connect(host="localhost",    # your host 
@@ -59,6 +60,10 @@ def read_params(fn):
          d = {}
     return d 
 
+
+
+
+
 class database:
     def __init__(self, host_, user_, passwd_, db_):
         self.host = host_
@@ -85,6 +90,42 @@ class database:
         query = 'SHOW DATABASES;'
         cur.execute(query)      
 
+    def create_table(self, dic, table_name):
+        cur = self.db.cursor()
+        query = 'CREATE TABLE IF NOT EXISTS ' +  table_name +  " ("
+        length = len(dic)
+        i = 0
+        for value in dic:
+            query += value + " " + dic[value]  
+            if i != length - 1:
+                query += ", "
+            else:
+                query += ") "
+            i += 1
+        print(query)
+        cur.execute(query)
+        self.db.commit() 
+    
+
+    def insertDataIntoTableFromCSV(self, name, table_name, key_field):
+        #csvfile = requests.get(name).csv
+        csvfile = open(name)
+        reader = csv.DictReader(csvfile)
+        for row in reader:   
+            print(row)  
+            if self.check_if_exists(table_name, key_field, row[key_field]) == -1:
+                self.insert_values(table_name, row.keys(), row.values()) 
+        return result
+
+    def getDictFromQueryRes(self, table_name, query = None):
+        #csvfile = requests.get(name).csv
+        cur = self.db.cursor(MySQLdb.cursors.DictCursor)
+        if query == None:
+            query = "SELECT * FROM " + table_name
+        cur.execute(query)
+        return list (cur.fetchall())
+       
+   
     def insert_values (self, table_name, headers, values):
         cur = self.db.cursor()
         size = len(headers)
@@ -141,7 +182,7 @@ class database:
     def delete_elem(self, table_name, column, value):
         res = -1
         cur = self.db.cursor()
-        query = 'DELET FROM ' + table_name + ' WHERE '+ column  + " = '" + str(value).replace("'", "") + "'"
+        query = 'DELETE FROM ' + table_name + ' WHERE '+ column  + " = '" + str(value).replace("'", "") + "'"
         print(query)
         cur.execute(query)
         self.db.commit()  
@@ -177,14 +218,20 @@ class database:
         self.db.commit() 
 
 
-settings  = read_params("FlaskApp/settings2.json")
-
-url = 'mysql://b1df3776b2b56c:8b4b450a@us-cdbr-iron-east-04.cleardb.net/heroku_0c1d0ea4e380413?reconnect=true'
+#settings  = read_params("settings2.json")
+#print(settings['sql_host'])
+#url = 'mysql://b1df3776b2b56c:8b4b450a@us-cdbr-iron-east-04.cleardb.net/heroku_0c1d0ea4e380413?reconnect=true'
 #result=  urllib.urlparse(url)
-print(url)
 
-db = database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])   
-db.get_dbs_info()
+#db = database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])   
+
+#print(db.getDictFromQueryRes("teams_wc"))
+#dict_teams = {"id":"int", "name":"text","shortName":"text", "crestUrl":"text", "squadMarketValue":"text"}
+#dict_teams =#{"goalsAgainst":"int","points":"int","goals":"int","teamId":"int","crestURI":"text","rank":"int","team":"text","playedGames":"int","group":"text","goalDifference":"int"}
+#db.create_table(dict_teams, "standings")
+#db.insertDataIntoTableFromCSV("teams_wc.csv", "teams_wc", "id")
+
+
 #db.check_if_exists("PROFILES", "id", "6adbb44d-be67-4e59-b8db-84982829a370")
 #db.drop_table("PROFILES")
 #db.insert_values("PROFILES", ("id", "name", "bio"), ("3", "al", "5j5j5k"))

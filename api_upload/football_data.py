@@ -55,7 +55,7 @@ def main():
     #print(get_standings_by_league_id(get_id_competion_by_year_and_code(2017, 'PL')))
     #print(get_players_by_team_id(754))
     #print()
-    YEAR = 2018
+    YEAR = 2002
     resp = requests.get(main_url + '/v1/competitions/?season=' + str(YEAR),  headers = myheaders)
     wdata = resp.json()
 

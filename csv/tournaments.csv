@@ -1,2 +1,10 @@
-lastUpdated,numberOfTeams,league,caption,id,year,numberOfGames,numberOfMatchdays,currentMatchday
-2018-05-25T07:21:47Z,32,WC,World Cup 2018 Russia,467,2018,64,8,1
+league,numberOfMatchdays,numberOfGames,currentMatchday,lastUpdated,id,numberOfTeams,caption,year
+WC,62,64,1,2015-02-20T00:39:11Z,367,32,World Cup 2002 South Korea / Japan,2002
+league,numberOfMatchdays,numberOfGames,currentMatchday,lastUpdated,id,numberOfTeams,caption,year
+WC,62,64,1,2015-02-19T07:22:58Z,366,32,World Cup 2006 Germany,2006
+league,numberOfMatchdays,numberOfGames,currentMatchday,lastUpdated,id,numberOfTeams,caption,year
+WC,62,64,1,2015-02-19T07:21:31Z,365,32,World Cup 2010 South Africa,2010
+league,numberOfMatchdays,numberOfGames,currentMatchday,lastUpdated,id,numberOfTeams,caption,year
+WC,8,64,1,2017-11-29T12:51:58Z,406,32,World Cup 2014 Brasil,2014
+league,numberOfMatchdays,numberOfGames,currentMatchday,lastUpdated,id,numberOfTeams,caption,year
+WC,8,64,1,2018-05-25T07:21:47Z,467,32,World Cup 2018 Russia,2018

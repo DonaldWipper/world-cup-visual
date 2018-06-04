@@ -2,7 +2,7 @@ from flask import Flask, render_template
 #from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-import sql
+import FlaskApp.sql
 from flask import request, flash
 import json
 import requests
@@ -20,8 +20,11 @@ cur_profile_index = 0
 global_path = ""
 local_path = "../csv"
 path = global_path
-
-
+settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net", 
+            "sql_user":"b1df3776b2b56c",
+            "sql_passwd":"2153543acdac76f",
+            "sql_db":"heroku_0c1d0ea4e380413"
+           }
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -64,9 +67,9 @@ def read_params(fn):
 @app.route("/", methods=['GET', 'POST'])
 def main():
     #initSQL()
-    settings  = read_params("settings2.json")
-    print(settings)
-    db = sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])
+    #settings  = read_params("settings2.json")
+    #print(settings)
+    db = FlaskApp.sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])
     teams = db.getDictFromQueryRes("teams_wc")
     #matches = getDataFromCSV(path + 'matches.csv')
     #tournaments = getDataFromCSV(path + 'tournaments.csv')

@@ -90,7 +90,7 @@
             .outerRadius(width * 0.5 / 2 + 60);
 
         //Turn the pie chart 90 degrees counter clockwise, so it starts at the left	
-        var pie = d3pie()
+        var pie = d3.layout.pie()
             .startAngle(-90 * Math.PI / 180)
             .endAngle(-90 * Math.PI / 180 + 2 * Math.PI)
             .value(function(d) {

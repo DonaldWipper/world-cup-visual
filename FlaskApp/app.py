@@ -12,14 +12,9 @@ import csv
 
 #mysql = MySQL()
 cursor = None
+competitionId = 467
 
-info = []
-profiles = []
-cur_profile_index = 0
 
-global_path = ""
-local_path = "../csv"
-path = global_path
 settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net", 
             "sql_user":"b1df3776b2b56c",
             "sql_passwd":"2153543acdac76f",
@@ -32,24 +27,6 @@ app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 
 
-def initSQL():
-    global mysql, cursor
-    settings  = read_params("/home/dmitry/settings2.json")
-    # MySQL configurations
-    app.config['MYSQL_DATABASE_USER'] = settings['sql_user']
-    app.config['MYSQL_DATABASE_PASSWORD'] = settings['sql_passwd']
-    app.config['MYSQL_DATABASE_DB'] = settings['sql_db']
-    app.config['MYSQL_DATABASE_HOST'] = settings['sql_host']
-    mysql.init_app(app)
- 
-    conn = mysql.connect()
-    cursor = conn.cursor() 
-    query = 'SHOW TABLES;'
-    cursor.execute(query)
-    for row in cursor.fetchall() :
-        for field in row:
-            print (field, end= " | ")
-        print("\n")   
 
 #get settings
 def read_params(fn): 
@@ -70,24 +47,30 @@ def main():
     #settings  = read_params("settings2.json")
     #print(settings)
     db = FlaskApp.sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])
-    teams = db.getDictFromQueryRes("teams_wc")
+    standings = db.getDictFromQueryRes("standings", {"competitionId": competitionId})
+    teams = [team for team in db.getDictFromQueryRes("teams_wc") if team["id"] in   [t["teamId"] for t in  standings] ]
+    places = db.getDictFromQueryRes("places", {"competitionId": competitionId})  
+    rounds = db.getDictFromQueryRes("rounds", {"competitionId": competitionId})
+    groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
+    
     #matches = getDataFromCSV(path + 'matches.csv')
     #tournaments = getDataFromCSV(path + 'tournaments.csv')
     #standings = getDataFromCSV(path + 'standings.csv')
-    standings = []
-    groups = []
-    for name in list(set([g["group"] for g in standings])):
-        g = {}
-        g["name"] = name
-        g["value"] =  40
-        g["color"] = "#8d4aa9"
-        groups.append(g)
+  
+    for g in groups:
+        g["value"] =  10
+        g["color"] = "#d82424"
 
     for t in teams:
-        t["value"] =  10
+        t["value"] =  15
         t["color"] = "#4daa4b"
+        
+    for p in places:
+        p["value"] =  15
+        p["color"] = "#4a69a9"
 
-    return render_template("world_cup2.html", teams = teams, groups = groups)
+
+    return render_template("world_cup2.html", teams = teams, groups = groups, places = places)
     
 
 if __name__ == "__main__":

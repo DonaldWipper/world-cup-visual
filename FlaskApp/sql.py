@@ -107,21 +107,39 @@ class database:
         self.db.commit() 
     
 
-    def insertDataIntoTableFromCSV(self, name, table_name, key_field):
+    def insertDataIntoTableFromCSV(self, name, table_name, key_field = None):
         #csvfile = requests.get(name).csv
         csvfile = open(name)
         reader = csv.DictReader(csvfile)
         for row in reader:   
             print(row)  
-            if self.check_if_exists(table_name, key_field, row[key_field]) == -1:
+            if key_field != None:
+                if self.check_if_exists(table_name, key_field, row[key_field]) == -1:
+                    self.insert_values(table_name, row.keys(), row.values())
+                else:
+                    return False  
+            else:
                 self.insert_values(table_name, row.keys(), row.values()) 
-        return result
+        return True
 
-    def getDictFromQueryRes(self, table_name, query = None):
+    def getDictFromQueryRes(self, table_name, condition = None, result_fields = None):
         #csvfile = requests.get(name).csv
         cur = self.db.cursor(MySQLdb.cursors.DictCursor)
-        if query == None:
-            query = "SELECT * FROM " + table_name
+
+        query = "SELECT "
+        if result_fields == None:
+            query += "*"
+        else:
+            for r  in result_fields:
+                query += r + ","
+            query += "+"
+            query.replace(",+", "")
+        query += " FROM " + table_name
+        if condition != None:
+            query += " WHERE "
+            for q in condition:
+                query += str(q) + " = " + str(condition[q])
+        print(query)
         cur.execute(query)
         return list (cur.fetchall())
        
@@ -156,6 +174,7 @@ class database:
                     query = query + "'" + str(value).replace("'", "") + "')"
                 else:
                     query = query  + str(value).replace("'", "") + ")"
+        print(query)
         cur.execute(query)
         self.db.commit()       
 
@@ -227,9 +246,40 @@ class database:
 
 #print(db.getDictFromQueryRes("teams_wc"))
 #dict_teams = {"id":"int", "name":"text","shortName":"text", "crestUrl":"text", "squadMarketValue":"text"}
-#dict_teams =#{"goalsAgainst":"int","points":"int","goals":"int","teamId":"int","crestURI":"text","rank":"int","team":"text","playedGames":"int","group":"text","goalDifference":"int"}
-#db.create_table(dict_teams, "standings")
+#dict_teams = #{"goalsAgainst":"int","points":"int","goals":"int","teamId":"int","crestURI":"text","rank":"int","team":"text","playedGames":"int","group":"text","goalDifference":"int"}
+#dict_games = {"competitionId":"int", "date":"text" ,"status":"text", "homeTeamId":"text", "awayTeamId":"text", "goalsHomeTeam":"text", "goalsAwayTeam":"text", "CityId":"int"}
+#db.create_table(dict_games, "games")
+#db.insertDataIntoTableFromCSV("matches2.csv", "games")
+#dict_tournaments = {"lastUpdated":"text","numberOfTeams":"int","league":"text","caption":"text","id":"int","year":"int","numberOfGames":"int","numberOfMatchdays":"int","currentMatchday":"int"}
+#db.create_table(dict_tournaments, "tournaments")
+#db.insertDataIntoTableFromCSV("tournaments.csv", "tournaments")
+#dict_places = {"id":"int","short_name":"text","stadium":"text","capacity":"int","city":"text"} 
+#db.create_table(dict_places, "places")
+#db.insertDataIntoTableFromCSV("places.csv", "places")
+
+
+#dict_rounds = {"id":"int", "competitionId":"int", "title":"text", "start_at":"text", "end_at":"text"} 
+#db.create_table(dict_rounds, "rounds")
+#db.insertDataIntoTableFromCSV("rounds.csv", "rounds")
+
+#dict_groups = {"id":"int", "title":"text", "competitionId":"text"} 
+#db.create_table(dict_groups, "groups")
+#db.insertDataIntoTableFromCSV("groups.csv", "groups")
+
+#dict_stand = #{"goalsAgainst":"int","points":"int","goals":"int","teamId":"int","crestURI":"text","rank":"int","team":"text","playedGames":"int","group_":"text","goalDifference":"int", "CompetitionId":"int"}
+#db.create_table(dict_stand, "standings")
+#db.insertDataIntoTableFromCSV("standings.csv", "standings")
+
+
+#competitionId,date,status,homeTeamId,awayTeamId,goalsHomeTeam,goalsAwayTeam
+#378,1930-07-12T23:00:00Z,FINISHED,771,805,3,0
+
+
+
+#db.create_table(dict_teams, "games")
 #db.insertDataIntoTableFromCSV("teams_wc.csv", "teams_wc", "id")
+
+
 
 
 #db.check_if_exists("PROFILES", "id", "6adbb44d-be67-4e59-b8db-84982829a370")

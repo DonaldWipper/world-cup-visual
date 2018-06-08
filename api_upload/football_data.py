@@ -54,21 +54,20 @@ def get_id_competion_by_year_and_code(year, code):
 def main():
     #print(get_standings_by_league_id(get_id_competion_by_year_and_code(2017, 'PL')))
     #print(get_players_by_team_id(754))
-    #print()
-    YEAR = 2002
+  
+    YEAR = 1930
     resp = requests.get(main_url + '/v1/competitions/?season=' + str(YEAR),  headers = myheaders)
     wdata = resp.json()
 
-
+   
     csvfile = open('../csv/tournaments.csv', 'w', newline='', encoding='utf-8')
-        
+    headers = wdata[0].keys()
+    writer = csv.DictWriter(csvfile, headers,  delimiter=',')
+    writer.writeheader()    
     while YEAR <= 2018: 
         for data in wdata:
             if data["caption"].lower().find('world') > -1:
                 ids_tournaments.append(data["id"])
-                headers = data.keys()
-                writer = csv.DictWriter(csvfile, headers,  delimiter=',')
-                writer.writeheader()
                 writer.writerow(data)
         YEAR += 4
         resp = requests.get(main_url + '/v1/competitions/?season=' + str(YEAR),  headers = myheaders)
@@ -82,6 +81,7 @@ def main():
     for id in ids_tournaments:
                 
         table = get_table_by_league_id(id)
+        print(table)
         csvfile = open('../csv/standings.csv', 'w', newline='', encoding='utf-8')
         headers = table["standings"]["A"][0].keys()  
         writer = csv.DictWriter(csvfile, headers,  delimiter=',')

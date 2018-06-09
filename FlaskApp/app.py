@@ -87,7 +87,7 @@ def main():
     for date in rounds:
         date["value"] =  shares["calendar"] / len(rounds)
         date["name"] = datetime.strptime(date["start_at"].strip(), '%Y-%m-%d').strftime("%A %d. %B")     
-        date["color"] = "#4a5fa9"
+        date["color"] = "#ddea4f"
         date["sliceId"] = sliceId
         dic_sliceId[sliceId] = 1
         sliceId += 1

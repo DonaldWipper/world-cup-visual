@@ -80,6 +80,7 @@ def main():
         t["value"] =  shares["teams"] / len(teams)
         t["color"] = "#4daa4b"
         t["sliceId"] = sliceId
+        t["id_group"] = 0
         dic_sliceId[sliceId] = 0
         sliceId += 1
 
@@ -89,6 +90,7 @@ def main():
         date["name"] = datetime.strptime(date["start_at"].strip(), '%Y-%m-%d').strftime("%A %d. %B")     
         date["color"] = "#ddea4f"
         date["sliceId"] = sliceId
+        date["id_group"] = 1
         dic_sliceId[sliceId] = 1
         sliceId += 1
      
@@ -98,6 +100,7 @@ def main():
         p["value"] =  shares["places"] / len(places)
         p["color"] = "#4a69a9"
         p["sliceId"] = sliceId
+        p["id_group"] = 2
         dic_sliceId[sliceId] = 2
         sliceId += 1
  
@@ -106,6 +109,7 @@ def main():
         s["value"] =  shares["stages"] / len(stages)
         s["color"] = "#a89449"
         s["sliceId"] = sliceId
+        s["id_group"] = 3
         dic_sliceId[sliceId] = 3
         sliceId += 1
 

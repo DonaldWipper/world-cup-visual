@@ -56,61 +56,6 @@
             return [newX, newY]
         }
 
-        ////////////////////////////////////////////////////////////// 
-        ///////////////////// Data &  Scales ///////////////////////// 
-        ////////////////////////////////////////////////////////////// 
-
-        //Some random data
-           var donutData = [
-            {% for d in teams %} {
-                "name": "{{d['name']}}",
-                "value": {{d['value']}},
-                "color": "{{d['color']}}"    
-            },
-             {% endfor %}
-             {
-                "name": "",
-                "value": {{space}},
-                "color":"none"    
-            },     
-            {% for d in rounds %} {
-                "name": "{{d['name']}}",
-                "value": {{d['value']}},
-                "color": "{{d['color']}}"  
-            },
-             {% endfor %}
-             {
-                "name": "",
-                "value": {{space}},
-                 "color":"none"     
-            }, 
-             {% for d in places %} {
-                "name": "{{d['name']}}",
-                "value": {{d['value']}},
-                "color": "{{d['color']}}"   
-            },
-             {% endfor %}      
-              {
-                "name": "",
-                "value": {{space}},
-                 "color":"none"     
-            },
-            {% for d in stages %} {
-                "name": "{{d['title']}}",
-                "value": {{d['value']}},
-                "color": "{{d['color']}}"   
-            },
-            {% endfor %}    
-            {
-                "name": "",
-                "value": {{space}},
-                "color":"none"     
-            }, 
-                
-                
-                
-
-        ];
              
         //Create a color scale
         var colorScale = d3.scale.linear()
@@ -132,7 +77,66 @@
             })
             .padAngle(.01)
             .sort(null);
+   
+        
+        
+        ////////////////////////////////////////////////////////////// 
+        ///////////////////// Data &  Scales ///////////////////////// 
+        ////////////////////////////////////////////////////////////// 
 
+        //Some random data
+           var donutData = [
+            {% for d in teams %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}",
+                "id_group": "{{d['id_group']}}"         
+            },
+             {% endfor %}
+             {
+                "name": "",
+                "value": {{space}},
+                "color":"none"    
+            },     
+            {% for d in rounds %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}",
+                "id_group": "{{d['id_group']}}"            
+            },
+             {% endfor %}
+             {
+                "name": "",
+                "value": {{space}},
+                 "color":"none"     
+            }, 
+             {% for d in places %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}" ,
+                "id_group": "{{d['id_group']}}"            
+            },
+             {% endfor %}      
+              {
+                "name": "",
+                "value": {{space}},
+                 "color":"none"     
+            },
+            {% for d in stages %} {
+                "name": "{{d['title']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}" ,
+                "id_group": "{{d['id_group']}}"            
+            },
+            {% endfor %}    
+            {
+                "name": "",
+                "value": {{space}},
+                "color":"none"     
+            }, 
+        
+        ];        
+                
         ////////////////////////////////////////////////////////////// 
         //////////////////// Create Donut Chart ////////////////////// 
         ////////////////////////////////////////////////////////////// 
@@ -159,16 +163,35 @@
                 //между М и A -->  преобразуем
                 //между A и 0 0, 1 по X увеличивам на K
                 //между 0 0,1 и L  преобразуем
+            
+            
+                //M -1.2879629948845253, 221.49625538894287       //первая точка на внешнем радиусе
+                //A 221.5, 221.5                                  //внешний радиус
+                //0 0,1 -14.203496816146563, 221.04413739837958   //вторая точка на внешнем радиусе
+                //L -7.9099938637859095, 131.26188326043044       //первая точка на внутреннем радиусе   
+                //A 131.5, 131.5                                  //внутренний радиус
+                //0 0,0 -1.2879629948845304, 131.49369243930983Z  //вторая точка на внутреннем радиусе
                 var firstDotEx = /M(.*?)A/;
                 var radEll = /A(.*?)0 0,1/;
                 var secondDotEx = /0 0,1(.*?)L/;
-
-
+                var firstSmallDotEx  = /L(.*?)A/;
+                var radSmallElEx = /A(.*?)0 0,0/
+                var secondSmallDotEx = /0 0,0(.*?)Z/;    
+                  
+     
+                //newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
+            
+            
+            
+                
                 firstLoc = firstDotEx.exec(d3.select(this).attr("d"))[1]
                 radLoc = radEll.exec(d3.select(this).attr("d"))[1]
                 secLoc = secondDotEx.exec(d3.select(this).attr("d"))[1]
 
-
+                firstSmallLoc = firstSmallDotEx.exec(d3.select(this).attr("d"))[1]
+                secSmallLoc = secondSmallDotEx.exec(d3.select(this).attr("d"))[1]
+                radSmallLoc = radSmallElEx.exec(d3.select(this).attr("d"))[1]
+            
                 var first = firstLoc.split(",");
                 newFirst = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), 0, 0).join(",")
 
@@ -177,62 +200,27 @@
                 var rad = radLoc.split(",")
                 newRad = [ellipse_koef * rad[0], rad[1]].join(",")
 
-                FirstPath = "M" + newFirst + "A" + newRad + "0 0, 1" + newLast + "L"
-                //console.log(FirstPath)
-                //Grab everything up to the first Line statement
-                //console.log(d3.select(this).attr("d"))
-
-                var newLoc = /0 0,1(.*?)A/;
-                var newSec = newLoc.exec(d3.select(this).attr("d"))[1];
-                var newArc = firstArcSection.exec(d3.select(this).attr("d"))[1];
-                var lastArc = lastArcSection.exec(d3.select(this).attr("d"))[1];
-                //Replace all the comma's so that IE can handle it
-                newArc = newArc.replace(/,/g, " ");
-                //console.log(newArc)
-                //If the end angle lies beyond a quarter of a circle (90 degrees or pi/2) 
-                //flip the end and start position
-                if (d.endAngle > 90 * Math.PI / 180) {
-                    var startLoc = /M(.*?)A/, //Everything between the first capital M and first capital A
-                        middleLoc = /A(.*?)0 0 1/, //Everything between the first capital A and 0 0 1
-                        cirLastLoc = /0 0 1(.*?)L/,
-                        endLoc = /0 0 1 (.*?)$/; //Everything between the first 0 0 1 and the end of the string (denoted by $)
-                    //Flip the direction of the arc by switching the start en end point (and sweep flag)
-                    //of those elements that are below the horizontal line
-                    var newStart = endLoc.exec(newArc)[1];
-                    var newEnd = startLoc.exec(newArc)[1];
-                    var middleSec = middleLoc.exec(newArc)[1];
-
-                    //var cirLastLoc                
-
-                    //Build up the new arc notation, set the sweep-flag to 0
-                    newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
-                    //         newArc = "M" + newSec + " Z";
-                    //       console.log(newArc)
-                } //if
-                //newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
-                newArc = "M" + newSec + " Z";
-			//newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
-			newArc2 = FirstPath + lastArc + "Z"
-		
-			
-			newLoc =  /0 0, 1(.*?)A/;
-            newSec = newLoc.exec(newArc2)[1];  
-			newArc3 = "M" + newSec + " Z";			
-			console.log(newArc3)			
-						
-			d3.select(this).append("path")
-			     .attr("d", newArc )  
-			//Create a new invisible arc that the text can flow along
+                FirstPath = "M" + newFirst + "A" + newRad + "0 0, 1" + newLast 
+                ellipseArc = FirstPath + "L" + firstSmallLoc + "A" + radSmallLoc + "0 0,0" + secSmallLoc + "Z"
+                console.log("ellipse arc " + ellipseArc)
+                
+                if(donutData[i]["id_group"]  != 0) {                      
+                    textArc = "M" +  newLast + "L" + firstSmallLoc + "Z"			
+                }
+                else {
+                    textArc = "M" + secSmallLoc + "L" + newFirst + "Z"
+                }
+               
 			svg.append("path")
 				.attr("class", "hiddenDonutArcs")
 				.attr("id", "donutArc"+i)
-				.attr("d", newArc)
+				.attr("d", textArc)
 				.style("fill", "none");
 			
 			svg.append("path")
 				.attr("class", "ellipse")
 				.attr("id", "donutArc"+i)
-				.attr("d", newArc2)
+				.attr("d", ellipseArc)
 				.style("fill", donutData[i]["color"]);
             });
 

@@ -211,22 +211,29 @@
                 } //if
                 //newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
                 newArc = "M" + newSec + " Z";
-                newArc2 = FirstPath + lastArc + "Z"
-                d3.select(this).append("path")
-                    .attr("d", newArc)
-                //Create a new invisible arc that the text can flow along
-                svg.append("path")
-                    .attr("class", "hiddenDonutArcs")
-                    .attr("id", "donutArc" + i)
-                    .attr("d", newArc)
-                    .style("fill", "none");
-
-                svg.append("path")
-                    .attr("class", "ellipse")
-                    .attr("id", "donutArc" + i)
-                    .attr("d", newArc2)
-                    .style("fill", donutData[i]["color"]);
-
+			//newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
+			newArc2 = FirstPath + lastArc + "Z"
+		
+			
+			newLoc =  /0 0, 1(.*?)A/;
+            newSec = newLoc.exec(newArc2)[1];  
+			newArc3 = "M" + newSec + " Z";			
+			console.log(newArc3)			
+						
+			d3.select(this).append("path")
+			     .attr("d", newArc )  
+			//Create a new invisible arc that the text can flow along
+			svg.append("path")
+				.attr("class", "hiddenDonutArcs")
+				.attr("id", "donutArc"+i)
+				.attr("d", newArc)
+				.style("fill", "#CCCCCC");
+			
+			svg.append("path")
+				.attr("class", "ellipse")
+				.attr("id", "donutArc"+i)
+				.attr("d", newArc2)
+				.style("fill", "#CCCCCC");
             });
 
         //Append the label names on the outside
@@ -237,9 +244,9 @@
             .attr("class", "donutText")
 
             //Move the labels below the arcs for those slices with an end angle greater than 90 degrees
-            .attr("dy", function(d, i) {
-                return (d.endAngle > 90 * Math.PI / 180 ? 18 : -11);
-            })
+            //.attr("dy", function(d, i) {
+              //  return (d.endAngle > 90 * Math.PI / 180 ? 18 : -11);
+            //})
 
             .append("textPath")
             .attr("startOffset", "50%")

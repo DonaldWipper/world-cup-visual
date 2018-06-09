@@ -275,9 +275,9 @@ class database:
 #378,1930-07-12T23:00:00Z,FINISHED,771,805,3,0
 
 
-
-#db.create_table(dict_teams, "games")
-#db.insertDataIntoTableFromCSV("teams_wc.csv", "teams_wc", "id")
+#dict_stages = {"id":"int","competitionId":"int","title":"text"}
+#db.create_table(dict_stages, "stages")
+#db.insertDataIntoTableFromCSV("stages.csv", "stages", "id")
 
 
 

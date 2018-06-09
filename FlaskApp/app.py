@@ -7,6 +7,8 @@ from flask import request, flash
 import json
 import requests
 import csv
+from datetime import date
+from datetime import datetime
 #https://127.0.0.1:5000/
 
 
@@ -14,6 +16,13 @@ import csv
 cursor = None
 competitionId = 467
 
+
+teams = [], 
+places = [],
+rounds = [] 
+groups = []
+
+dic_sliceId = {}
 
 settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net", 
             "sql_user":"b1df3776b2b56c",
@@ -52,25 +61,55 @@ def main():
     places = db.getDictFromQueryRes("places", {"competitionId": competitionId})  
     rounds = db.getDictFromQueryRes("rounds", {"competitionId": competitionId})
     groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
-    
+    stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
+
     #matches = getDataFromCSV(path + 'matches.csv')
     #tournaments = getDataFromCSV(path + 'tournaments.csv')
     #standings = getDataFromCSV(path + 'standings.csv')
-  
-    for g in groups:
-        g["value"] =  10
-        g["color"] = "#d82424"
+    print(groups)
+    print(teams)
+    print(places)
+    
+    sliceId = 0
+    space = {}
+    shares = {"teams":350, "calendar":600//3, "places":600//3, "stages":600//3}
+    space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
 
+    #список команд
     for t in teams:
-        t["value"] =  15
+        t["value"] =  shares["teams"] / len(teams)
         t["color"] = "#4daa4b"
-        
+        t["sliceId"] = sliceId
+        dic_sliceId[sliceId] = 0
+        sliceId += 1
+
+    #календарь игр
+    for date in rounds:
+        date["value"] =  shares["calendar"] / len(rounds)
+        date["name"] = datetime.strptime(date["start_at"].strip(), '%Y-%m-%d').strftime("%A %d. %B")     
+        date["color"] = "#4a5fa9"
+        date["sliceId"] = sliceId
+        dic_sliceId[sliceId] = 1
+        sliceId += 1
+     
+    #стадион + город
     for p in places:
-        p["value"] =  15
+        p["name"] = p["stadium"].split("|")[0] + " " + p["city"]
+        p["value"] =  shares["places"] / len(places)
         p["color"] = "#4a69a9"
+        p["sliceId"] = sliceId
+        dic_sliceId[sliceId] = 2
+        sliceId += 1
+ 
+    #раунды
+    for s in stages:
+        s["value"] =  shares["stages"] / len(stages)
+        s["color"] = "#a89449"
+        s["sliceId"] = sliceId
+        dic_sliceId[sliceId] = 3
+        sliceId += 1
 
-
-    return render_template("world_cup2.html", teams = teams, groups = groups, places = places)
+    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space)
     
 
 if __name__ == "__main__":

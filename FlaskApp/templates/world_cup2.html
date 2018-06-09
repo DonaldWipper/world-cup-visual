@@ -65,43 +65,50 @@
             {% for d in teams %} {
                 "name": "{{d['name']}}",
                 "value": {{d['value']}},
-                "color": "{{d['color']}}",  
-                "image": "{{d['crestUrl']}}"     
+                "color": "{{d['color']}}"    
             },
              {% endfor %}
              {
-                "name": "fdfgsg",
-                "value": 5,
-                "image":"http://www.foo.com/bar.jpg"    
-
+                "name": "",
+                "value": {{space}},
+                "color":"none"    
             },     
-            {% for d in groups %} {
+            {% for d in rounds %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}"  
+            },
+             {% endfor %}
+             {
+                "name": "",
+                "value": {{space}},
+                 "color":"none"     
+            }, 
+             {% for d in places %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}"   
+            },
+             {% endfor %}      
+              {
+                "name": "",
+                "value": {{space}},
+                 "color":"none"     
+            },
+            {% for d in stages %} {
                 "name": "{{d['title']}}",
                 "value": {{d['value']}},
-                "color": "{{d['color']}}",
-                 "image":"http://www.foo.com/bar.jpg"     
+                "color": "{{d['color']}}"   
             },
-                 {% endfor %}
-             {
-                "name": "fdfgsg",
-                "value": 5,
-                 "image":"http://www.foo.com/bar.jpg"     
-
-            },
-             {% for d in places %} {
-                "name": "{{d['stadium']}}",
-                "value": {{d['value']}},
-                "color": "{{d['color']}}",
-                 "image":"http://www.foo.com/bar.jpg"     
-            },
-             {% endfor %}
-             {
-                "name": "fdfgsg",
-                "value": 5,
-                "color":"none",
-                "image":"http://www.foo.com/bar.jpg"     
-
-            }
+            {% endfor %}    
+            {
+                "name": "space",
+                "value": {{space}},
+                "color":"none"     
+            }, 
+                
+                
+                
 
         ];
              
@@ -118,8 +125,8 @@
 
         //Turn the pie chart 90 degrees counter clockwise, so it starts at the left	
         var pie = d3.layout.pie()
-            .startAngle(-90 * Math.PI / 180)
-            .endAngle(-90 * Math.PI / 180 + 2 * Math.PI)
+            .startAngle(-180 * Math.PI / 180)
+            .endAngle(-180 * Math.PI / 180 + 2 * Math.PI)
             .value(function(d) {
                 return d.value;
             })
@@ -240,6 +247,7 @@
             .attr("xlink:href", function(d, i) {
                 return "#donutArc" + i;
             })
+             
             //.attr("xlink:href",function(d) {return d.data.image;})
             .text(function(d) {
                 return d.data.name;

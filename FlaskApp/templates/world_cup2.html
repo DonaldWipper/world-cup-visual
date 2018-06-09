@@ -102,7 +102,7 @@
             },
             {% endfor %}    
             {
-                "name": "space",
+                "name": "",
                 "value": {{space}},
                 "color":"none"     
             }, 
@@ -227,7 +227,7 @@
 				.attr("class", "hiddenDonutArcs")
 				.attr("id", "donutArc"+i)
 				.attr("d", newArc)
-				.style("fill", "#CCCCCC");
+				.style("fill", "none");
 			
 			svg.append("path")
 				.attr("class", "ellipse")

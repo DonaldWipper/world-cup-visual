@@ -12,6 +12,11 @@
 
     <script src="{{
   url_for('static', filename='js/d3pie.min.js') }}"></script>
+    
+    <script src="{{
+  url_for('static', filename='js/jquery-1.9.0.js') }}"></script>
+    
+   
 
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
     <!-- Month names -->
@@ -32,7 +37,20 @@
         var screenWidth = window.innerWidth;
 
         
-        var ellipse_koef = 1.1
+        var ellipse_koefX = 1.1
+        var ellipse_koefY = 1.0
+        var global_arc_koefX = ellipse_koefX  * 1.1
+        var global_arc_koefY = ellipse_koefY  * 1.1
+        var part_bounces = {"0":[10000, -1], "1":[10000, -1], "2":[10000, -1], "3":[10000, -1]}
+        var arcOut = {firstLoc:"",
+                       radLoc :"",
+                       secLoc:"",
+                       firstSmallLoc:"",
+                       secSmallLoc:"",
+                       radSmallLoc :""  } 
+           
+          
+        var out_arcs = [] 
         var margin = {
                 left: 0,
                 top: 0,
@@ -48,10 +66,11 @@
             .append("g").attr("class", "wrapper")
             .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
 
-        function getEllipseCoords(coorX, coorY, translateX, translateY) {
+        function getEllipseCoords(coorX, coorY, koefX, koefY, radius) {
             //console.log(Math.sqrt(ellipse_koef * ellipse_koef * coorY * coorY +  coorX * coorX ))
             //console.log(ellipse_koef * coorX)
-            newX = ellipse_koef * coorX / (Math.sqrt(ellipse_koef * ellipse_koef * coorY * coorY + coorX * coorX)) * outerRadius;
+            newX = radius * koefY * coorX * koefX / Math.sqrt (koefY * koefY * coorX * coorX + coorY * coorY * koefX * koefX);
+            //newX = koefX * coorX / (Math.sqrt(koefX * koefX * coorY * coorY + coorX * coorX)) * radius;
             newY = newX * coorY / coorX;
             return [newX, newY]
         }
@@ -96,7 +115,8 @@
              {
                 "name": "",
                 "value": {{space}},
-                "color":"none"    
+                "color":"none",
+                "id_group":-1      
             },     
             {% for d in rounds %} {
                 "name": "{{d['name']}}",
@@ -108,19 +128,22 @@
              {
                 "name": "",
                 "value": {{space}},
-                 "color":"none"     
+                "color":"none",
+                "id_group":-1     
             }, 
              {% for d in places %} {
                 "name": "{{d['name']}}",
                 "value": {{d['value']}},
                 "color": "{{d['color']}}" ,
-                "id_group": "{{d['id_group']}}"            
+                "id_group": "{{d['id_group']}}"
+                    
             },
              {% endfor %}      
               {
                 "name": "",
                 "value": {{space}},
-                 "color":"none"     
+                "color":"none",
+                "id_group":-1     
             },
             {% for d in stages %} {
                 "name": "{{d['title']}}",
@@ -132,11 +155,49 @@
             {
                 "name": "",
                 "value": {{space}},
-                "color":"none"     
+                "color":"none",
+                "id_group":-1     
             }, 
         
         ];        
-                
+         
+        //дял каждой части находим первый и последний кусочек     
+        function getPartBounces() {
+            for (i = 0; i < donutData.length; i++) {
+                cur_group = donutData[i]["id_group"];
+                if(cur_group == -1) {
+                    continue;
+                }
+                cur_group_left = part_bounces[cur_group][0]
+                cur_group_right = part_bounces[cur_group][1]
+                if (i <  cur_group_left) {
+                    part_bounces[cur_group][0] = i              
+                }   
+                if (i > cur_group_right) {
+                    part_bounces[cur_group][1] = i              
+                }   
+            }
+        }
+             
+        function sendIndexToPython(index) {     
+        $.ajax({
+            type: "POST",
+            cache: false,
+            data:{"index":index},
+            url: "https://mundial-data-project.herokuapp.com/",
+            dataType: "json",
+            success: function(data) { 
+                console.log(data);                    
+            }
+            
+        })
+        }
+             
+             
+        getPartBounces();
+        console.log(part_bounces)
+             
+             
         ////////////////////////////////////////////////////////////// 
         //////////////////// Create Donut Chart ////////////////////// 
         ////////////////////////////////////////////////////////////// 
@@ -147,7 +208,6 @@
             .enter().append("path")
             .attr("class", "donutArcs")
             .attr("d", arc)
-
             .style("fill", function(d, i) {
                 return "none";
 
@@ -156,14 +216,14 @@
                 //Search pattern for everything between the start and the first capital L
                 var firstArcSection = /(^.+?)L/;
                 var lastArcSection = /L(.*?)Z/;
-                console.log(d3.select(this).attr("d"))
                 //console.log((width / 2 + margin.left))
 
 
+                
                 //между М и A -->  преобразуем
                 //между A и 0 0, 1 по X увеличивам на K
                 //между 0 0,1 и L  преобразуем
-            
+                
             
                 //M -1.2879629948845253, 221.49625538894287       //первая точка на внешнем радиусе
                 //A 221.5, 221.5                                  //внешний радиус
@@ -193,24 +253,53 @@
                 radSmallLoc = radSmallElEx.exec(d3.select(this).attr("d"))[1]
             
                 var first = firstLoc.split(",");
-                newFirst = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), 0, 0).join(",")
+                newFirst = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), ellipse_koefX, ellipse_koefY, outerRadius  ).join(",")
 
                 var second = secLoc.split(",");
-                newLast = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), 0, 0).join(",")
+                newLast = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), ellipse_koefX, ellipse_koefY, outerRadius ).join(",")
                 var rad = radLoc.split(",")
-                newRad = [ellipse_koef * rad[0], rad[1]].join(",")
-
-                FirstPath = "M" + newFirst + "A" + newRad + "0 0, 1" + newLast 
+                newRad = [rad[0] * ellipse_koefX,  rad[1] * ellipse_koefY].join(",")
+                FirstPath = "M" + newFirst + "A" + newRad + " 0 0, 1" + newLast 
                 ellipseArc = FirstPath + "L" + firstSmallLoc + "A" + radSmallLoc + "0 0,0" + secSmallLoc + "Z"
-                console.log("ellipse arc " + ellipseArc)
-                
+               
+                            
                 if(donutData[i]["id_group"]  != 0) {                      
                     textArc = "M" +  newLast + "L" + firstSmallLoc + "Z"			
                 }
                 else {
                     textArc = "M" + secSmallLoc + "L" + newFirst + "Z"
                 }
-               
+                
+                  
+                newFirstOut = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), global_arc_koefX, global_arc_koefY, outerRadius).join(",")
+                newSecOut = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), global_arc_koefX, global_arc_koefY, outerRadius).join(",")
+                newRadOut = [global_arc_koefX * rad[0],  global_arc_koefY * rad[1]].join(",")
+            
+                //если текущий кусок самый крайний в группе
+                cur_group = donutData[i]["id_group"]
+            
+                if (cur_group != -1) {
+                    if (part_bounces[cur_group][0] == i) {
+                        var a = Object.assign({}, arcOut)
+                        
+                        a["firstLoc"] = newFirstOut
+                        a["radLoc"] = newRadOut
+                        a["firstSmallLoc"] = newFirst
+                        a["radSmallLoc"] = newRad 
+                        out_arcs.push(a)
+                    }
+                
+                    if (part_bounces[cur_group][1] == i) {
+                        //console.log("part " + i) 
+                        //console.log("sec out before " + newSecOut)  
+                        out_arcs[cur_group]["secLoc"] = newSecOut
+                        out_arcs[cur_group]["secSmallLoc"] = newLast
+                    }
+            }
+            
+            
+            
+                
 			svg.append("path")
 				.attr("class", "hiddenDonutArcs")
 				.attr("id", "donutArc"+i)
@@ -221,9 +310,73 @@
 				.attr("class", "ellipse")
 				.attr("id", "donutArc"+i)
 				.attr("d", ellipseArc)
-				.style("fill", donutData[i]["color"]);
+                .style("fill", donutData[i]["color"])
+                .on("mouseover", function() {
+                     sendIndexToPython(i);
+                     console.log("over slice " + i);
+                     d3.select(this).style("fill", "black");
+                })
+                .on("mouseout", function() {
+                     console.log("out slice " + i);
+                     d3.select(this).style("fill", donutData[i]["color"]);
+                });
             });
-
+             
+             
+        for (i = 0; i < out_arcs.length; i++) {
+            for (j = 0; j < Object.values(out_arcs[i]).length; j++) {
+                console.log("values " +  Object.keys(out_arcs[i])[j] + ":" + Object.values(out_arcs[i])[j])    
+            }
+            
+            pathOutArc =  "M" + out_arcs[i]["firstLoc"]
+                              + "A" + out_arcs[i]["radLoc"] 
+                              + " 0 0, 1" + out_arcs[i]["secLoc"]
+                              + "L" + out_arcs[i]["secSmallLoc"] 
+                              + "A" + out_arcs[i]["radSmallLoc"] 
+                              + " 0 0,0" + out_arcs[i]["firstSmallLoc"]  + "Z"
+            //M-2.390088167315485,379.99478018943495
+            //A456,380 0 0, 1
+            //L-2.3900819267657423,379.9937880183677A380,380 0 0,0Z    
+            pathText = "M" +  out_arcs[i]["secSmallLoc"]  
+                       + "A" + out_arcs[i]["radSmallLoc"] 
+                       + " 0 0,0" + out_arcs[i]["firstSmallLoc"]  + "Z"
+            
+           
+            
+            console.log("new path " + pathText)         
+            svg.append("path")
+				.attr("class", "outArc")
+				.attr("id", "outArc"+i)
+				.attr("d", pathOutArc)
+                .style("fill", "#a89449")
+                .on("mouseover", function() {
+                     d3.select(this).style("fill", "black");
+                })
+                .on("mouseout", function() {
+                     d3.select(this).style("fill", donutData[i]["color"]);
+                });
+            
+            
+            svg.append("path")
+				.attr("class", "outArcPath")
+				.attr("id", "outArcPath"+i)
+				.attr("d", pathText)
+                .style("fill", "none")
+                
+                  
+            svg.append("text")
+               .style("font-size", "16px")
+               .append("textPath")
+			   .attr("startOffset", "25%")
+               .attr("id", "outArcText"+i)
+               .attr("xlink:href", "#outArcPath"+i)
+               .text("test")
+               .style("fill", "#b69449")
+        }
+        
+               
+             
+             
         //Append the label names on the outside
         svg.selectAll(".donutText")
             .data(pie(donutData))
@@ -231,14 +384,9 @@
             .style("font-size", "16px") 
             .attr("class", "donutText")
 
-            //Move the labels below the arcs for those slices with an end angle greater than 90 degrees
-            //.attr("dy", function(d, i) {
-              //  return (d.endAngle > 90 * Math.PI / 180 ? 18 : -11);
-            //})
-
             .append("textPath")
             .attr("startOffset", "50%")
-
+         
             .attr("xlink:href", function(d, i) {
                 return "#donutArc" + i;
             })

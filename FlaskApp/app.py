@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response
 #from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
@@ -16,13 +16,15 @@ from datetime import datetime
 cursor = None
 competitionId = 467
 
-
-teams = [], 
-places = [],
+stages = []
+teams = [] 
+places = []
 rounds = [] 
 groups = []
+space = None
 
 dic_sliceId = {}
+dic_name2sliceId = {}
 
 settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net", 
             "sql_user":"b1df3776b2b56c",
@@ -33,6 +35,15 @@ settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net",
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+
+
+
+'''
+//календарь, стадионы, стадии
+def getAllCorellByTeamId(teamId):
+    standings = db.getDictFromQueryRes("places", {"competitionId": competitionId})
+'''
+
 
 
 
@@ -48,10 +59,21 @@ def read_params(fn):
          d = {}
     return d 
 
+@app.route('/', methods=['POST'])
+def index():
+     data = request.form['index']
+     resp = make_response(json.dumps(data))
+     resp.status_code = 200
+     print(" GET REQUEST " + str(data))
+     resp.headers['Access-Control-Allow-Origin'] = '*'
+     places[0]["color"] = "#070707"
+     return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space)
+    
 
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def main():
+    global stages, teams, places, rounds, groups, space 
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -66,12 +88,7 @@ def main():
     #matches = getDataFromCSV(path + 'matches.csv')
     #tournaments = getDataFromCSV(path + 'tournaments.csv')
     #standings = getDataFromCSV(path + 'standings.csv')
-    print(groups)
-    print(teams)
-    print(places)
-    
     sliceId = 0
-    space = {}
     shares = {"teams":350, "calendar":600//3, "places":600//3, "stages":600//3}
     space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
 
@@ -82,16 +99,19 @@ def main():
         t["sliceId"] = sliceId
         t["id_group"] = 0
         dic_sliceId[sliceId] = 0
+        dic_name2sliceId[t["name"]] = sliceId
         sliceId += 1
 
     #календарь игр
     for date in rounds:
+        strTime =  datetime.strptime(date["start_at"].strip(), '%Y-%m-%d')
         date["value"] =  shares["calendar"] / len(rounds)
-        date["name"] = datetime.strptime(date["start_at"].strip(), '%Y-%m-%d').strftime("%A %d. %B")     
+        date["name"] =  strTime.strftime("%A")[0:3] + "." + strTime.strftime(" %d. %B")     
         date["color"] = "#ddea4f"
         date["sliceId"] = sliceId
         date["id_group"] = 1
         dic_sliceId[sliceId] = 1
+        dic_name2sliceId[date["start_at"]] = sliceId
         sliceId += 1
      
     #стадион + город
@@ -102,6 +122,7 @@ def main():
         p["sliceId"] = sliceId
         p["id_group"] = 2
         dic_sliceId[sliceId] = 2
+        dic_name2sliceId[p["stadium"]] = sliceId
         sliceId += 1
  
     #раунды
@@ -111,6 +132,7 @@ def main():
         s["sliceId"] = sliceId
         s["id_group"] = 3
         dic_sliceId[sliceId] = 3
+        dic_name2sliceId[s["title"]] = sliceId
         sliceId += 1
 
     return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space)

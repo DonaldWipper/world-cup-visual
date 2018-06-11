@@ -133,12 +133,14 @@ class database:
             for r  in result_fields:
                 query += r + ","
             query += "+"
-            query.replace(",+", "")
+            query = query.strip().replace(",+", "")
         query += " FROM " + table_name
         if condition != None:
             query += " WHERE "
             for q in condition:
-                query += str(q) + " = " + str(condition[q])
+                query += " " + str(q) + " = " + str(condition[q]) + " AND"
+            query += "="
+            query = query.strip().replace("AND=", "")
         print(query)
         cur.execute(query)
         return list (cur.fetchall())

@@ -48,8 +48,12 @@
                        firstSmallLoc:"",
                        secSmallLoc:"",
                        radSmallLoc :""  } 
-           
-          
+        
+        var cur_index = 0   
+        var ajax = null
+        var flag_response = 1
+        var last_click = new Date().getTime()
+        
         var out_arcs = [] 
         var margin = {
                 left: 0,
@@ -161,6 +165,14 @@
         
         ];        
          
+        function sleep(milliseconds) {
+          var start = new Date().getTime();
+          for (var i = 0; i < 1e7; i++) {
+          if ((new Date().getTime() - start) > milliseconds){
+              break;
+            }
+         }
+       }     
         //дял каждой части находим первый и последний кусочек     
         function getPartBounces() {
             for (i = 0; i < donutData.length; i++) {
@@ -180,19 +192,61 @@
         }
              
         function sendIndexToPython(index) {     
+        var qurl="/";
+        
+        if ((ajax != null) && (flag_response == 0)){ 
+            ajax.abort();
+            ajax = null;
+            
+        }    
+        ajax =
+        
         $.ajax({
             type: "POST",
             cache: false,
+            url:qurl,
+            //timeout: 2000, 
             data:{"index":index},
-            url: "https://mundial-data-project.herokuapp.com/",
             dataType: "json",
-            success: function(data) { 
-                console.log(data);                    
+            success: function(response) { 
+                console.log(index + ": " + response[index]);
+                if (response[index] === null) {
+                   console.log("nothing found");
+                } else {
+                    if (index == cur_index) { 
+                        setClicked(response[index]);
+                    }
+                }
+                flag_response = 1
+            },
+            error: function(error) {
+                console.log(error);
+                flag_response = 1
             }
-            
         })
+           
         }
              
+        function kill_ajax() {
+            ajax.abort()    
+        }     
+             
+        function restore_colors() {
+            for (i  = 0; i < donutData.length; i++) {
+                d3.select("#ArcEllipse"+i).style("fill", donutData[i]["color"]); 
+                  
+            }
+            
+        }
+             
+             
+        function setClicked(Array) {
+            for (i  = 0; i < Array.length; i++) {
+                d3.select("#ArcEllipse"+Array[i]).style("fill", "black"); 
+                  
+            }
+            
+        }
              
         getPartBounces();
         console.log(part_bounces)
@@ -308,19 +362,50 @@
 			
 			svg.append("path")
 				.attr("class", "ellipse")
-				.attr("id", "donutArc"+i)
+				.attr("id", "ArcEllipse"+i)
 				.attr("d", ellipseArc)
                 .style("fill", donutData[i]["color"])
+                .on("mousehover", function() {
+                     console.log("mousehover")
+                     x = new Date().getTime() - last_click
+                     if (x > 300) { 
+                         sendIndexToPython(i);
+                         last_click = new Date().getTime();  
+                         console.log("last click " + last_click.toLocaleString() + " index " + i );
+                     } 
+                
+                  
+                 })
                 .on("mouseover", function() {
-                     sendIndexToPython(i);
-                     console.log("over slice " + i);
+                     restore_colors()
                      d3.select(this).style("fill", "black");
+                     cur_index = i
+                     flag_response = 0
+                     x = new Date().getTime() - last_click
+                     if (x > 300) { 
+                         sendIndexToPython(i);
+                         last_click = new Date().getTime();  
+                         console.log("last click " + last_click.toLocaleString() + " index " + i );
+                     } else {
+                         sleep(300 -x)
+                         sendIndexToPython(i);
+                         last_click = new Date().getTime();  
+                         console.log("last click " + last_click.toLocaleString() + " index " + i ); 
+                         
+                     } 
+                         
+                     console.log("over slice " + i);
+                     
                 })
-                .on("mouseout", function() {
+                .on("mouseout", function(d, i) {
+                     cur_index = -1
+                     //kill_ajax()
+                     //flag_unclicked = 1
                      console.log("out slice " + i);
-                     d3.select(this).style("fill", donutData[i]["color"]);
+                     restore_colors()  
+                     //d3.select(this).style("fill", donutData[i]["color"]);
                 });
-            });
+        });
              
              
         for (i = 0; i < out_arcs.length; i++) {
@@ -353,7 +438,7 @@
                      d3.select(this).style("fill", "black");
                 })
                 .on("mouseout", function() {
-                     d3.select(this).style("fill", donutData[i]["color"]);
+                     //d3.select(this).style("fill", donutData[i]["color"]);
                 });
             
             
@@ -383,16 +468,16 @@
             .enter().append("text")
             .style("font-size", "16px") 
             .attr("class", "donutText")
-
+            .attr("pointer-events", "none")  
             .append("textPath")
             .attr("startOffset", "50%")
          
-            .attr("xlink:href", function(d, i) {
+            .attr("href", function(d, i) {
                 return "#donutArc" + i;
             })
              
             //.attr("xlink:href",function(d) {return d.data.image;})
-            .text(function(d) {
+            .text(function(d, i) {
                 return d.data.name;
             });
 

@@ -4,3 +4,11 @@ body {
     font-size: 12px;
     text-align: center;
 }
+
+
+@font-face {
+font-family: "Harabara Bold";
+src: url("Countryside Personal Use");
+
+}
+

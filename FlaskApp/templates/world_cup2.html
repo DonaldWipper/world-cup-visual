@@ -16,7 +16,13 @@
     <script src="{{
   url_for('static', filename='js/jquery-1.9.0.js') }}"></script>
     
-   
+   <script src="{{
+  url_for('static', filename='js/topojson.min.js') }}"></script>
+    
+    
+    <script src="{{
+  url_for('static', filename='js/datamaps.world.min.js') }}"></script>
+    
 
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
     <!-- Month names -->
@@ -26,16 +32,71 @@
 </head>
 
 <body>
+    
+ 
+    <div id="chart"style="position: absolute;"></div>
 
-    <div id="chart"></div>
+    <div id="container" style="position: absolute;top: 260px; left:260px"></div>
 
+    
     <script>
         ////////////////////////////////////////////////////////////
         //////////////////////// Set-up ////////////////////////////
         ////////////////////////////////////////////////////////////
 
         var screenWidth = window.innerWidth;
+        
+        ////////////////////////////////////////////////////////////// 
+        ///////////////////// MAP            ///////////////////////// 
+        ////////////////////////////////////////////////////////////// 
 
+         var basic_choropleth = new Datamap({
+          element: document.getElementById("chart"),
+          projection: 'mercator',
+
+          fills: {
+              defaultFill: "#ABDDA4",
+              authorHasTraveledTo: "#fa0fa0"
+          },
+          data: {
+              USA: {
+                  fillKey: "authorHasTraveledTo"
+              },
+              JPN: {
+                  fillKey: "authorHasTraveledTo"
+              },
+              ITA: {
+                  fillKey: "authorHasTraveledTo"
+              },
+              CRI: {
+                  fillKey: "authorHasTraveledTo"
+              },
+              KOR: {
+                  fillKey: "authorHasTraveledTo"
+              },
+              DEU: {
+                  fillKey: "authorHasTraveledTo"
+              },
+          }
+      });
+         var colors = d3.scale.category10();
+
+    window.setInterval(function () {
+        basic_choropleth.updateChoropleth({
+            USA: colors(Math.random() * 10),
+            RUS: colors(Math.random() * 100),
+            AUS: {
+                fillKey: 'authorHasTraveledTo'
+            },
+            BRA: colors(Math.random() * 50),
+            CAN: colors(Math.random() * 50),
+            ZAF: colors(Math.random() * 50),
+            IND: colors(Math.random() * 50),
+        });
+    }, 2000);
+   
+        
+        
         
         var ellipse_koefX = 1.1
         var ellipse_koefY = 1.0
@@ -67,6 +128,7 @@
         var svg = d3.select("#chart").append("svg")
             .attr("width", (width + margin.left + margin.right))
             .attr("height", (height + margin.top + margin.bottom))
+            .attr("color", "#debcd1")
             .append("g").attr("class", "wrapper")
             .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
 
@@ -163,7 +225,19 @@
                 "id_group":-1     
             }, 
         
-        ];        
+        ];  
+             
+        
+        var outArcsData = [
+            {% for d in outGroups %} {
+                "name": "{{d['name']}}",
+                 "color": "{{d['color']}}"
+                    
+            },
+            {% endfor %} 
+        ]
+                
+             
          
         function sleep(milliseconds) {
           var start = new Date().getTime();
@@ -239,10 +313,21 @@
             
         }
              
+           
+                
+        function restore_colors_outArcs() {
+            for (i  = 0; i < outArcsData.length; i++) {
+                d3.select("#outArc"+i).style("fill", outArcsData[i]["color"]); 
+                  
+            }
+            
+        }
+          
+             
              
         function setClicked(Array) {
             for (i  = 0; i < Array.length; i++) {
-                d3.select("#ArcEllipse"+Array[i]).style("fill", "black"); 
+                d3.select("#ArcEllipse"+Array[i]).style("fill", "#debcd1"); 
                   
             }
             
@@ -365,20 +450,10 @@
 				.attr("id", "ArcEllipse"+i)
 				.attr("d", ellipseArc)
                 .style("fill", donutData[i]["color"])
-                .on("mousehover", function() {
-                     console.log("mousehover")
-                     x = new Date().getTime() - last_click
-                     if (x > 300) { 
-                         sendIndexToPython(i);
-                         last_click = new Date().getTime();  
-                         console.log("last click " + last_click.toLocaleString() + " index " + i );
-                     } 
                 
-                  
-                 })
                 .on("mouseover", function() {
                      restore_colors()
-                     d3.select(this).style("fill", "black");
+                     d3.select(this).style("fill", "#debcd1");
                      cur_index = i
                      flag_response = 0
                      x = new Date().getTime() - last_click
@@ -386,12 +461,6 @@
                          sendIndexToPython(i);
                          last_click = new Date().getTime();  
                          console.log("last click " + last_click.toLocaleString() + " index " + i );
-                     } else {
-                         sleep(300 -x)
-                         sendIndexToPython(i);
-                         last_click = new Date().getTime();  
-                         console.log("last click " + last_click.toLocaleString() + " index " + i ); 
-                         
                      } 
                          
                      console.log("over slice " + i);
@@ -422,9 +491,9 @@
             //M-2.390088167315485,379.99478018943495
             //A456,380 0 0, 1
             //L-2.3900819267657423,379.9937880183677A380,380 0 0,0Z    
-            pathText = "M" +  out_arcs[i]["secSmallLoc"]  
+            pathText = "M" + out_arcs[i]["firstSmallLoc"]
                        + "A" + out_arcs[i]["radSmallLoc"] 
-                       + " 0 0,0" + out_arcs[i]["firstSmallLoc"]  + "Z"
+                       + " 0 0,1" + out_arcs[i]["secSmallLoc"]   + "Z"
             
            
             
@@ -433,12 +502,13 @@
 				.attr("class", "outArc")
 				.attr("id", "outArc"+i)
 				.attr("d", pathOutArc)
-                .style("fill", "#a89449")
+                .style("fill", outArcsData[i]["color"])
                 .on("mouseover", function() {
-                     d3.select(this).style("fill", "black");
+                     restore_colors_outArcs();
+                     d3.select(this).style("fill", "#debcd1");
                 })
                 .on("mouseout", function() {
-                     //d3.select(this).style("fill", donutData[i]["color"]);
+                     restore_colors_outArcs();
                 });
             
             
@@ -455,8 +525,9 @@
 			   .attr("startOffset", "25%")
                .attr("id", "outArcText"+i)
                .attr("xlink:href", "#outArcPath"+i)
-               .text("test")
-               .style("fill", "#b69449")
+               .text(outArcsData[i]["name"])
+               .style("font-weight", "bold")
+               .style("fill", "#black")
         }
         
                

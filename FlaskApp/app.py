@@ -25,6 +25,11 @@ rounds = []
 groups = []
 space = None
 
+
+outGroups = [{ "name":"NATIONAL TEAMS", "color":"#ABDDA4"}, { "name":"WORLD CUP SCHEDULE", "color":"#2c7bb6"},
+             { "name":"CITIES AND STADIUMS", "color":"#d7191c"}, { "name":"GROUPS ANS STAGES", "color":"#d7c119"}]
+
+
 dic_sliceId = {}
 dic_name2sliceId = {}
 dic_sliceId2name = {}
@@ -132,8 +137,11 @@ def render():
         dic_name2sliceId[s["title"]] = sliceId
         dic_sliceId2name[sliceId] = s["title"]
         sliceId += 1
+    
+    
+    
 
-    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space)
+    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space, outGroups = outGroups)
 
 
 

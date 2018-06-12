@@ -268,12 +268,7 @@
         function sendIndexToPython(index) {     
         var qurl="/";
         
-        if ((ajax != null) && (flag_response == 0)){ 
-            ajax.abort();
-            ajax = null;
-            
-        }    
-        ajax =
+       
         
         $.ajax({
             type: "POST",
@@ -457,11 +452,10 @@
                      cur_index = i
                      flag_response = 0
                      x = new Date().getTime() - last_click
-                     if (x > 300) { 
-                         sendIndexToPython(i);
-                         last_click = new Date().getTime();  
-                         console.log("last click " + last_click.toLocaleString() + " index " + i );
-                     } 
+                     sendIndexToPython(i);
+                     last_click = new Date().getTime();  
+                     console.log("last click " + last_click.toLocaleString() + " index " + i );
+                      
                          
                      console.log("over slice " + i);
                      

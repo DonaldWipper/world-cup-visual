@@ -23,10 +23,12 @@
     <script src="{{
   url_for('static', filename='js/datamaps.world.min.js') }}"></script>
     
-
+    
+     
+     
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
     <!-- Month names -->
-    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+
 
 
 </head>
@@ -279,11 +281,13 @@
             dataType: "json",
             success: function(response) { 
                 console.log(index + ": " + response[index]);
+                console.log( "res: " + response["res"]);
                 if (response[index] === null) {
                    console.log("nothing found");
                 } else {
                     if (index == cur_index) { 
                         setClicked(response[index]);
+                        addTextInCentre(response["res"]) 
                     }
                 }
                 flag_response = 1
@@ -328,6 +332,23 @@
             
         }
              
+        function addTextInCentre(Array) {
+            for (i  = 0; i < Array.length; i++) {
+                d3.select("#donutTextCentre"+i).empty()
+                svg.selectAll(".TextCentre")
+                   .data(pie(donutData))
+                   .enter().append("text")
+                   .attr("class", "donutTextCentre" + i) 
+                   .style("font-size", "20px") 
+                   .attr("text-anchor", "middle")
+                   .text(Array[i])
+                   .attr("dy", -10 + i * 4 + "em") 
+            }
+            
+        }
+             
+             
+            
         getPartBounces();
         console.log(part_bounces)
              
@@ -470,6 +491,7 @@
                 });
         });
              
+       
              
         for (i = 0; i < out_arcs.length; i++) {
             for (j = 0; j < Object.values(out_arcs[i]).length; j++) {
@@ -531,7 +553,8 @@
         svg.selectAll(".donutText")
             .data(pie(donutData))
             .enter().append("text")
-            .style("font-size", "16px") 
+            .style("font-size", "16px")
+            .style("font-family","octin")
             .attr("class", "donutText")
             .attr("pointer-events", "none")  
             .append("textPath")

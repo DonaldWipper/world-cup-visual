@@ -25,6 +25,7 @@ rounds = []
 groups = []
 space = None
 
+teams_name_dic = {}
 
 outGroups = [{ "name":"NATIONAL TEAMS", "color":"#ABDDA4"}, { "name":"WORLD CUP SCHEDULE", "color":"#2c7bb6"},
              { "name":"CITIES AND STADIUMS", "color":"#d7191c"}, { "name":"GROUPS ANS STAGES", "color":"#d7c119"}]
@@ -45,7 +46,10 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['TEMPLATES_AUTO_RELOAD']=True
 
-
+def xstr(s):
+    if s is None:
+        return ''
+    return str(s)
 
 def getConnectionBySliceId(sliceId):
     groupId = dic_sliceId[sliceId]
@@ -56,17 +60,25 @@ def getConnectionBySliceId(sliceId):
 
 #календарь, стадионы, стадии
 def getAllCorellByTeamId(teamId):
-    dates_home = [datetime.strptime(d["date"].strip()[0:10], '%Y-%m-%d') for d in db.getDictFromQueryRes("games", {"homeTeamId": teamId, "competitionId": competitionId}, ["date"])]
-    dates_away = [datetime.strptime(d["date"].strip()[0:10], '%Y-%m-%d') for d in db.getDictFromQueryRes("games", {"awayTeamId": teamId, "competitionId": competitionId}, ["date"])]   
-    groups = [d["group_"] for d in db.getDictFromQueryRes("standings", {"teamId": teamId, "competitionId": competitionId}, ["group_"])]
-
+    team_name =  teams_name_dic[str(teamId)]
+    result_homeId = db.getDictFromQueryRes("games", {"homeTeamId": teamId, "competitionId": competitionId}, ["date", "awayTeamId", "goalsHomeTeam", "goalsAwayTeam"])
+    dates_home = [datetime.strptime(d["date"].strip()[0:10], '%Y-%m-%d')  for d in result_homeId]
+    string_res = [' '.join((d["date"].strip()[0:10],team_name,teams_name_dic[d["awayTeamId"]],xstr(d["goalsHomeTeam"]),xstr(d["goalsAwayTeam"])))  for d in result_homeId]
+    del result_homeId   
+   
+    result_awayId = db.getDictFromQueryRes("games", {"awayTeamId": teamId, "competitionId": competitionId}, ["date", "homeTeamId", "goalsHomeTeam", "goalsAwayTeam"])
+    print(result_awayId)
+    dates_away = [datetime.strptime(d["date"].strip()[0:10], '%Y-%m-%d')  for d in result_awayId]
+    string_res += [' '.join((d["date"].strip()[0:10],teams_name_dic[d["homeTeamId"]],team_name, xstr(d["goalsHomeTeam"]), xstr(d["goalsAwayTeam"])))   for d in result_awayId]
+    del result_awayId 
+    groups = ["Group" + " " + d["group_"] for d in db.getDictFromQueryRes("standings", {"teamId": teamId, "competitionId": competitionId}, ["group_"])]
     names = dates_home + dates_away + groups
-    print(names)  
+    
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
             sliceIds.append(dic_name2sliceId[name])
-    return sliceIds
+    return [sliceIds, string_res]
 
 
 
@@ -97,6 +109,7 @@ def render():
         t["color"] = "#4daa4b"
         t["sliceId"] = sliceId
         t["id_group"] = 0
+        teams_name_dic[str(t["id"])] = t["name"] 
         dic_sliceId[sliceId] = 0
         dic_name2sliceId[t["id"]] = sliceId
         dic_sliceId2name[sliceId] = t["id"]
@@ -166,7 +179,8 @@ def main():
     if request.method == 'POST':
         index = request.form['index']
         #del places
-        resp = make_response(json.dumps({index:getConnectionBySliceId(int(index))} ))
+        res =  getConnectionBySliceId(int(index))
+        resp = make_response(json.dumps({index:res[0], "res": res[1] } ))
         resp.status_code = 200
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp

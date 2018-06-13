@@ -1,14 +1,6 @@
-body {
-    font-family: 'Pacifico', sans-serif;
-    fill: #333333;
-    font-size: 12px;
-    text-align: center;
-}
+@font-face{
+font-family: octin;
+src: url('octin.ttf');
+font-weight: bold;}
 
-
-@font-face {
-font-family: "Harabara Bold";
-src: url("Countryside Personal Use");
-
-}
 

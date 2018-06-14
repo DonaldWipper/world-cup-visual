@@ -246,6 +246,12 @@ class database:
 
 #db = database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])   
 
+
+#dict_groups = {"stadium":"text","city":"text","homeTeam":"text","awayTeam":"text","shortHomeTeam":"text","shortAwayTeam":"text"} 
+#db.create_table(dict_groups, "games_fifa")
+#db.insertDataIntoTableFromCSV("games_wc.csv", "games_fifa")
+
+
 #print(db.getDictFromQueryRes("teams_wc"))
 #dict_teams = {"id":"int", "name":"text","shortName":"text", "crestUrl":"text", "squadMarketValue":"text"}
 #dict_teams = #{"goalsAgainst":"int","points":"int","goals":"int","teamId":"int","crestURI":"text","rank":"int","team":"text","playedGames":"int","group":"text","goalDifference":"int"}

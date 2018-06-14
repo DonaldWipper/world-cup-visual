@@ -1,0 +1,33 @@
+goals,crestURI,rank,points,competitionId,goalsAgainst,goalDifference,teamId,playedGames,group_,team
+0,https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg,0,0,467,0,0,773,0,C,France
+0,https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg,0,0,467,0,0,779,0,C,Australia
+0,https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg,0,0,467,0,0,832,0,C,Peru
+0,https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg,0,0,467,0,0,782,0,C,Denmark
+0,https://upload.wikimedia.org/wikipedia/commons/9/92/Flag_of_Belgium_%28civil%29.svg,0,0,467,0,0,805,0,G,Belgium
+0,https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg,0,0,467,0,0,1836,0,G,Panama
+0,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg,0,0,467,0,0,802,0,G,Tunisia
+0,https://upload.wikimedia.org/wikipedia/commons/b/be/Flag_of_England.svg,0,0,467,0,0,770,0,G,England
+0,https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg,0,0,467,0,0,808,0,A,Russia
+0,https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg,0,0,467,0,0,801,0,A,"Saudi Arabia"
+0,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg,0,0,467,0,0,825,0,A,Egypt
+0,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg,0,0,467,0,0,758,0,A,Uruguay
+0,https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg,0,0,467,0,0,762,0,D,Argentina
+0,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Iceland.svg,0,0,467,0,0,1066,0,D,Iceland
+0,https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg,0,0,467,0,0,799,0,D,Croatia
+0,https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg,0,0,467,0,0,776,0,D,Nigeria
+0,https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg,0,0,467,0,0,759,0,F,Germany
+0,https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg,0,0,467,0,0,769,0,F,Mexico
+0,https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg,0,0,467,0,0,792,0,F,Sweden
+0,https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg,0,0,467,0,0,772,0,F,"Korea Republic"
+0,https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_Costa_Rica_%28state%29.svg,0,0,467,0,0,793,0,E,"Costa Rica"
+0,https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg,0,0,467,0,0,780,0,E,Serbia
+0,https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg,0,0,467,0,0,764,0,E,Brazil
+0,https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Switzerland_%28Pantone%29.svg,0,0,467,0,0,788,0,E,Switzerland
+0,https://upload.wikimedia.org/wikipedia/commons/1/12/Flag_of_Poland.svg,0,0,467,0,0,794,0,H,Poland
+0,https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg,0,0,467,0,0,804,0,H,Senegal
+0,https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg,0,0,467,0,0,818,0,H,Colombia
+0,https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg,0,0,467,0,0,766,0,H,Japan
+0,https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg,0,0,467,0,0,815,0,B,Morocco
+0,NULL,0,0,467,0,0,840,0,B,Iran
+0,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg,0,0,467,0,0,765,0,B,Portugal
+0,https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg,0,0,467,0,0,760,0,B,Spain

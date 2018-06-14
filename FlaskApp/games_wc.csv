@@ -1,0 +1,65 @@
+stadium,city,homeTeam,awayTeam,shortHomeTeam,shortAwayTeam
+Luzhniki Stadium,Moscow,Russia,Saudi Arabia,RUS,KSA
+Ekaterinburg Arena,Ekaterinburg,Egypt,Uruguay,EGY,URU
+Saint Petersburg Stadium,St. Petersburg,Morocco,IR Iran,MAR,IRN
+Fisht Stadium,Sochi,Portugal,Spain,POR,ESP
+Kazan Arena,Kazan,France,Australia,FRA,AUS
+Spartak Stadium,Moscow,Argentina,Iceland,ARG,ISL
+Mordovia Arena,Saransk,Peru,Denmark,PER,DEN
+Kaliningrad Stadium,Kaliningrad,Croatia,Nigeria,CRO,NGA
+Samara Arena,Samara,Costa Rica,Serbia,CRC,SRB
+Luzhniki Stadium,Moscow,Germany,Mexico,GER,MEX
+Rostov Arena,Rostov-On-Don,Brazil,Switzerland,BRA,SUI
+Nizhny Novgorod Stadium,Nizhny Novgorod,Sweden,Korea Republic,SWE,KOR
+Fisht Stadium,Sochi,Belgium,Panama,BEL,PAN
+Volgograd Arena,Volgograd,Tunisia,England,TUN,ENG
+Mordovia Arena,Saransk,Colombia,Japan,COL,JPN
+Spartak Stadium,Moscow,Poland,Senegal,POL,SEN
+Saint Petersburg Stadium,St. Petersburg,Russia,Egypt,RUS,EGY
+Luzhniki Stadium,Moscow,Portugal,Morocco,POR,MAR
+Rostov Arena,Rostov-On-Don,Uruguay,Saudi Arabia,URU,KSA
+Kazan Arena,Kazan,IR Iran,Spain,IRN,ESP
+Samara Arena,Samara,Denmark,Australia,DEN,AUS
+Ekaterinburg Arena,Ekaterinburg,France,Peru,FRA,PER
+Nizhny Novgorod Stadium,Nizhny Novgorod,Argentina,Croatia,ARG,CRO
+Saint Petersburg Stadium,St. Petersburg,Brazil,Costa Rica,BRA,CRC
+Volgograd Arena,Volgograd,Nigeria,Iceland,NGA,ISL
+Kaliningrad Stadium,Kaliningrad,Serbia,Switzerland,SRB,SUI
+Spartak Stadium,Moscow,Belgium,Tunisia,BEL,TUN
+Rostov Arena,Rostov-On-Don,Korea Republic,Mexico,KOR,MEX
+Fisht Stadium,Sochi,Germany,Sweden,GER,SWE
+Nizhny Novgorod Stadium,Nizhny Novgorod,England,Panama,ENG,PAN
+Ekaterinburg Arena,Ekaterinburg,Japan,Senegal,JPN,SEN
+Kazan Arena,Kazan,Poland,Colombia,POL,COL
+Samara Arena,Samara,Uruguay,Russia,URU,RUS
+Volgograd Arena,Volgograd,Saudi Arabia,Egypt,KSA,EGY
+Kaliningrad Stadium,Kaliningrad,Spain,Morocco,ESP,MAR
+Mordovia Arena,Saransk,IR Iran,Portugal,IRN,POR
+Fisht Stadium,Sochi,Australia,Peru,AUS,PER
+Luzhniki Stadium,Moscow,Denmark,France,DEN,FRA
+Saint Petersburg Stadium,St. Petersburg,Nigeria,Argentina,NGA,ARG
+Rostov Arena,Rostov-On-Don,Iceland,Croatia,ISL,CRO
+Kazan Arena,Kazan,Korea Republic,Germany,KOR,GER
+Ekaterinburg Arena,Ekaterinburg,Mexico,Sweden,MEX,SWE
+Spartak Stadium,Moscow,Serbia,Brazil,SRB,BRA
+Nizhny Novgorod Stadium,Nizhny Novgorod,Switzerland,Costa Rica,SUI,CRC
+Volgograd Arena,Volgograd,Japan,Poland,JPN,POL
+Samara Arena,Samara,Senegal,Colombia,SEN,COL
+Mordovia Arena,Saransk,Panama,Tunisia,PAN,TUN
+Kaliningrad Stadium,Kaliningrad,England,Belgium,ENG,BEL
+Kazan Arena,Kazan,1C,2D,1C,2D
+Fisht Stadium,Sochi,1A,2B,1A,2B
+Luzhniki Stadium,Moscow,1B,2A,1B,2A
+Nizhny Novgorod Stadium,Nizhny Novgorod,1D,2C,1D,2C
+Samara Arena,Samara,1E,2F,1E,2F
+Rostov Arena,Rostov-On-Don,1G,2H,1G,2H
+Saint Petersburg Stadium,St. Petersburg,1F,2E,1F,2E
+Spartak Stadium,Moscow,1H,2G,1H,2G
+Nizhny Novgorod Stadium,Nizhny Novgorod,W49,W50,W49,W50
+Kazan Arena,Kazan,W53,W54,W53,W54
+Samara Arena,Samara,W55,W56,W55,W56
+Fisht Stadium,Sochi,W51,W52,W51,W52
+Saint Petersburg Stadium,St. Petersburg,W57,W58,W57,W58
+Luzhniki Stadium,Moscow,W59,W60,W59,W60
+Saint Petersburg Stadium,St. Petersburg,L61,L62,L61,L62
+Luzhniki Stadium,Moscow,W61,W62,W61,W62

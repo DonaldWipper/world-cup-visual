@@ -1,33 +1,33 @@
-id,name,shortName,crestUrl,squadMarketValue
-808,Russia,,https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg,
-801,Saudi Arabia,,https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg,
-825,Egypt,,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg,
-758,Uruguay,,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg,
-815,Morocco,,https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg,
-840,Iran,Iran,,
-765,Portugal,,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg,
-760,Spain,,https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg,
-773,France,,https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg,
-779,Australia,,https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg,
-762,Argentina,,https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg,
-1066,Iceland,,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Iceland.svg,
-832,Peru,Peru,https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg,
-782,Denmark,,https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg,
-799,Croatia,,https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg,
-776,Nigeria,,https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg,
-793,Costa Rica,,https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_Costa_Rica_(state).svg,
-780,Serbia,,https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg,
-759,Germany,,https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg,
-769,Mexico,,https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg,
-764,Brazil,,https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg,
-788,Switzerland,,https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Switzerland_(Pantone).svg,
-792,Sweden,,https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg,
-772,Korea Republic,,https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg,
-805,Belgium,,https://upload.wikimedia.org/wikipedia/commons/9/92/Flag_of_Belgium_(civil).svg,
-1836,Panama,Panama,https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg,
-802,Tunisia,,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg,
-770,England,,https://upload.wikimedia.org/wikipedia/commons/b/be/Flag_of_England.svg,
-818,Colombia,,https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg,
-766,Japan,,https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg,
-794,Poland,,https://upload.wikimedia.org/wikipedia/commons/1/12/Flag_of_Poland.svg,
-804,Senegal,,https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg,
+shortName,id,name,squadMarketValue,crestUrl,rating
+NULL,808,Russia,NULL,https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg,NULL
+NULL,801,"Saudi Arabia",NULL,https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg,NULL
+NULL,825,Egypt,NULL,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg,NULL
+NULL,758,Uruguay,NULL,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg,NULL
+NULL,815,Morocco,NULL,https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg,NULL
+Iran,840,Iran,NULL,NULL,NULL
+NULL,765,Portugal,NULL,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg,NULL
+NULL,760,Spain,NULL,https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg,NULL
+NULL,773,France,NULL,https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg,NULL
+NULL,779,Australia,NULL,https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg,NULL
+NULL,762,Argentina,NULL,https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg,NULL
+NULL,1066,Iceland,NULL,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Iceland.svg,NULL
+Peru,832,Peru,NULL,https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg,NULL
+NULL,782,Denmark,NULL,https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg,NULL
+NULL,799,Croatia,NULL,https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg,NULL
+NULL,776,Nigeria,NULL,https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg,NULL
+NULL,793,"Costa Rica",NULL,https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_Costa_Rica_(state).svg,NULL
+NULL,780,Serbia,NULL,https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg,NULL
+NULL,759,Germany,NULL,https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg,NULL
+NULL,769,Mexico,NULL,https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg,NULL
+NULL,764,Brazil,NULL,https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg,NULL
+NULL,788,Switzerland,NULL,https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Switzerland_(Pantone).svg,NULL
+NULL,792,Sweden,NULL,https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg,NULL
+NULL,772,"Korea Republic",NULL,https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg,NULL
+NULL,805,Belgium,NULL,https://upload.wikimedia.org/wikipedia/commons/9/92/Flag_of_Belgium_(civil).svg,NULL
+Panama,1836,Panama,NULL,https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg,NULL
+NULL,802,Tunisia,NULL,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg,NULL
+NULL,770,England,NULL,https://upload.wikimedia.org/wikipedia/commons/b/be/Flag_of_England.svg,NULL
+NULL,818,Colombia,NULL,https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg,NULL
+NULL,766,Japan,NULL,https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg,NULL
+NULL,794,Poland,NULL,https://upload.wikimedia.org/wikipedia/commons/1/12/Flag_of_Poland.svg,NULL
+NULL,804,Senegal,NULL,https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg,NULL

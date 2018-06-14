@@ -38,7 +38,7 @@
  
     <div id="chart"style="position: absolute;"></div>
 
-    <div id="container" style="position: absolute;top: 260px; left:260px"></div>
+   
 
     
     <script>
@@ -47,13 +47,57 @@
         ////////////////////////////////////////////////////////////
 
         var screenWidth = window.innerWidth;
+        var screenHeight = window.innerHeight;
+        var margin = {
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0
+            },
+            width = Math.min(screenWidth, 1000) - margin.left - margin.right,
+            height = Math.min(screenHeight, 1000) - margin.top - margin.bottom;
+        
+        var innerRadius = width * 0.5 - 210
+        var cur_index = 0   
+        var ajax = null
+        var flag_response = 1
+        var last_click = new Date().getTime()
+         
+        var ellipse_koefX = 1.2
+        var ellipse_koefY = 1.0
+        var global_arc_koefX = ellipse_koefX  * 1.1
+        var global_arc_koefY = ellipse_koefY  * 1.1
+        var part_bounces = {"0":[10000, -1], "1":[10000, -1], "2":[10000, -1], "3":[10000, -1]}
+        var arcOut = {firstLoc:"",
+                       radLoc :"",
+                       secLoc:"",
+                       firstSmallLoc:"",
+                       secSmallLoc:"",
+                       radSmallLoc :""  } 
+        
+       
+        var outerRadius = width * 0.5 - 120
+        var out_arcs = [] 
+       
+            
+            
+        
+        
+        var iDiv = document.createElement('div');
+        iDiv.id = 'container';
+        iDiv.className = 'container';
+        document.getElementsByTagName('body')[0].appendChild(iDiv); 
+        document.getElementById("container").style.width = 2 * innerRadius + "px";
+        document.getElementById("container").style.left = innerRadius + "px";
+        document.getElementById("container").style.position = "relative";
+        document.getElementById("container").style.display = "none";
         
         ////////////////////////////////////////////////////////////// 
         ///////////////////// MAP            ///////////////////////// 
         ////////////////////////////////////////////////////////////// 
 
          var basic_choropleth = new Datamap({
-          element: document.getElementById("chart"),
+          element: document.getElementById("container"),
           projection: 'mercator',
 
           fills: {
@@ -85,48 +129,16 @@
 
     window.setInterval(function () {
         basic_choropleth.updateChoropleth({
-            USA: colors(Math.random() * 10),
-            RUS: colors(Math.random() * 100),
-            AUS: {
-                fillKey: 'authorHasTraveledTo'
-            },
-            BRA: colors(Math.random() * 50),
-            CAN: colors(Math.random() * 50),
-            ZAF: colors(Math.random() * 50),
-            IND: colors(Math.random() * 50),
+            {% for t in teams %} 
+                {{t['shortName']}}: colors(Math.random() * 100)
+            ,
+             {% endfor %}            
         });
     }, 2000);
    
         
         
-        
-        var ellipse_koefX = 1.1
-        var ellipse_koefY = 1.0
-        var global_arc_koefX = ellipse_koefX  * 1.1
-        var global_arc_koefY = ellipse_koefY  * 1.1
-        var part_bounces = {"0":[10000, -1], "1":[10000, -1], "2":[10000, -1], "3":[10000, -1]}
-        var arcOut = {firstLoc:"",
-                       radLoc :"",
-                       secLoc:"",
-                       firstSmallLoc:"",
-                       secSmallLoc:"",
-                       radSmallLoc :""  } 
-        
-        var cur_index = 0   
-        var ajax = null
-        var flag_response = 1
-        var last_click = new Date().getTime()
-        
-        var out_arcs = [] 
-        var margin = {
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0
-            },
-            width = Math.min(screenWidth, 1000) - margin.left - margin.right,
-            height = Math.min(screenWidth, 1000) - margin.top - margin.bottom;
-        var outerRadius = width * 0.5 - 120
+       
         var svg = d3.select("#chart").append("svg")
             .attr("width", (width + margin.left + margin.right))
             .attr("height", (height + margin.top + margin.bottom))
@@ -151,14 +163,19 @@
             .interpolate(d3.interpolateHcl);
 
         //Create an arc function   
+      
         var arc = d3.svg.arc()
-            .innerRadius(width * 0.5 - 210)
+            .innerRadius(innerRadius)
             .outerRadius(outerRadius);
 
+        
+        
+    
+        
         //Turn the pie chart 90 degrees counter clockwise, so it starts at the left	
         var pie = d3.layout.pie()
-            .startAngle(-180 * Math.PI / 180)
-            .endAngle(-180 * Math.PI / 180 + 2 * Math.PI)
+            .startAngle(-180 * Math.PI / 180 + Math.PI / 6)
+            .endAngle(-180 * Math.PI / 180  + Math.PI / 6 + 2 * Math.PI)
             .value(function(d) {
                 return d.value;
             })
@@ -280,14 +297,13 @@
             data:{"index":index},
             dataType: "json",
             success: function(response) { 
-                console.log(index + ": " + response[index]);
-                console.log( "res: " + response["res"]);
+                console.log(index + ": " + "debug" + response[index]);
                 if (response[index] === null) {
                    console.log("nothing found");
                 } else {
                     if (index == cur_index) { 
                         setClicked(response[index]);
-                        addTextInCentre(response["res"]) 
+                        //addTextInCentre(response["res"]) 
                     }
                 }
                 flag_response = 1
@@ -538,10 +554,12 @@
             svg.append("text")
                .style("font-size", "16px")
                .append("textPath")
-			   .attr("startOffset", "25%")
+			   .attr("startOffset", "20%")
                .attr("id", "outArcText"+i)
+               .attr("pointer-events", "none") 
                .attr("xlink:href", "#outArcPath"+i)
                .text(outArcsData[i]["name"])
+               .style("font-family","octin")
                .style("font-weight", "bold")
                .style("fill", "#black")
         }
@@ -555,6 +573,7 @@
             .enter().append("text")
             .style("font-size", "16px")
             .style("font-family","octin")
+            .style("font-weight", "bold") 
             .attr("class", "donutText")
             .attr("pointer-events", "none")  
             .append("textPath")

@@ -16,6 +16,29 @@ where g.competitionId = 467
       and g.placeId is null
       
       
+
+
+select *
+join teams_wc as w1
+     on w1.id = g.awayTeamId 
+     
+join teams_wc as w2 
+     on w2.id = g.homeTeamId 
+ 
+join games_fifa as gl
+     on gl.awayTeam = w1.name
+     and gl.homeTeam = w2.name    
+ 
+
+
+where g.competitionId = 467  
+
+
+      and g.placeId is null
+      
+      
+
+
       
       
       

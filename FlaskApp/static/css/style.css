@@ -3,4 +3,12 @@ font-family: octin;
 src: url('octin.ttf');
 font-weight: bold;}
 
+@font-face{
+font-family: quicksand-regular;
+src: url('Quicksand-Regular.otf');
+font-weight: bold;}
 
+@font-face{
+font-family: quicksand-bold;
+src: url('Quicksand-Bold.otf');
+font-weight: bold;}

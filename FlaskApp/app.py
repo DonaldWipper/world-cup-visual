@@ -219,9 +219,9 @@ def render():
     
     click_events = []
     for curSlice in range(sliceId):
-        click_events.append({curSlice:getConnectionBySliceId(curSlice)}) 
+        click_events.append({"key":curSlice, "value":getConnectionBySliceId(curSlice)}) 
 
-    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space, outGroups = outGroups)
+    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space, outGroups = outGroups, click_events = click_events)
 
 
 

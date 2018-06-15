@@ -88,6 +88,7 @@
         iDiv.className = 'container';
         document.getElementsByTagName('body')[0].appendChild(iDiv); 
         document.getElementById("container").style.width = 2 * innerRadius + "px";
+        document.getElementById("container").style.height = 2 * innerRadius + "px"
         document.getElementById("container").style.left = innerRadius + "px";
         document.getElementById("container").style.position = "relative";
         document.getElementById("container").style.display = "none";
@@ -255,7 +256,14 @@
             },
             {% endfor %} 
         ]
-                
+            
+        var click_events = {
+            {% for d in click_events %} 
+             {{d['key']}}:{{d['value']}},
+            {% endfor %} 
+            }
+              
+        
              
          
         function sleep(milliseconds) {
@@ -489,7 +497,7 @@
                      cur_index = i
                      flag_response = 0
                      x = new Date().getTime() - last_click
-                     sendIndexToPython(i);
+                     setClicked(click_events[i]);
                      last_click = new Date().getTime();  
                      console.log("last click " + last_click.toLocaleString() + " index " + i );
                       
@@ -559,7 +567,7 @@
                .attr("pointer-events", "none") 
                .attr("xlink:href", "#outArcPath"+i)
                .text(outArcsData[i]["name"])
-               .style("font-family","octin")
+               .style("font-family","quicksand-bold")
                .style("font-weight", "bold")
                .style("fill", "#black")
         }
@@ -572,7 +580,7 @@
             .data(pie(donutData))
             .enter().append("text")
             .style("font-size", "16px")
-            .style("font-family","octin")
+            .style("font-family","quicksand-regular")
             .style("font-weight", "bold") 
             .attr("class", "donutText")
             .attr("pointer-events", "none")  

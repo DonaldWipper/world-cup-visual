@@ -18,7 +18,8 @@ key_words = ['<div class="fi-matchlist">',
             '<div class="fi__info__stadium">',
             '<div class="fi__info__venue">',
             '<div class="fi-t__n">',
-            '<div class="fi-t__n">'
+            '<div class="fi-t__n">',
+            '<span class="fi-s__matchDate">' 
             ]
 
 

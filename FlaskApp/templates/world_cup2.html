@@ -88,10 +88,13 @@
         iDiv.className = 'container';
         document.getElementsByTagName('body')[0].appendChild(iDiv); 
         document.getElementById("container").style.width = 2 * innerRadius + "px";
+        wd = document.getElementById("container").style.width 
         document.getElementById("container").style.height = 2 * innerRadius + "px"
-        document.getElementById("container").style.left = innerRadius + "px";
+        document.getElementById("container").style.left = width / 2 - innerRadius + "px";
+        document.getElementById("container").style.top = height / 2 - innerRadius + "px";
         document.getElementById("container").style.position = "relative";
-        document.getElementById("container").style.display = "none";
+        document.getElementById("container").style.zIndex="-1"
+        //document.getElementById("container").style.display = "none";
         
         ////////////////////////////////////////////////////////////// 
         ///////////////////// MAP            ///////////////////////// 
@@ -137,7 +140,7 @@
         });
     }, 2000);
    
-        
+        //basic_choropleth.labels()
         
        
         var svg = d3.select("#chart").append("svg")
@@ -247,7 +250,25 @@
         
         ];  
              
+        var show_games = {
+            {% for d in slice_name %} 
+            {{d['key']}}:{{d['value']}},
+            {% endfor %} 
+        }
         
+        var games = [
+            {% for d in games_clear %} { 
+                 "teamAway": "{{d['teamAway']}}",
+                 "teamHome": "{{d['teamHome']}}",
+                 "status": "{{d['status']}}",
+                 "city": "{{d['city']}}", 
+                 "stadium": "{{d['stadium']}}",  
+                 "date": "{{d['date']}}",  
+                 "time": "{{d['time']}}"
+            },
+             {% endfor %} 
+            ]
+                   
         var outArcsData = [
             {% for d in outGroups %} {
                 "name": "{{d['name']}}",
@@ -546,9 +567,13 @@
                 .on("mouseover", function() {
                      restore_colors_outArcs();
                      d3.select(this).style("fill", "#debcd1");
+                     if (i == 0) {
+                         document.getElementById("container").style.display = "none";
+                     }
                 })
                 .on("mouseout", function() {
                      restore_colors_outArcs();
+                     document.getElementById("container").style.display = "block";
                 });
             
             

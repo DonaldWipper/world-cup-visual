@@ -25,6 +25,7 @@ rounds = []
 groups = []
 games = []
 standings = []
+games_clear = []
 space = None
 
 teams_name_dic = {}
@@ -37,6 +38,7 @@ dic_sliceId = {}
 dic_name2sliceId = {}
 dic_sliceId2name = {}
 
+dic_slice_2_games = {} #связь кусочка с играми
 
 dic_games = {} #все игры для вывода
 
@@ -76,12 +78,11 @@ def getConnectionBySliceId(sliceId):
 #календарь, стадионы, стадии
 def getAllCorellByTeamId(teamId):
     teamId = str(teamId)
-    dates_home = [getNormalDate(g["date"]) for g in games if g["homeTeamId"] == teamId]
-    place_home = [g["placeId"] for g in games if g["homeTeamId"] == teamId]
-    dates_away = [getNormalDate(g["date"]) for g in games if g["awayTeamId"] == teamId]
-    place_away = [g["placeId"] for g in games if g["awayTeamId"] == teamId]
+    places = [g["placeId"] for g in games if g["homeTeamId"] == teamId or g["awayTeamId"] == teamId]
+    dates =  [getNormalDate(g["date"]) for g in games if g["awayTeamId"] == teamId or g["homeTeamId"] == teamId ] 
     groups = ["Group" + " " + d["group_"] for d in standings if str(d["teamId"]) == teamId]
-    names = dates_home + dates_away + groups + place_home + place_away
+    dic_slice_2_games[dic_name2sliceId[teamId]] += [g["id"] for g in games if g["awayTeamId"] == teamId or g["homeTeamId"] == teamId]
+    names = dates + groups + places
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
@@ -94,13 +95,9 @@ def getAllCorellByTeamId(teamId):
 def getAllCorellByDate(date):
     print(date)
     places = [g["placeId"] for g in games if getNormalDate(g["date"]) == date]
-    teams_home = [g["homeTeamId"] for g in games if getNormalDate(g["date"]) == date]
-    teams_away = [g["awayTeamId"] for g in games if getNormalDate(g["date"]) == date]  
-    teams = teams_home + teams_away
-    print(teams)
-    groups = []
-    for t in teams:
-        groups += ["Group" + " " + d["group_"] for d in standings  if  d["teamId"] in teams]
+    teams = [g["homeTeamId"] for g in games if getNormalDate(g["date"]) == date] + [g["awayTeamId"] for g in games if getNormalDate(g["date"]) == date]  
+    groups = ["Group" + " " + d["group_"] for d in standings  if str(d["teamId"]) in teams]
+    dic_slice_2_games[dic_name2sliceId[date]] += [g["id"] for g in games if getNormalDate(g["date"]) == date]
     names = teams + groups + places
     sliceIds = []
     for name in names:
@@ -111,15 +108,11 @@ def getAllCorellByDate(date):
 #по месту возвращаем
 #группы, команды, даты
 def getAllCorellByPlace(placeId):
-    dates_away = [getNormalDate(g["date"]) for g in games if g["placeId"] == placeId]
-    dates_home = [getNormalDate(g["date"]) for g in games if g["placeId"] == placeId]
-    teams_home = [g["homeTeamId"] for g in games if g["placeId"] == placeId]
-    teams_away = [g["awayTeamId"] for g in games if g["placeId"] == placeId]  
-    teams = teams_home + teams_away
-    groups = []
-    for t in teams:
-        groups += ["Group" + " " + d["group_"] for d in standings  if  d["teamId"] in teams]
-    names = dates_home + dates_away + groups + teams
+    dates = [getNormalDate(g["date"]) for g in games if g["placeId"] == placeId]
+    teams = [g["homeTeamId"] for g in games if g["placeId"] == placeId] + [g["awayTeamId"] for g in games if g["placeId"] == placeId] 
+    groups =  ["Group" + " " + d["group_"] for d in standings  if  str(d["teamId"]) in teams]
+    dic_slice_2_games[dic_name2sliceId[placeId]] += [g["id"] for g in games if g["placeId"] == placeId]
+    names = dates + groups + teams
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
@@ -130,12 +123,10 @@ def getAllCorellByPlace(placeId):
 #места, команды, даты
 def getAllCorellByStage(title):
     teams = [str(d["teamId"]) for d in standings  if "Group" + " " + d["group_"] == title]
-    dates_away = [getNormalDate(g["date"]) for g in games if g["homeTeamId"] in teams]
-    dates_home = [getNormalDate(g["date"]) for g in games if g["awayTeamId"] in teams]
-    place_home = [g["placeId"] for g in games if g["homeTeamId"] in teams]
-    place_away = [g["placeId"] for g in games if g["homeTeamId"] in teams]
-   
-    names = dates_home + dates_away + place_home + place_away + teams
+    dates = [getNormalDate(g["date"]) for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
+    places = [g["placeId"] for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
+    dic_slice_2_games[dic_name2sliceId[title]] += [g["id"] for g in games if g["placeId"] in places]
+    names = dates + places + teams
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
@@ -158,10 +149,44 @@ def init_data():
     groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
     stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
     games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
+    #установим id, чтоб потом ссылаться
+    i = 0
+    for g in games:
+        g_new = get_game_dic(g)
+        g["id"] = i 
+        g_new["id"] = g["id"]
+        i += 1   
+        games_clear.append (g_new)
+
+
+def get_game_dic(g):
+    game = {}
+    try:
+        p = [p for p in places if p["id"] == g["placeId"]][0]
+        game["stadium"] = p["stadium"].split("|")[0] 
+        game["city"] = p["city"]
+    except:
+        game["stadium"] = None 
+        game["city"] = None    
+    
+    
+    game["teamAway"] = None
+    try:
+        game["teamHome"] = [t for t in teams if t["id"] == g["homeTeamId"]][0]
+    except:
+        game["teamHome"] = None
+    try:
+        game["teamAway"] = [t for t in teams if t["id"] == g["awayTeamId"]][0]
+    except:
+        game["teamAway"] = None     
+    game["status"] = g["status"]
+    game["date"] = g["date"][0:10]
+    game["time"] = g["date"][11:16]
+    return game
 
 
 def render():
-    global stages, teams, places, rounds, groups, space, games, places 
+    global stages, teams, places, rounds, groups, space, games, places, dic_slice_2_games
     sliceId = 0
     shares = {"teams":350, "calendar":600//3, "places":600//3, "stages":600//3}
     space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
@@ -216,17 +241,27 @@ def render():
         dic_sliceId2name[sliceId] = s["title"]
         sliceId += 1
     
+    #какие игры показываем при клике
+    for i in range(sliceId):
+        dic_slice_2_games[i] = []
     
     click_events = []
     for curSlice in range(sliceId):
         click_events.append({"key":curSlice, "value":getConnectionBySliceId(curSlice)}) 
-
-    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space, outGroups = outGroups, click_events = click_events)
+    
+    slice_name = []
+    for d in dic_slice_2_games:
+        slice_name.append ( {"key":d, "value":dic_slice_2_games[d]})
+    
+   
+    dic_slice_2_games = {}
+    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space, outGroups = outGroups, click_events = click_events, games_clear = games_clear, slice_name = slice_name)
 
 
 
 
 #get settings
+
 def read_params(fn): 
     d ={} 
     try:

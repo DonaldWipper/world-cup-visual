@@ -12,3 +12,9 @@ font-weight: bold;}
 font-family: quicksand-bold;
 src: url('Quicksand-Bold.otf');
 font-weight: bold;}
+
+
+@font-face{
+font-family: dusha;
+src: url('dusha.ttf');
+}

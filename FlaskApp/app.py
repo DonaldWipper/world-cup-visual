@@ -125,7 +125,7 @@ def getAllCorellByStage(title):
     teams = [str(d["teamId"]) for d in standings  if "Group" + " " + d["group_"] == title]
     dates = [getNormalDate(g["date"]) for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
     places = [g["placeId"] for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
-    dic_slice_2_games[dic_name2sliceId[title]] += [g["id"] for g in games if g["placeId"] in places]
+    dic_slice_2_games[dic_name2sliceId[title]] += [g["id"] for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
     names = dates + places + teams
     sliceIds = []
     for name in names:
@@ -172,11 +172,11 @@ def get_game_dic(g):
     
     game["teamAway"] = None
     try:
-        game["teamHome"] = [t for t in teams if t["id"] == g["homeTeamId"]][0]
+        game["teamHome"] = [t for t in teams if str(t["id"]) == g["homeTeamId"]][0]["name"]
     except:
         game["teamHome"] = None
     try:
-        game["teamAway"] = [t for t in teams if t["id"] == g["awayTeamId"]][0]
+        game["teamAway"] = [t for t in teams if str(t["id"]) == g["awayTeamId"]][0]["name"]
     except:
         game["teamAway"] = None     
     game["status"] = g["status"]

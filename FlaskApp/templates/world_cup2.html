@@ -57,7 +57,7 @@
             width = Math.min(screenWidth, 1000) - margin.left - margin.right,
             height = Math.min(screenHeight, 1000) - margin.top - margin.bottom;
         
-        var innerRadius = width * 0.5 - 210
+        
         var cur_index = 0   
         var ajax = null
         var flag_response = 1
@@ -76,7 +76,8 @@
                        radSmallLoc :""  } 
         
        
-        var outerRadius = width * 0.5 - 130
+        var outerRadius =  Math.min(height / (2 * global_arc_koefY), width / (2 * ellipse_koefX * global_arc_koefX))
+        var innerRadius =  outerRadius * 0.8 
         var out_arcs = [] 
         var fontKoef = 0.06
         var fontSizeInnerSlice = fontKoef * innerRadius 

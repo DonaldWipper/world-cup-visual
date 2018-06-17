@@ -77,12 +77,15 @@
         
        
         var outerRadius =  Math.min(height / (2 * global_arc_koefY), width / (2 * ellipse_koefX * global_arc_koefX))
-        var innerRadius =  outerRadius * 0.8 
+        var innerRadius =  outerRadius * 0.75 
         var out_arcs = [] 
-        var fontKoef = 0.06
-        var fontSizeInnerSlice = fontKoef * innerRadius 
-        var fontSizeOutterSlice = (fontKoef + 0.01) * innerRadius 
-      
+        var fontKoef = 1 / 5.0
+        var fontInside = 1 / 6.0 
+        var fontKoefOut = 1 / 4.0
+        var fontSizeInnerSlice = fontKoef * (outerRadius - innerRadius) 
+        var fontSizeOutterSlice = (global_arc_koefX - 1) * innerRadius  * fontKoefOut
+        var fontSizeOutterSlice        
+ 
             
             
         
@@ -409,9 +412,9 @@
             d3.select("#table").remove()            
             var table = d3.select("#chart").append("table")
                           .attr("width", innerRadius)
-                          .attr("style", "margin-left: " + outerRadius + "px; margin-top:-" +  width / 2 + "px")
+                          .attr("style", "margin-left: " + (width - innerRadius) / 2 + "px; margin-top:-" +  height / 2 + "px")
                           .attr("id", "table");
-                          
+                           
             thead = table.append("thead"),
             tbody = table.append("tbody")
                         
@@ -421,6 +424,7 @@
                   .data(columns)
                   .enter()
                   .append("th")
+                  .attr("style", "font-family: dusha;font-size:" + fontSizeInnerSlice +"px")   
                        .text(function(column) { return column; });
 
             // create a row for each object in the data
@@ -438,7 +442,7 @@
             })
             .enter()
             .append("td")
-            .attr("style", "font-family: dusha;font-size:10px")
+            .attr("style", "font-family: dusha;font-size:" + fontSizeInnerSlice +"px")
                 .html(function(d) { return d.value; });
     
            return table;
@@ -656,7 +660,7 @@
                 
                   
             svg.append("text")
-               .style("font-size", "20px")
+               .style("font-size", fontSizeOutterSlice + "px")
                .append("textPath")
 			   .attr("startOffset", "20%")
                .attr("id", "outArcText"+i)
@@ -675,7 +679,7 @@
         svg.selectAll(".donutText")
             .data(pie(donutData))
             .enter().append("text")
-            .style("font-size", "16px")
+            .style("font-size", fontSizeInnerSlice + "px")
             .style("font-family","dusha")
             .attr("class", "donutText")
             .attr("pointer-events", "none")  

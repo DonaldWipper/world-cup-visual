@@ -207,8 +207,9 @@ def render():
     #календарь игр
     for date in rounds:
         strTime =  getNormalDate(date["start_at"].strip())
+        Time =  datetime.strptime(date["start_at"].strip(), '%Y-%m-%d')
         date["value"] =  shares["calendar"] / len(rounds)
-        date["name"] =  strTime #strTime.strftime("%A")[0:3] + "." + strTime.strftime(" %d. %B")     
+        date["name"] =  Time.strftime(" %d %B") + " " + Time.strftime("%A")[0:3] + "."    
         date["color"] = "#ddea4f"
         date["sliceId"] = sliceId
         date["id_group"] = 1

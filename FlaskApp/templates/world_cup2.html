@@ -80,7 +80,7 @@
         var innerRadius =  outerRadius * 0.75 
         var out_arcs = [] 
         var fontKoef = 1 / 5.0
-        var fontInsideKoef = 1 / 6.0 
+        var fontInsideKoef = 1 / 7.0 
         var fontKoefOut = 1 / 3.5
         var fontSizeInnerSlice = fontKoef * (outerRadius - innerRadius) 
         var fontSizeOutterSlice = (global_arc_koefX - 1) * innerRadius  * fontKoefOut
@@ -101,7 +101,8 @@
         document.getElementById("container").style.top = height / 2 - innerRadius + "px";
         document.getElementById("container").style.position = "relative";
         document.getElementById("container").style.zIndex="-1"
-        document.getElementById("container").style.display = "block";
+        //document.getElementById("container").style.display = "block";
+        console.log("display " + document.getElementById("container").style.display)
         
         ////////////////////////////////////////////////////////////// 
         ///////////////////// MAP            ///////////////////////// 

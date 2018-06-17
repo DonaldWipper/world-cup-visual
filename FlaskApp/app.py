@@ -180,7 +180,7 @@ def get_game_dic(g):
     except:
         game["teamAway"] = None     
     game["status"] = g["status"]
-    game["date"] = g["date"][0:10]
+    game["date"] = g["date"][5:7] + "." + g["date"][8:10]
     game["time"] = g["date"][11:16]
     return game
 

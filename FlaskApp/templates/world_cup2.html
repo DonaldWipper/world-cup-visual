@@ -81,7 +81,7 @@
         var out_arcs = [] 
         var fontKoef = 1 / 5.0
         var fontInsideKoef = 1 / 6.0 
-        var fontKoefOut = 1 / 4.0
+        var fontKoefOut = 1 / 3.5
         var fontSizeInnerSlice = fontKoef * (outerRadius - innerRadius) 
         var fontSizeOutterSlice = (global_arc_koefX - 1) * innerRadius  * fontKoefOut
         var fontSizeInside  = fontInsideKoef * (outerRadius - innerRadius)        
@@ -412,7 +412,7 @@
             d3.select("#table").remove()            
             var table = d3.select("#chart").append("table")
                           .attr("width", innerRadius)
-                          .attr("style", "margin-left: " + (width - innerRadius) / 2 + "px; margin-top:-" +  height / 2 + "px")
+                          .attr("style", "margin-left: " + (width - 1.5 * innerRadius) / 2 + "px; margin-top:-" +  (height  + 1.5 * innerRadius) / 2  + "px")
                           .attr("id", "table");
                            
             thead = table.append("thead"),
@@ -424,7 +424,7 @@
                   .data(columns)
                   .enter()
                   .append("th")
-                  .attr("style", "font-family: dusha;font-size:" + fontSizeInnerSlice +"px")   
+                  .attr("style", "font-family: dusha;font-size:" + fontSizeInside +"px")   
                        .text(function(column) { return column; });
 
             // create a row for each object in the data
@@ -442,7 +442,7 @@
             })
             .enter()
             .append("td")
-            .attr("style", "font-family: dusha;font-size:" + fontSizeInnerSlice +"px")
+            .attr("style", "font-family: dusha;font-size:" + fontSizeInside +"px")
                 .html(function(d) { return d.value; });
     
            return table;

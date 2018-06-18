@@ -680,21 +680,43 @@
         svg.selectAll(".donutText")
             .data(pie(donutData))
             .enter().append("text")
+            .style("dy", "-1em")  
             .style("font-size", fontSizeInnerSlice + "px")
             .style("font-family","dusha")
             .attr("class", "donutText")
             .attr("pointer-events", "none")  
             .append("textPath")
-            .attr("startOffset", "50%")
-         
             .attr("href", function(d, i) {
                 return "#donutArc" + i;
             })
              
+            .attr("startOffset", function(d, i) {
+                  if (d.data.id_group == 0) { 
+                      return "100%";
+                  } else {
+                      return "50%";
+                  }
+            })
+            .attr("text-anchor", function(d, i) {
+                  if (d.data.id_group == 0) { 
+                      return "end";
+                  } else {
+                      return "start";
+                  }
+            }) 
+             
             //.attr("xlink:href",function(d) {return d.data.image;})
             .text(function(d, i) {
                 return d.data.name;
-            });
+            })
+            .append("svg:image")
+               .attr("xlink:href",function(d) {return "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg"})
+               .attr("x", 0)
+               .attr("y", 0)
+               .attr("height", "100")
+               .attr("width", "100")   
+                 
+    
 
     </script>
 

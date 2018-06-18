@@ -62,6 +62,7 @@ def get_update_data_by_league_id(Idleague):
     res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
 "goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["goalsHomeTeam"] != None] 
     for r in res_update:
+        print("update " + r["id"])
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
     return res_update
@@ -219,7 +220,7 @@ def get_game_dic(g):
 def render():
     global stages, teams, places, rounds, groups, space, games, places, dic_slice_2_games
     sliceId = 0
-    shares = {"teams":350, "calendar":600//3, "places":600//3, "stages":600//3}
+    shares = {"teams":350, "calendar":600//3, "places":650//3, "stages":400 - 650//3}
     space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
 
     #список команд

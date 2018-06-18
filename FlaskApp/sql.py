@@ -144,7 +144,35 @@ class database:
         print(query)
         cur.execute(query)
         return list (cur.fetchall())
-       
+    
+    def updateTableFromConditions(self, table_name, condition = None, update_fields = None):
+        #csvfile = requests.get(name).csv
+        cur = self.db.cursor(MySQLdb.cursors.DictCursor)
+
+        query = "UPDATE " + table_name
+        if update_fields == None:
+            return
+        else:
+            query += " SET "
+            for r in update_fields:
+                s = str(r) + " = '" + str(update_fields[r]) + "',"
+                if r not in ["date", "status"]:
+                    s = s.strip().replace("'", "")
+                query += s 
+            query += "+"
+            query = query.strip().replace(",+", "")
+        if condition != None:
+            query += " WHERE "
+            for q in condition:
+                qr = " " + str(q) + " = '" + str(condition[q]) + "' AND "
+                if q not in ["date", "status"]:
+                    qr = qr.replace("'", "")
+                query += qr 
+            query += "="
+            query = query.strip().replace("AND =", "")
+        print(query)
+        cur.execute(query)
+        self.db.commit() 
    
     def insert_values (self, table_name, headers, values):
         cur = self.db.cursor()

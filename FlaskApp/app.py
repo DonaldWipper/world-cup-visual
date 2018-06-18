@@ -26,6 +26,7 @@ groups = []
 games = []
 standings = []
 games_clear = []
+games_update = []
 space = None
 
 teams_name_dic = {}
@@ -47,6 +48,26 @@ settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net",
             "sql_passwd":"2153543acdac76f",
             "sql_db":"heroku_0c1d0ea4e380413"
            }
+
+token = 'efda008899e346f693efa9c75f9577ee'
+myheaders = { 'X-Auth-Token': token, 'X-Response-Control': 'minified' }
+main_url = 'http://api.football-data.org'
+
+
+def get_update_data_by_league_id(Idleague):
+    global games
+    url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
+    resp = requests.get(url, headers = myheaders)
+    resp = resp.json()["fixtures"] 
+    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
+"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["goalsHomeTeam"] != None] 
+    for r in res_update:
+        if r["id"] in games_update:
+            db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
+    return res_update
+
+
+
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -149,6 +170,13 @@ def init_data():
     groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
     stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
     games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
+    games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["goalsHomeTeam"] == None]
+    res_update = None
+    try:
+        get_update_data_by_league_id(competitionId)
+    except:
+        res_update = None
+    
     #установим id, чтоб потом ссылаться
     i = 0
     for g in games:
@@ -178,8 +206,11 @@ def get_game_dic(g):
     try:
         game["teamAway"] = [t for t in teams if str(t["id"]) == g["awayTeamId"]][0]["name"]
     except:
-        game["teamAway"] = None     
-    game["status"] = g["status"]
+        game["teamAway"] = None
+    if(g["goalsAwayTeam"] == None):     
+        game["result"] = g["status"]
+    else:
+        game["result"] = g["goalsAwayTeam"] + ":" + g["goalsHomeTeam"]
     game["date"] = g["date"][5:7] + "." + g["date"][8:10]
     game["time"] = g["date"][11:16]
     return game

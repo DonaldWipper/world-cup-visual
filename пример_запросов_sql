@@ -16,14 +16,7 @@ where g.competitionId = 467
       and g.placeId is null
       
       
-update games  g
-join standings s
-     on g.awayTeamId = s.teamId
-     and g.competitionId = s.competitionId
-join stages s2
-     on s2.title = concat("Group ",s.group_)     
- set g.id_stage = s2.id    
-     
+
 
 select *
 join teams_wc as w1

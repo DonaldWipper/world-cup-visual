@@ -148,9 +148,10 @@ class database:
     def updateTableFromConditions(self, table_name, condition = None, update_fields = None):
         #csvfile = requests.get(name).csv
         cur = self.db.cursor(MySQLdb.cursors.DictCursor)
-
+       
         query = "UPDATE " + table_name
         if update_fields == None:
+            print("No update fields")
             return
         else:
             query += " SET "

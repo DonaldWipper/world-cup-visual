@@ -55,16 +55,16 @@ main_url = 'http://api.football-data.org'
 
 
 def get_update_data_by_league_id(Idleague):
-    global games
+    global games, games_update
     url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
     resp = requests.get(url, headers = myheaders)
     resp = resp.json()["fixtures"] 
     res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
-"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["goalsHomeTeam"] != None] 
+"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["goalsHomeTeam"] != None or r["result"]["goalsAwayTeam"] != None and r["result"]["status"]] 
     for r in res_update:
-        print("update " + r["id"])
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
+            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
     return res_update
 
 
@@ -159,7 +159,7 @@ def getAllCorellByStage(title):
 
 
 def init_data():
-    global stages, games, teams, places, rounds, groups, space, standings, db 
+    global stages, games, teams, places, games_update, rounds, groups, space, standings, db 
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -171,7 +171,7 @@ def init_data():
     groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
     stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
     games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
-    games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["goalsHomeTeam"] == None]
+    games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
     res_update = None
     try:
         get_update_data_by_league_id(competitionId)

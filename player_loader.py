@@ -18,8 +18,9 @@ key_words = ['<div class="fi-matchlist">',
             '<div class="fi__info__stadium">',
             '<div class="fi__info__venue">',
             '<div class="fi-t__n">',
+            '<span class="fi-s__matchDate">',
+            'data-timeutc="',
             '<div class="fi-t__n">',
-            '<span class="fi-s__matchDate">' 
             ]
 
 
@@ -41,11 +42,11 @@ url = "https://www.fifa.com/worldcup/matches/#groupphase/"
 resp = requests.get(url).text
 resp = resp[resp.find(key_words[0]) + len(key_words[0]):len(resp) - 1]
 
-result = {2: "stadium", 3: "city", 4: "homeTeam",  5:"awayTeam", 6:"shortHomeTeam", 7: "homeTeam",  8: "shortawayTeam"}
+result = {2: "stadium", 3: "city", 5:"date", 6:"time"}
 
 
 filmes = open("games_wc.csv", 'w', encoding="utf-8") 
-fieldnames = ["stadium", "city","homeTeam", "awayTeam", "shortHomeTeam", "shortAwayTeam"]
+fieldnames = ["stadium", "city","homeTeam", "awayTeam", "date", "time", "shortHomeTeam", "shortAwayTeam", "datetime"]
 writer = csv.DictWriter(filmes, fieldnames = fieldnames)
 writer.writeheader()
     
@@ -56,27 +57,33 @@ while len(resp) > 0:
 
 
     resp = resp[resp.find(key_words[1]) + len(key_words[1]):len(resp) - 1]
-    for k in range(2, 6): 
+    for k in range(2, 8): 
         pos = resp.find(key_words[k])
         resp = resp[pos + len(key_words[k]):len(resp) - 1]
         if pos < 0:
             break;
-        index = resp.find('</div>')
-        '''
-        if k in [4, 6]:
-            index = resp.find('<div')
+        #index = resp.find('</div>')
+        
+        if k in [5]:
+            index = resp.find('</span>')
+        elif k in [6]:
+            index = resp.find('" data') 
         else:
             index = resp.find('</div>')
-        '''
+        
         text = resp[0:index].strip()
+        if (k == 5):
+            text = datetime.strptime("2018 " + text, '%Y %d %B') 
+            print(text)
+        
         #if len(text) > 100:
          #   break;
-        if k in [4, 5]:
+        if k in [4, 7]:
             if(k == 4):
                 x = parse_team_str(text)
                 a["homeTeam"] = x[0]
                 a["shortHomeTeam"] = x[1]
-            if(k == 5):
+            if(k == 7):
                 x = parse_team_str(text)
                 a["awayTeam"] = x[0]
                 a["shortAwayTeam"] = x[1]
@@ -85,6 +92,7 @@ while len(resp) > 0:
             a[result[k]] = text 
     if a != {}:
         print(a) 
+        a["datetime"] = str(a["date"])[0:10] + "T" +  a["time"] + "Z"
         writer.writerow(a)
 
     

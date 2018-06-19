@@ -3,52 +3,9 @@ import json
 import urllib
 import csv
 
-'''
-db = MySQLdb.connect(host="localhost",    # your host 
-                     user="root",         # username
-                     passwd="111",  # password
-                     db="tinderdb")
- '''
+
 # Create a Cursor object to execute queries.
-'''
-#cur = db.cursor()
 
-str = "CREATE TABLE IF NOT EXISTS PROFILES ("  
-str += "id varchar(50), "
-str += "id_pair varchar(50), " 
-str = str + "name varchar(50), " 
-str = str + "birth_date datetime, " 
-str = str + "distance_mi int, " 
-str = str + "jobs text, " 
-str = str + "bio text, " 
-str = str + "text text, "
-str = str + "common_interests text, "
-str = str + "profile_instagram text, "
-str = str + "profile_vk varchar(50), "
-str = str + "profile_fb varchar(50), "
-str += "profile_photo1 text,"
-str += "profile_photo2 text,"
-str += "profile_photo3 text,"
-str += "profile_photo4 text,"
-str += "profile_photo5 text,"
-str += "profile_photo6 text,"
-str += "inst_photo1  text,"
-str += "inst_photo2  text,"
-str += "inst_photo3  text,"
-str += "inst_photo4  text,"
-str += "inst_photo5  text,"
-str += "inst_photo6  text,"
-str += "PRIMARY KEY (id) ); "
---DateOfAdded datetime
---text_json text
-
-#str = 'ALTER database tinderdb CHARACTER SET utf8 COLLATE utf8_general_ci'
-str = 'SELECT 1 FROM PROFILES WHERE id = '5a805b6a12c0389c16f16209'
-
-print(str)
-# Select data from table using SQL query.
-cur.execute(str)
- '''
 #get settings
 def read_params(fn): 
     d ={} 

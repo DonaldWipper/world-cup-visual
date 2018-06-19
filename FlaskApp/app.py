@@ -102,9 +102,9 @@ def getAllCorellByTeamId(teamId):
     teamId = str(teamId)
     places = [g["placeId"] for g in games if g["homeTeamId"] == teamId or g["awayTeamId"] == teamId]
     dates =  [getNormalDate(g["date"]) for g in games if g["awayTeamId"] == teamId or g["homeTeamId"] == teamId ] 
-    groups = ["Group" + " " + d["group_"] for d in standings if str(d["teamId"]) == teamId]
+    _stages = ["s" + str(d["id_stage"]) for d in games if d["awayTeamId"] == teamId or d["homeTeamId"] == teamId]
     dic_slice_2_games[dic_name2sliceId[teamId]] += [g["id"] for g in games if g["awayTeamId"] == teamId or g["homeTeamId"] == teamId]
-    names = dates + groups + places
+    names = dates + _stages + places
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
@@ -118,9 +118,9 @@ def getAllCorellByDate(date):
     print(date)
     places = [g["placeId"] for g in games if getNormalDate(g["date"]) == date]
     teams = [g["homeTeamId"] for g in games if getNormalDate(g["date"]) == date] + [g["awayTeamId"] for g in games if getNormalDate(g["date"]) == date]  
-    groups = ["Group" + " " + d["group_"] for d in standings  if str(d["teamId"]) in teams]
+    _stages = ["s" + str(d["id_stage"]) for d in games if getNormalDate(d["date"]) == date]
     dic_slice_2_games[dic_name2sliceId[date]] += [g["id"] for g in games if getNormalDate(g["date"]) == date]
-    names = teams + groups + places
+    names = teams + _stages + places
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
@@ -132,9 +132,9 @@ def getAllCorellByDate(date):
 def getAllCorellByPlace(placeId):
     dates = [getNormalDate(g["date"]) for g in games if g["placeId"] == placeId]
     teams = [g["homeTeamId"] for g in games if g["placeId"] == placeId] + [g["awayTeamId"] for g in games if g["placeId"] == placeId] 
-    groups =  ["Group" + " " + d["group_"] for d in standings  if  str(d["teamId"]) in teams]
+    _stages = ["s" + str(d["id_stage"]) for d in games if d["placeId"] == placeId]
     dic_slice_2_games[dic_name2sliceId[placeId]] += [g["id"] for g in games if g["placeId"] == placeId]
-    names = dates + groups + teams
+    names = dates + _stages + teams
     sliceIds = []
     for name in names:
         if name in dic_name2sliceId:
@@ -143,11 +143,11 @@ def getAllCorellByPlace(placeId):
 
 #по группе возвращаем
 #места, команды, даты
-def getAllCorellByStage(title):
-    teams = [str(d["teamId"]) for d in standings  if "Group" + " " + d["group_"] == title]
-    dates = [getNormalDate(g["date"]) for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
-    places = [g["placeId"] for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
-    dic_slice_2_games[dic_name2sliceId[title]] += [g["id"] for g in games if g["homeTeamId"] in teams or g["awayTeamId"] in teams]
+def getAllCorellByStage(id_stage):
+    teams =  [g["homeTeamId"] for g in games if "s" + str(g["id_stage"]) == id_stage] + [g["awayTeamId"] for g in games if "s" + str(g["id_stage"]) == id_stage]  
+    dates = [getNormalDate(g["date"]) for g in games if "s" + str(g["id_stage"]) == id_stage]
+    places = [g["placeId"] for g in games if "s" + str(g["id_stage"]) == id_stage]
+    dic_slice_2_games[dic_name2sliceId[id_stage]] += [g["id"] for g in games if "s" + str(g["id_stage"]) == id_stage]
     names = dates + places + teams
     sliceIds = []
     for name in names:
@@ -159,7 +159,7 @@ def getAllCorellByStage(title):
 
 
 def init_data():
-    global stages, games, teams, places, games_update, rounds, groups, space, standings, db 
+    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db 
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -270,8 +270,8 @@ def render():
         s["sliceId"] = sliceId
         s["id_group"] = 3
         dic_sliceId[sliceId] = 3
-        dic_name2sliceId[s["title"]] = sliceId
-        dic_sliceId2name[sliceId] = s["title"]
+        dic_name2sliceId["s" + str(s["id"])] = sliceId
+        dic_sliceId2name[sliceId] = "s" + str(s["id"])
         sliceId += 1
     
     #какие игры показываем при клике

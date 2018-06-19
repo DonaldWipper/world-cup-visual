@@ -18,6 +18,29 @@ where g.competitionId = 467
       
 
 
+
+
+select *
+from games_wc  g
+join games  g2
+     on DATE_FORMAT(g2.date, '%d %m %Y %hh' ) = DATE_FORMAT(g.datetime, '%d %m %Y %hh' )
+left join places as p
+     on LOWER(g.stadium) like CONCAT('%',lower(p.short_name),'%')
+     
+where length(homeTeam) = 2
+
+
+update games  g2
+join games_wc  g
+     on DATE_FORMAT(g2.date, '%d %m %Y %hh' ) = DATE_FORMAT(g.datetime, '%d %m %Y %hh' )
+join places as p
+     on LOWER(g.stadium) like CONCAT('%',lower(p.short_name),'%')
+set g2.placeId = p.id    
+where length(homeTeam) = 2
+
+
+
+
 select *
 join teams_wc as w1
      on w1.id = g.awayTeamId 
@@ -35,7 +58,31 @@ where g.competitionId = 467
 
 
       and g.placeId is null
+ 
+
+
+update games  g2
+join games_wc  g
+     on DATE_FORMAT(g2.date, '%d %m %Y %hh' ) = DATE_FORMAT(g.datetime, '%d %m %Y %hh' )
+join places as p
+     on LOWER(g.stadium) like CONCAT('%',lower(p.short_name),'%')
+set g2.placeId = p.id    
+where g2.placeId is null
+
+
+
+update games  g2 
+join games_wc  g
+     on DATE_FORMAT(g2.date, '%d %m %Y %hh' ) = DATE_FORMAT(g.datetime, '%d %m %Y %hh' )
+left join places as p
+     on LOWER(g.stadium) like CONCAT('%',lower(p.short_name),'%')
+     
+set g2.id_stage = 10   
+where g.date >= '2018-07-06'
+      and g.date < '2018-07-10'
       
+     
+
       
 
 

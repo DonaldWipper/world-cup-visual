@@ -159,7 +159,14 @@
             newY = newX * coorY / coorX;
             return [newX, newY]
         }
-
+         
+        function getCentres(point1, point2) {
+            console.log(point1, point2) 
+            return [(parseFloat(point1[0]) + parseFloat(point2[0])) / 2, (parseFloat(point1[1]) + parseFloat(point2[1])) / 2]
+             
+            
+        }
+        
         //Create an arc function   
         var arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -392,7 +399,7 @@
             d3.select("#table").remove()
             var table = d3.select("#chart").append("table")
                 .attr("width", innerRadius)
-                .attr("style", "margin-left: " + (width - 1.30 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.5 * innerRadius) / 2 + "px")
+                .attr("style", "margin-left: " + (width - 1.30 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.2 * innerRadius) / 2 + "px")
                 .attr("id", "table");
 
             thead = table.append("thead"),
@@ -437,7 +444,7 @@
 
 
         getPartBounces();
-        console.log(part_bounces)
+   
 
 
         var imgs = svg.select("#chart")
@@ -503,10 +510,12 @@
                 radSmallLoc = radSmallElEx.exec(d3.select(this).attr("d"))[1]
 
                 var first = firstLoc.split(",");
-                newFirst = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), ellipse_koefX, ellipse_koefY, outerRadius).join(",")
+                newFirsts = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), ellipse_koefX, ellipse_koefY, outerRadius) 
+                newFirst = newFirsts.join(",")
 
                 var second = secLoc.split(",");
-                newLast = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), ellipse_koefX, ellipse_koefY, outerRadius).join(",")
+                newSeconds = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), ellipse_koefX, ellipse_koefY, outerRadius)
+                newLast = newSeconds.join(",")
                 var rad = radLoc.split(",")
                 newRad = [rad[0] * ellipse_koefX, rad[1] * ellipse_koefY].join(",")
                 FirstPath = "M" + newFirst + "A" + newRad + " 0 0, 1" + newLast
@@ -515,11 +524,18 @@
 
                 if (donutData[i]["id_group"] != 0) {
                     textArc = "M" + newLast + "L" + firstSmallLoc + "Z"
+                    centreSec =  getCentres(newLast.split(","), newFirst.split(",")).join(",")
+                    centreFirst =  getCentres(firstSmallLoc.split(","), secSmallLoc.split(",")).join(",") 
+                    textArcCentre = "M" + centreSec + "L" + centreFirst + "Z"
                 } else {
                     textArc = "M" + secSmallLoc + "L" + newFirst + "Z"
+                    centreSec =  getCentres(newLast.split(","), newFirst.split(",")).join(",")
+                    centreFirst =  getCentres(firstSmallLoc.split(","), secSmallLoc.split(",")).join(",") 
+                    textArcCentre = "M" + centreFirst + "L" +  centreSec + "Z"
                 }
-
-
+                
+                
+            
                 newFirstOut = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), global_arc_koefX, global_arc_koefY, outerRadius).join(",")
                 newSecOut = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), global_arc_koefX, global_arc_koefY, outerRadius).join(",")
                 newRadOut = [global_arc_koefX * rad[0], global_arc_koefY * rad[1]].join(",")
@@ -546,7 +562,11 @@
                     }
                 }
 
-
+                svg.append("path")
+                    .attr("class", "hiddenDonutArcsCentre")
+                    .attr("id", "donutArcCentre" + i)
+                    .attr("d", textArcCentre)
+                    .style("fill", "none");
 
 
                 svg.append("path")
@@ -568,8 +588,6 @@
                         flag_response = 0
                         x = new Date().getTime() - last_click
                         setClicked(click_events[i]);
-                        console.log("show games " + show_games[i])
-                        console.log("array " + function_get_games_array(show_games[i]))
                         tabulate(function_get_games_array(show_games[i]), Object.keys(games[0]));
 
 
@@ -587,10 +605,7 @@
 
 
         for (i = 0; i < out_arcs.length; i++) {
-            for (j = 0; j < Object.values(out_arcs[i]).length; j++) {
-                console.log("values " + Object.keys(out_arcs[i])[j] + ":" + Object.values(out_arcs[i])[j])
-            }
-
+          
             pathOutArc = "M" + out_arcs[i]["firstLoc"] +
                 "A" + out_arcs[i]["radLoc"] +
                 " 0 0, 1" + out_arcs[i]["secLoc"] +
@@ -616,7 +631,6 @@
                     restore_colors_outArcs();
                     d3.select(this).style("fill", "#debcd1");
                     if (d3.select(this).attr("id") == "outArc0") {
-                        console.log("show national teams")
                         document.getElementById("container").style.display = "block";
                         //$("#container").load(location.href + " #container");  
                     }
@@ -649,15 +663,61 @@
                 .style("fill", "#black")
         }
 
+        //Append the label names on the outside
+        svg.selectAll(".donutTextCentre")
+            .data(pie(donutData))
+            .enter().append("text")
+            .style("font-size", fontSizeInnerSlice / 1.2 + "px")
+            .style("font-family", "dusha")
+            .style("fill",  "#ffffff") 
+            .attr("class", "donutTextCentre")
+            .attr("pointer-events", "none")
+            .append("textPath")
+            .attr("href", function(d, i) {
+                return "#donutArcCentre" + i;
+            })
 
+            .attr("startOffset", function(d, i) {
+                if (d.data.id_group == 0) {
+                    return "100%";
+                } else {
+                    return "50%";
+                }
+            })
+            .attr("text-anchor", function(d, i) {
+                if (d.data.id_group == 0) {
+                    return "end";
+                } else {
+                    return "start";
+                }
+            })
+
+            //.attr("xlink:href",function(d) {return d.data.image;})
+            .text(function(d, i) {
+                if (d.data.id_group == 2) {
+                    return d.data.name.split(";")[1].toUpperCase();
+                } else {
+                    return ""
+                }
+            })
+             
+             
 
 
         //Append the label names on the outside
         svg.selectAll(".donutText")
             .data(pie(donutData))
             .enter().append("text")
-            .style("dy", "-1em")
-            .style("font-size", fontSizeInnerSlice + "px")
+            .style("font-size",  function(d, i) { 
+             if (d.data.id_group == 2) {
+                    return fontSizeInnerSlice / 1.4 + "px";
+                } else {
+                    return fontSizeInnerSlice ;
+                }
+            })
+                    
+            
+                
             .style("font-family", "dusha")
             .attr("class", "donutText")
             .attr("pointer-events", "none")
@@ -683,8 +743,12 @@
 
             //.attr("xlink:href",function(d) {return d.data.image;})
             .text(function(d, i) {
-                return d.data.name;
-            })
+                if (d.data.id_group == 2) {
+                    return d.data.name.split(";")[0];
+                } else {
+                    return d.data.name;
+                }
+             })
 
     </script>
 

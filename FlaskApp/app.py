@@ -253,7 +253,7 @@ def render():
     sliceId += 1 #для пространства  
     #стадион + город
     for p in places:
-        p["name"] = p["stadium"].split("|")[0] + " " + p["city"]
+        p["name"] = p["stadium"].split("|")[0] + ";" + p["city"]
         p["value"] =  shares["places"] / len(places)
         p["color"] = "#4a69a9"
         p["sliceId"] = sliceId

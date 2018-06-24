@@ -1,117 +1,818 @@
+<!DOCTYPE html>
 <html>
 
 <head>
-    <meta name="viewport" content="initial-scale=1.0, width=device-width" /> </head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>World-cup-visual</title>
 
-<body>
+    <!-- D3.js -->
 
-    <div id="pieChart"></div>
- 
     <script src="{{
   url_for('static', filename='js/d3.min.js') }}"></script>
 
-
     <script src="{{
   url_for('static', filename='js/d3pie.min.js') }}"></script>
+
+    <script src="{{
+  url_for('static', filename='js/jquery-1.9.0.js') }}"></script>
+
+    <script src="{{
+  url_for('static', filename='js/topojson.min.js') }}"></script>
+
+
+    <script src="{{
+  url_for('static', filename='js/datamaps.world.min.js') }}"></script>
+
+
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <!-- Month names -->
+
+
+
+</head>
+
+<body>
+
+
+    <div id="chart" style="position: absolute;"></div>
+
+
+
     <script>
-        var pie = new d3pie("pieChart", {
-            "header": {
-                "title": {
-                    "text": "World Cup Russia",
-                    "fontSize": 24,
-                    "font": "open sans"
-                },
-                "subtitle": {
-                    "text": "",
-                    "color": "#999999",
-                    "fontSize": 12,
-                    "font": "open sans"
-                },
-                "titleSubtitlePadding": 9
+        ////////////////////////// //////////////////////////////////
+        //////////////////////// Set-up ////////////////////////////
+        ////////////////////////////////////////////////////////////
+
+        var screenWidth = window.innerWidth;
+        var screenHeight = window.innerHeight;
+        var margin = {
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0
             },
-            "footer": {
-                "color": "#999999",
-                "fontSize": 10,
-                "font": "open sans",
-                "location": "bottom-left"
-            },
-            "size": {
-                "canvasWidth": 590,
-                "pieInnerRadius": "60%",
-                "pieOuterRadius": "100%"
-            },
-            "data": {
-                "sortOrder": "value-desc",
-                "content": [
+            width = Math.min(screenWidth, 1000) - margin.left - margin.right,
+            height = Math.min(screenHeight, 1000) - margin.top - margin.bottom;
 
 
-                   {% for data in teams %}
-                   {
-                       "label": "{{data['name']}}", 
-                       "image": "{{data['crestUrl']}}",
-                        "value": {{data['value']}}, 
-                        "color": "{{data['color']}}"
-                   },
-        {% endfor %}
+        var cur_index = 0
+        var ajax = null
+        var flag_response = 1
+        var last_click = new Date().getTime()
 
-        {% for data in groups %}
-        {
-            "label": "{{data['name']}}",
-                "image": "{{data['crestUrl']}}",
-                    "value": 40,
-            "color": "{{data['color']}}"
-        },
-        {% endfor %}
-                   {
-                        "label": "", 
-                        "value": 0, 
-                        "color": ""
-                   }
-                ]
+        var ellipse_koefX = 1.2
+        var ellipse_koefY = 1.0
+        var global_arc_koefX = ellipse_koefX * 1.1
+        var global_arc_koefY = ellipse_koefY * 1.1
+        var part_bounces = {
+            "0": [10000, -1],
+            "1": [10000, -1],
+            "2": [10000, -1],
+            "3": [10000, -1]
+        }
+        var arcOut = {
+            firstLoc: "",
+            radLoc: "",
+            secLoc: "",
+            firstSmallLoc: "",
+            secSmallLoc: "",
+            radSmallLoc: ""
+        }
+
+        //параметры отрисовки
+        var outerRadius = Math.min(height / (2 * global_arc_koefY), width / (2 * ellipse_koefX * global_arc_koefX))
+        var innerRadius = outerRadius * 0.75
+        var out_arcs = []
+        var fontKoef = 1 / 5.0
+        var fontInsideKoef = 1 / 7.0
+        var fontKoefOut = 1 / 3.5
+        var fontSizeInnerSlice = fontKoef * (outerRadius - innerRadius)
+        var fontSizeOutterSlice = (global_arc_koefX - 1) * innerRadius * fontKoefOut
+        var fontSizeInside = fontInsideKoef * (outerRadius - innerRadius)
+
+
+
+        var colors = d3.scale.category10();
+
+
+        var iDiv = document.createElement('div');
+        iDiv.id = 'container';
+        iDiv.className = 'container';
+        document.getElementsByTagName('body')[0].appendChild(iDiv);
+        document.getElementById("container").style.width = 2 * innerRadius + "px";
+        wd = document.getElementById("container").style.width
+        document.getElementById("container").style.height = 2 * innerRadius + "px"
+        document.getElementById("container").style.left = width / 2 - innerRadius + "px";
+        document.getElementById("container").style.top = height / 2 - innerRadius + "px";
+        document.getElementById("container").style.position = "relative";
+        document.getElementById("container").style.zIndex = "-1"
+        //document.getElementById("container").style.display = "block";
+        //console.log("display " + document.getElementById("container").style.display)
+
+        ////////////////////////////////////////////////////////////// 
+        ///////////////////// MAP            ///////////////////////// 
+        ////////////////////////////////////////////////////////////// 
+
+        var basic_choropleth = new Datamap({
+            element: document.getElementById("container"),
+            projection: 'mercator',
+
+            fills: {
+                defaultFill: "#ABDDA4",
+                authorHasTraveledTo: "#fa0fa0"
             },
-        "labels": {
-            "outer": {
-                "format": "none",
-                    "pieDistance": 32
-            },
-            "inner": {
-                "format": "label"
-            },
-            "mainLabel": {
-                "fontSize": 11
-            },
-            "percentage": {
-                "color": "#ffffff",
-                    "decimalPlaces": 0
-            },
-            "value": {
-                "color": "#adadad",
-                    "fontSize": 11
-            },
-            "lines": {
-                "enabled": true,
-                    "style": "straight"
-            },
-            "truncation": {
-                "enabled": true
+            data: {
+                {% for t in teams %} 
+                 {{t['shortName']}}: colors(Math.random() * 100),
+                {% endfor %}
             }
-        },
-        "effects": {
-            "pullOutSegmentOnClick": {
-                "effect": "elastic",
-                    "speed": 400,
-                        "size": 8
-            }
-        },
-        "misc": {
-            "gradient": {
-                "enabled": true,
-                    "percentage": 100
-            }
-        },
-        "callbacks": { }
         });
-       
+
+      window.setInterval(function () {
+       basic_choropleth.updateChoropleth({
+            {% for t in teams %} 
+                {{t['shortName']}}: colors(Math.random() * 100)
+            ,
+             {% endfor %}            
+          });
+       }, 2000);
+   
+ 
+
+        //basic_choropleth.labels()
+
+
+        var svg = d3.select("#chart").append("svg")
+            .attr("width", (width + margin.left + margin.right))
+            .attr("height", (height + margin.top + margin.bottom))
+            .attr("color", "#debcd1")
+            .append("g").attr("class", "wrapper")
+            .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+
+        function getEllipseCoords(coorX, coorY, koefX, koefY, radius) {
+            //console.log(Math.sqrt(ellipse_koef * ellipse_koef * coorY * coorY +  coorX * coorX ))
+            //console.log(ellipse_koef * coorX)
+            newX = radius * koefY * coorX * koefX / Math.sqrt(koefY * koefY * coorX * coorX + coorY * coorY * koefX * koefX);
+            //newX = koefX * coorX / (Math.sqrt(koefX * koefX * coorY * coorY + coorX * coorX)) * radius;
+            newY = newX * coorY / coorX;
+            return [newX, newY]
+        }
+         
+        function getCentres(point1, point2) {
+            console.log(point1, point2) 
+            return [(parseFloat(point1[0]) + parseFloat(point2[0])) / 2, (parseFloat(point1[1]) + parseFloat(point2[1])) / 2]
+             
+            
+        }
+        
+        function getDistance(point1, point2) {
+            return Math.sqrt(Math.pow(parseFloat(point1[0]) - parseFloat(point2[0]), 2) +  
+                             Math.pow(parseFloat(point1[1]) - parseFloat(point2[1]), 2) )
+        }
+             
+        function getRotateAngle(point1, point2) {
+            dist = getDistance(point1, point2)
+            //угол(a, b) = arccos((a * b) / (|a| * |b|))
+            vect1 = [point2[0] - point1[0], point2[1] - point1[1]]                
+            vect2 = [0, - 1]
+            mult = vect1[0] * vect2[0] + vect1[1] * vect2[1]
+            
+            
+            //console.log(dist, dist2, dist3)
+            
+            //d3 * d3 = d * d + d2 * d2 - 2 * d * d2 * cosA
+            
+            
+            d = mult / dist
+            console.log(d)
+            if (vect1[0] > 0) {
+                return Math.acos(d) / Math.PI * 180
+            } else {
+                return -Math.acos(d) / Math.PI * 180    
+            }
+            
+            
+        }
+        
+        
+        //Create an arc function   
+        var arc = d3.svg.arc()
+            .innerRadius(innerRadius)
+            .outerRadius(outerRadius);
+
+
+
+        //Turn the pie chart 90 degrees counter clockwise, so it starts at the left	
+        var pie = d3.layout.pie()
+            .startAngle(-180 * Math.PI / 180 + Math.PI / 6)
+            .endAngle(-180 * Math.PI / 180 + Math.PI / 6 + 2 * Math.PI)
+            .value(function(d) {
+                return d.value;
+            })
+            .padAngle(.01)
+            .sort(null);
+
+
+        
+
+        ////////////////////////////////////////////////////////////// 
+        ///////////////////// Data &  Scales ///////////////////////// 
+        ////////////////////////////////////////////////////////////// 
+
+        //Some random data
+           var donutData = [
+            {% for d in teams %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}",
+                "image": "{{d['crestUrl']}}",    
+                "id_group": "{{d['id_group']}}"         
+            },
+             {% endfor %}
+             {
+                "name": "",
+                "value": {{space}},
+                "color":"none",
+                "id_group":-1      
+            },     
+            {% for d in rounds %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}",
+                "id_group": "{{d['id_group']}}"            
+            },
+             {% endfor %}
+             {
+                "name": "",
+                "value": {{space}},
+                "color":"none",
+                "id_group":-1     
+            }, 
+             {% for d in places %} {
+                "name": "{{d['name']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}" ,
+                "id_group": "{{d['id_group']}}"
+                    
+            },
+             {% endfor %}      
+              {
+                "name": "",
+                "value": {{space}},
+                "color":"none",
+                "id_group":-1     
+            },
+            {% for d in stages %} {
+                "name": "{{d['title']}}",
+                "value": {{d['value']}},
+                "color": "{{d['color']}}" ,
+                "id_group": "{{d['id_group']}}"            
+            },
+            {% endfor %}    
+            {
+                "name": "",
+                "value": {{space}},
+                "color":"none",
+                "id_group":-1     
+            }, 
+        
+        ];  
+             
+        var show_games = {
+            {% for d in slice_name %} 
+            {{d['key']}}:{{d['value']}},
+            {% endfor %} 
+        }
+        
+        var games = [
+            {% for d in games_clear %} { 
+                 "teamAway": "{{d['teamAway']}}",
+                 "teamHome": "{{d['teamHome']}}",
+                 "result": "{{d['result']}}",
+                 "city": "{{d['city']}}", 
+                 "stadium": "{{d['stadium']}}",  
+                 "date": "{{d['date']}}",  
+                 "time": "{{d['time']}}"
+            },
+             {% endfor %} 
+            ]
+                   
+        var outArcsData = [
+            {% for d in outGroups %} {
+                "name": "{{d['name']}}",
+                 "color": "{{d['color']}}"
+                    
+            },
+            {% endfor %} 
+        ]
+            
+        
+        
+        var click_events = {
+            {% for d in click_events %} 
+             {{d['key']}}:{{d['value']}},
+            {% endfor %} 
+            }
+               
+
+
+
+        function function_get_games_array(Array) {
+            var gms = []
+            for (i = 0; i < Array.length; i++) {
+                gms.push(games[Array[i]])
+            }
+            return gms;
+
+        }
+
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) {
+                    break;
+                }
+            }
+        }
+        //дял каждой части находим первый и последний кусочек     
+        function getPartBounces() {
+            for (i = 0; i < donutData.length; i++) {
+                cur_group = donutData[i]["id_group"];
+                if (cur_group == -1) {
+                    continue;
+                }
+                cur_group_left = part_bounces[cur_group][0]
+                cur_group_right = part_bounces[cur_group][1]
+                if (i < cur_group_left) {
+                    part_bounces[cur_group][0] = i
+                }
+                if (i > cur_group_right) {
+                    part_bounces[cur_group][1] = i
+                }
+            }
+        }
+
+
+
+        function sendIndexToPython(index) {
+            var qurl = "/";
+
+
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: qurl,
+                //timeout: 2000, 
+                data: {
+                    "index": index
+                },
+                dataType: "json",
+                success: function(response) {
+                    console.log(index + ": " + "debug" + response[index]);
+                    if (response[index] === null) {
+                        console.log("nothing found");
+                    } else {
+                        if (index == cur_index) {
+                            setClicked(response[index]);
+                            //addTextInCentre(response["res"]) 
+                        }
+                    }
+                    flag_response = 1
+                },
+                error: function(error) {
+                    console.log(error);
+                    flag_response = 1
+                }
+            })
+
+        }
+
+        function kill_ajax() {
+            ajax.abort()
+        }
+
+        function restore_colors() {
+            for (i = 0; i < donutData.length; i++) {
+                d3.select("#ArcEllipse" + i).style("fill", donutData[i]["color"]);
+
+            }
+
+        }
+
+
+
+        function restore_colors_outArcs() {
+            for (i = 0; i < outArcsData.length; i++) {
+                d3.select("#outArc" + i).style("fill", outArcsData[i]["color"]);
+
+            }
+
+        }
+
+
+
+        function setClicked(Array) {
+            for (i = 0; i < Array.length; i++) {
+                d3.select("#ArcEllipse" + Array[i]).style("fill", "#debcd1");
+
+            }
+
+        }
+
+
+        //таблица результатов            
+        function tabulate(data, columns) {
+            d3.select("#table").empty()
+            d3.select("#table").remove()
+            var table = d3.select("#chart").append("table")
+                .attr("width", innerRadius)
+                .attr("style", "margin-left: " + (width - 1.50 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.2 * innerRadius) / 2 + "px")
+                .attr("id", "table");
+
+            thead = table.append("thead"),
+                tbody = table.append("tbody")
+
+            // append the header row
+            thead.append("tr")
+                .selectAll("th")
+                .data(columns)
+                .enter()
+                .append("th")
+                .attr("style", "font-family: dusha;font-size:" + fontSizeInside + "px")
+                .text(function(column) {
+                    return column;
+                });
+
+            // create a row for each object in the data
+            var rows = tbody.selectAll("tr")
+                .data(data)
+                .enter()
+                .append("tr");
+
+            // create a cell in each row for each column
+            var cells = rows.selectAll("td")
+                .data(function(row) {
+                    return columns.map(function(column) {
+                        return {
+                            column: column,
+                            value: row[column]
+                        };
+                    });
+                })
+                .enter()
+                .append("td")
+                .attr("style", "font-family: dusha;font-size:" + fontSizeInside + "px")
+                .html(function(d) {
+                    return d.value;
+                });
+
+            return table;
+        }
+
+
+        getPartBounces();
+   
+
+
+        var imgs = svg.select("#chart")
+            .append("text")
+            .attr("x", "0")
+            .attr("y", "0")
+            .text("text for text")
+
+
+        ////////////////////////////////////////////////////////////// 
+        //////////////////// Create Donut Chart ////////////////////// 
+        ////////////////////////////////////////////////////////////// 
+
+        //Create the donut slices and also the invisible arcs for the text 
+        svg.selectAll(".donutArcs")
+            .data(pie(donutData))
+            .enter().append("path")
+            .attr("class", "donutArcs")
+            .attr("d", arc)
+            .attr("id", "donutArcs")
+            .style("fill", function(d, i) {
+                return "none";
+
+            })
+            .each(function(d, i) {
+                //Search pattern for everything between the start and the first capital L
+                var firstArcSection = /(^.+?)L/;
+                var lastArcSection = /L(.*?)Z/;
+                //console.log((width / 2 + margin.left))
+
+
+
+                //между М и A -->  преобразуем
+                //между A и 0 0, 1 по X увеличивам на K
+                //между 0 0,1 и L  преобразуем
+
+
+                //M -1.2879629948845253, 221.49625538894287       //первая точка на внешнем радиусе
+                //A 221.5, 221.5                                  //внешний радиус
+                //0 0,1 -14.203496816146563, 221.04413739837958   //вторая точка на внешнем радиусе
+                //L -7.9099938637859095, 131.26188326043044       //первая точка на внутреннем радиусе   
+                //A 131.5, 131.5                                  //внутренний радиус
+                //0 0,0 -1.2879629948845304, 131.49369243930983Z  //вторая точка на внутреннем радиусе
+                var firstDotEx = /M(.*?)A/;
+                var radEll = /A(.*?)0 0,1/;
+                var secondDotEx = /0 0,1(.*?)L/;
+                var firstSmallDotEx = /L(.*?)A/;
+                var radSmallElEx = /A(.*?)0 0,0/
+                var secondSmallDotEx = /0 0,0(.*?)Z/;
+
+
+                //newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
+
+
+
+
+                firstLoc = firstDotEx.exec(d3.select(this).attr("d"))[1]
+                radLoc = radEll.exec(d3.select(this).attr("d"))[1]
+                secLoc = secondDotEx.exec(d3.select(this).attr("d"))[1]
+
+                firstSmallLoc = firstSmallDotEx.exec(d3.select(this).attr("d"))[1]
+                secSmallLoc = secondSmallDotEx.exec(d3.select(this).attr("d"))[1]
+                radSmallLoc = radSmallElEx.exec(d3.select(this).attr("d"))[1]
+
+                var first = firstLoc.split(",");
+                newFirsts = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), ellipse_koefX, ellipse_koefY, outerRadius) 
+                newFirst = newFirsts.join(",")
+
+                var second = secLoc.split(",");
+                newSeconds = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), ellipse_koefX, ellipse_koefY, outerRadius)
+                newLast = newSeconds.join(",")
+                var rad = radLoc.split(",")
+                newRad = [rad[0] * ellipse_koefX, rad[1] * ellipse_koefY].join(",")
+                FirstPath = "M" + newFirst + "A" + newRad + " 0 0, 1" + newLast
+                ellipseArc = FirstPath + "L" + firstSmallLoc + "A" + radSmallLoc + "0 0,0" + secSmallLoc + "Z"
+
+
+                if (donutData[i]["id_group"] != 0) {
+                    textArc = "M" + newLast + "L" + firstSmallLoc + "Z"
+                    centreSec =  getCentres(newLast.split(","), newFirst.split(",")).join(",")
+                    centreFirst =  getCentres(firstSmallLoc.split(","), secSmallLoc.split(",")).join(",") 
+                    textArcCentre = "M" + centreSec + "L" + centreFirst + "Z"
+                } else {
+                    textArc = "M" + secSmallLoc + "L" + newFirst + "Z"
+                    centreSec =  getCentres(newLast.split(","), newFirst.split(",")).join(",")
+                    centreFirst =  getCentres(firstSmallLoc.split(","), secSmallLoc.split(",")).join(",") 
+                    textArcCentre = "M" + centreFirst + "L" +  centreSec + "Z"
+                }
+                
+                
+            
+                newFirstOut = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), global_arc_koefX, global_arc_koefY, outerRadius).join(",")
+                newSecOut = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), global_arc_koefX, global_arc_koefY, outerRadius).join(",")
+                newRadOut = [global_arc_koefX * rad[0], global_arc_koefY * rad[1]].join(",")
+                dist = getDistance(firstSmallLoc.split(","), secSmallLoc.split(","))
+                angle =  getRotateAngle(firstSmallLoc.split(","), secSmallLoc.split(","))
+                console.log("POINT " + i + " " + firstSmallLoc.split(","))   
+             
+                //если текущий кусок самый крайний в группе
+                cur_group = donutData[i]["id_group"]
+
+                if (cur_group != -1) {
+                    if (part_bounces[cur_group][0] == i) {
+                        var a = Object.assign({}, arcOut)
+
+                        a["firstLoc"] = newFirstOut
+                        a["radLoc"] = newRadOut
+                        a["firstSmallLoc"] = newFirst
+                        a["radSmallLoc"] = newRad
+                        out_arcs.push(a)
+                    }
+
+                    if (part_bounces[cur_group][1] == i) {
+                        //console.log("part " + i) 
+                        //console.log("sec out before " + newSecOut)  
+                        out_arcs[cur_group]["secLoc"] = newSecOut
+                        out_arcs[cur_group]["secSmallLoc"] = newLast
+                    }
+                }
+                
+                svg.append("image")
+                 .attr("width", 
+                  dist)
+                 .attr("height", dist)  
+                 .attr("x", firstSmallLoc.split(",")[0])
+                 .attr("y", firstSmallLoc.split(",")[1])
+                 .attr("id", "rect"+i)
+                 .attr("transform", function() { 
+                                   a = 180 + angle
+                                   if (donutData[i]["id_group"] == 0) {
+                                         //a = angle 
+                                         return "rotate(" + a + ", " + firstSmallLoc.split(",")[0]+  " ,"  + firstSmallLoc.split(",")[1]+ ")"
+                                    } else {
+                                        return ""
+                                    }
+                                  
+                              })  
+                .attr("xlink:href", function() {
+                                //console.log("")
+                                    if (donutData[i]["id_group"] == 0) {
+                                        console.log(i + " " + angle)
+                                        console.log(donutData[i])
+                                        return donutData[i]["image"]
+                                    }
+                                })
+             
+            
+                svg.append("path")
+                    .attr("class", "hiddenDonutArcsCentre")
+                    .attr("id", "donutArcCentre" + i)
+                    .attr("d", textArcCentre)
+                    .style("fill", "none");
+
+
+                svg.append("path")
+                    .attr("class", "hiddenDonutArcs")
+                    .attr("id", "donutArc" + i)
+                    .attr("d", textArc)
+                    .style("fill", "none");
+
+                svg.append("path")
+                    .attr("class", "ellipse")
+                    .attr("id", "ArcEllipse" + i)
+                    .attr("d", ellipseArc)
+                    .style("fill", donutData[i]["color"])
+
+                    .on("mouseover", function() {
+                        restore_colors()
+                        d3.select(this).style("fill", "#debcd1");
+                        cur_index = i
+                        flag_response = 0
+                        x = new Date().getTime() - last_click
+                        setClicked(click_events[i]);
+                        tabulate(function_get_games_array(show_games[i]), Object.keys(games[0]));
+
+
+                    })
+                    .on("mouseout", function(d, i) {
+                        cur_index = -1
+                        //kill_ajax()
+                        //flag_unclicked = 1
+                        console.log("out slice " + i);
+                        restore_colors()
+                        //d3.select(this).style("fill", donutData[i]["color"]);
+                    });
+            });
+
+
+
+        for (i = 0; i < out_arcs.length; i++) {
+          
+            pathOutArc = "M" + out_arcs[i]["firstLoc"] +
+                "A" + out_arcs[i]["radLoc"] +
+                " 0 0, 1" + out_arcs[i]["secLoc"] +
+                "L" + out_arcs[i]["secSmallLoc"] +
+                "A" + out_arcs[i]["radSmallLoc"] +
+                " 0 0,0" + out_arcs[i]["firstSmallLoc"] + "Z"
+            //M-2.390088167315485,379.99478018943495
+            //A456,380 0 0, 1
+            //L-2.3900819267657423,379.9937880183677A380,380 0 0,0Z    
+            pathText = "M" + out_arcs[i]["firstSmallLoc"] +
+                "A" + out_arcs[i]["radSmallLoc"] +
+                " 0 0,1" + out_arcs[i]["secSmallLoc"] + "Z"
+
+
+
+            //console.log("new path " + pathText)
+            svg.append("path")
+                .attr("class", "outArc")
+                .attr("id", "outArc" + i)
+                .attr("d", pathOutArc)
+                .style("fill", outArcsData[i]["color"])
+                .on("mouseover", function() {
+                    restore_colors_outArcs();
+                    d3.select(this).style("fill", "#debcd1");
+                    if (d3.select(this).attr("id") == "outArc0") {
+                        document.getElementById("container").style.display = "block";
+                        //$("#container").load(location.href + " #container");  
+                    }
+                })
+                .on("mouseout", function() {
+                    restore_colors_outArcs();
+                    console.log("hide national teams")
+                    document.getElementById("container").style.display = "none";
+                    //$("#container").load(location.href + " #container"); 
+                });
+           
+            
+            
+
+            svg.append("path")
+                .attr("class", "outArcPath")
+                .attr("id", "outArcPath" + i)
+                .attr("d", pathText)
+                .style("fill", "none")
+
+
+            svg.append("text")
+                .style("font-size", fontSizeOutterSlice + "px")
+                .append("textPath")
+                .attr("startOffset", "20%")
+                .attr("id", "outArcText" + i)
+                .attr("pointer-events", "none")
+                .attr("xlink:href", "#outArcPath" + i)
+                .text(outArcsData[i]["name"])
+                .style("font-family", "dusha")
+                .style("font-weight", "bold")
+                .style("fill", "#black")
+        }
+
+        //Append the label names on the outside
+        svg.selectAll(".donutTextCentre")
+            .data(pie(donutData))
+            .enter().append("text")
+            .style("font-size", fontSizeInnerSlice / 1.2 + "px")
+            .style("font-family", "dusha")
+            .style("fill",  "#ffffff") 
+            .attr("class", "donutTextCentre")
+            .attr("pointer-events", "none")
+            .append("textPath")
+            .attr("href", function(d, i) {
+                return "#donutArcCentre" + i;
+            })
+
+            .attr("startOffset", function(d, i) {
+                if (d.data.id_group == 0) {
+                    return "100%";
+                } else {
+                    return "50%";
+                }
+            })
+            .attr("text-anchor", function(d, i) {
+                if (d.data.id_group == 0) {
+                    return "end";
+                } else {
+                    return "start";
+                }
+            })
+
+            //.attr("xlink:href",function(d) {return d.data.image;})
+            .text(function(d, i) {
+                if (d.data.id_group == 2) {
+                    return d.data.name.split(";")[1].toUpperCase();
+                } else {
+                    return ""
+                }
+            })
+             
+             
+
+
+        //Append the label names on the outside
+        svg.selectAll(".donutText")
+            .data(pie(donutData))
+            .enter().append("text")
+            .style("font-size",  function(d, i) { 
+             if (d.data.id_group == 2) {
+                    return fontSizeInnerSlice / 1.4 + "px";
+                } else {
+                    return fontSizeInnerSlice ;
+                }
+            })
+                    
+            
+                
+            .style("font-family", "dusha")
+            .attr("class", "donutText")
+            .attr("pointer-events", "none")
+            .append("textPath")
+            .attr("href", function(d, i) {
+                return "#donutArc" + i;
+            })
+
+            .attr("startOffset", function(d, i) {
+                if (d.data.id_group == 0) {
+                    return "100%";
+                } else {
+                    return "50%";
+                }
+            })
+            .attr("text-anchor", function(d, i) {
+                if (d.data.id_group == 0) {
+                    return "end";
+                } else {
+                    return "start";
+                }
+            })
+
+            //.attr("xlink:href",function(d) {return d.data.image;})
+            .text(function(d, i) {
+                if (d.data.id_group == 2) {
+                    return d.data.name.split(";")[0];
+                } else {
+                    return d.data.name;
+                }
+             })
+
     </script>
 
 </body>

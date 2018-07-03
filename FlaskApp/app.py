@@ -27,6 +27,7 @@ games = []
 standings = []
 games_clear = []
 games_update = []
+games_update_playoff = []
 space = None
 
 teams_name_dic = {}
@@ -55,17 +56,21 @@ main_url = 'http://api.football-data.org'
 
 
 def get_update_data_by_league_id(Idleague):
-    global games, games_update
+    global games, games_update, games_update_playoff
     url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
     resp = requests.get(url, headers = myheaders)
     resp = resp.json()["fixtures"] 
-    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
+    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
 "goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["goalsHomeTeam"] != None or r["result"]["goalsAwayTeam"] != None and r["result"]["status"]] 
     for r in res_update:
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
-            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
+            games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
+        if r["id2"] in games_update_playoff:
+            db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
+            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})           
     return res_update
+  
 
 
 
@@ -159,7 +164,7 @@ def getAllCorellByStage(id_stage):
 
 
 def init_data():
-    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db 
+    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, games_update_playoff 
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -172,6 +177,7 @@ def init_data():
     stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
     games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
     games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
+    games_update_playoff = [str(g["date"]) for g in games if g["status"] != "FINISHED" and g["homeTeamId"] == 757]
     res_update = None
     try:
         get_update_data_by_league_id(competitionId)

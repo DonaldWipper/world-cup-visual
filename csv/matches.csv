@@ -1,65 +1,57 @@
-competitionId,odds,id,result,status,matchday,awayTeamId,homeTeamName,date,awayTeamName,homeTeamId
-467,,165069,"{'goalsHomeTeam': 5, 'halfTime': {'goalsHomeTeam': 2, 'goalsAwayTeam': 0}, 'goalsAwayTeam': 0}",FINISHED,1,801,Russia,2018-06-14T15:00:00Z,Saudi Arabia,808
-467,,165084,"{'goalsHomeTeam': 0, 'goalsAwayTeam': 1}",FINISHED,1,758,Egypt,2018-06-15T12:00:00Z,Uruguay,825
-467,,165083,"{'goalsHomeTeam': 0, 'halfTime': {'goalsHomeTeam': 0, 'goalsAwayTeam': 0}, 'goalsAwayTeam': 1}",FINISHED,1,840,Morocco,2018-06-15T15:00:00Z,Iran,815
-467,,165076,"{'goalsHomeTeam': 3, 'goalsAwayTeam': 3}",FINISHED,1,760,Portugal,2018-06-15T18:00:00Z,Spain,765
-467,,165072,"{'goalsHomeTeam': 2, 'halfTime': {'goalsHomeTeam': 0, 'goalsAwayTeam': 0}, 'goalsAwayTeam': 1}",FINISHED,1,779,France,2018-06-16T10:00:00Z,Australia,773
-467,,165073,"{'goalsHomeTeam': 1, 'goalsAwayTeam': 1}",FINISHED,1,1066,Argentina,2018-06-16T13:00:00Z,Iceland,762
-467,,165071,"{'goalsHomeTeam': 0, 'goalsAwayTeam': 1}",FINISHED,1,782,Peru,2018-06-16T16:00:00Z,Denmark,832
-467,,165074,"{'goalsHomeTeam': 2, 'halfTime': {'goalsHomeTeam': 1, 'goalsAwayTeam': 0}, 'goalsAwayTeam': 0}",FINISHED,1,776,Croatia,2018-06-16T19:00:00Z,Nigeria,799
-467,,165075,"{'goalsHomeTeam': 0, 'halfTime': {'goalsHomeTeam': 0, 'goalsAwayTeam': 0}, 'goalsAwayTeam': 1}",FINISHED,1,780,Costa Rica,2018-06-17T12:00:00Z,Serbia,793
-467,,165082,"{'goalsHomeTeam': 0, 'halfTime': {'goalsHomeTeam': 0, 'goalsAwayTeam': 1}, 'goalsAwayTeam': 1}",FINISHED,1,769,Germany,2018-06-17T15:00:00Z,Mexico,759
-467,,165070,"{'goalsHomeTeam': 1, 'halfTime': {'goalsHomeTeam': 1, 'goalsAwayTeam': 0}, 'goalsAwayTeam': 1}",FINISHED,1,788,Brazil,2018-06-17T18:00:00Z,Switzerland,764
-467,,165081,"{'goalsHomeTeam': 1, 'goalsAwayTeam': 0}",FINISHED,1,772,Sweden,2018-06-18T12:00:00Z,Korea Republic,792
-467,,165077,"{'goalsHomeTeam': 3, 'goalsAwayTeam': 0}",FINISHED,1,1836,Belgium,2018-06-18T15:00:00Z,Panama,805
-467,,165078,"{'goalsHomeTeam': 1, 'halfTime': {'goalsHomeTeam': 1, 'goalsAwayTeam': 1}, 'goalsAwayTeam': 2}",FINISHED,1,770,Tunisia,2018-06-18T18:00:00Z,England,802
-467,,165080,"{'goalsHomeTeam': 1, 'goalsAwayTeam': 2}",FINISHED,1,766,Colombia,2018-06-19T12:00:00Z,Japan,818
-467,,165079,"{'goalsHomeTeam': 1, 'goalsAwayTeam': 2}",FINISHED,1,804,Poland,2018-06-19T15:00:00Z,Senegal,794
-467,,165100,"{'goalsHomeTeam': 0, 'goalsAwayTeam': 0}",IN_PLAY,2,825,Russia,2018-06-19T18:00:00Z,Egypt,808
-467,,165087,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,815,Portugal,2018-06-20T12:00:00Z,Morocco,765
-467,,165086,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,801,Uruguay,2018-06-20T15:00:00Z,Saudi Arabia,758
-467,,165085,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,760,Iran,2018-06-20T18:00:00Z,Spain,840
-467,,165099,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,779,Denmark,2018-06-21T12:00:00Z,Australia,782
-467,,165096,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,832,France,2018-06-21T15:00:00Z,Peru,773
-467,,165094,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,799,Argentina,2018-06-21T18:00:00Z,Croatia,762
-467,,165092,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,793,Brazil,2018-06-22T12:00:00Z,Costa Rica,764
-467,,165098,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,1066,Nigeria,2018-06-22T15:00:00Z,Iceland,776
-467,,165091,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,788,Serbia,2018-06-22T18:00:00Z,Switzerland,780
-467,,165088,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,802,Belgium,2018-06-23T12:00:00Z,Tunisia,805
-467,,165089,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,769,Korea Republic,2018-06-23T15:00:00Z,Mexico,772
-467,,165090,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,792,Germany,2018-06-23T18:00:00Z,Sweden,759
-467,,165093,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,1836,England,2018-06-24T12:00:00Z,Panama,770
-467,,165095,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,804,Japan,2018-06-24T15:00:00Z,Senegal,766
-467,,165097,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,2,818,Poland,2018-06-24T18:00:00Z,Colombia,794
-467,,165111,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,825,Saudi Arabia,2018-06-25T14:00:00Z,Egypt,801
-467,,165101,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,808,Uruguay,2018-06-25T14:00:00Z,Russia,758
-467,,165112,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,765,Iran,2018-06-25T18:00:00Z,Portugal,840
-467,,165109,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,815,Spain,2018-06-25T18:00:00Z,Morocco,760
-467,,165113,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,773,Denmark,2018-06-26T14:00:00Z,France,782
-467,,165107,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,832,Australia,2018-06-26T14:00:00Z,Peru,779
-467,,165115,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,762,Nigeria,2018-06-26T18:00:00Z,Argentina,776
-467,,165114,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,799,Iceland,2018-06-26T18:00:00Z,Croatia,1066
-467,,165102,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,792,Mexico,2018-06-27T14:00:00Z,Sweden,769
-467,,165106,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,759,Korea Republic,2018-06-27T14:00:00Z,Germany,772
-467,,165116,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,764,Serbia,2018-06-27T18:00:00Z,Brazil,780
-467,,165108,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,793,Switzerland,2018-06-27T18:00:00Z,Costa Rica,788
-467,,165104,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,794,Japan,2018-06-28T14:00:00Z,Poland,766
-467,,165103,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,818,Senegal,2018-06-28T14:00:00Z,Colombia,804
-467,,165110,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,802,Panama,2018-06-28T18:00:00Z,Tunisia,1836
-467,,165105,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",TIMED,3,805,England,2018-06-28T18:00:00Z,Belgium,770
-467,,165119,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-06-30T14:00:00Z,,757
-467,,165123,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-06-30T18:00:00Z,,757
-467,,165122,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-07-01T14:00:00Z,,757
-467,,165121,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-07-01T18:00:00Z,,757
-467,,165118,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-07-02T14:00:00Z,,757
-467,,165120,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-07-02T18:00:00Z,,757
-467,,165117,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-07-03T14:00:00Z,,757
-467,,165124,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,4,757,,2018-07-03T18:00:00Z,,757
-467,,165127,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,5,757,,2018-07-06T14:00:00Z,,757
-467,,165126,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,5,757,,2018-07-06T18:00:00Z,,757
-467,,165125,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,5,757,,2018-07-07T14:00:00Z,,757
-467,,165128,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,5,757,,2018-07-07T18:00:00Z,,757
-467,,165130,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,6,757,,2018-07-10T18:00:00Z,,757
-467,,165129,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,6,757,,2018-07-11T18:00:00Z,,757
-467,,165131,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,7,757,,2018-07-14T14:00:00Z,,757
-467,,165132,"{'goalsHomeTeam': None, 'goalsAwayTeam': None}",SCHEDULED,8,757,,2018-07-15T15:00:00Z,,757
+matchday,competitionId,result,awayTeamId,id,odds,awayTeamName,date,homeTeamName,status,homeTeamId,goalsHomeTeam,goalsAwayTeam,AccomGoalsHomeTeam,AccomGoalsAwayTeam,AccomTotalGoals,gdX,gdY,rankX,rankY
+1,467,"{'goalsAwayTeam': 0, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 2}, 'goalsHomeTeam': 5}",801,165069,,Saudi Arabia,2018-06-14T15:00:00Z,Russia,FINISHED,808,5,0,5,0,5,0,0,2,3
+1,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 0}",758,165084,,Uruguay,2018-06-15T12:00:00Z,Egypt,FINISHED,825,0,1,0,1,6,0,0,4,1
+1,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 0}",840,165083,,Iran,2018-06-15T15:00:00Z,Morocco,FINISHED,815,0,1,0,1,7,1,0,4,3
+1,467,"{'goalsAwayTeam': 3, 'goalsHomeTeam': 3}",760,165076,,Spain,2018-06-15T18:00:00Z,Portugal,FINISHED,765,3,3,3,3,13,1,0,2,1
+1,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 2}",779,165072,,Australia,2018-06-16T10:00:00Z,France,FINISHED,773,2,1,2,1,16,2,0,1,4
+1,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 1}",1066,165073,,Iceland,2018-06-16T13:00:00Z,Argentina,FINISHED,762,1,1,1,1,18,3,0,2,4
+1,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 0}",782,165071,,Denmark,2018-06-16T16:00:00Z,Peru,FINISHED,832,0,1,0,1,19,2,0,3,2
+1,467,"{'goalsAwayTeam': 0, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 1}, 'goalsHomeTeam': 2}",776,165074,,Nigeria,2018-06-16T19:00:00Z,Croatia,FINISHED,799,2,0,2,0,21,3,0,1,3
+1,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 0}",780,165075,,Serbia,2018-06-17T12:00:00Z,Costa Rica,FINISHED,793,0,1,0,1,22,0,1,4,3
+1,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 1, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 0}",769,165082,,Mexico,2018-06-17T15:00:00Z,Germany,FINISHED,759,0,1,0,1,23,1,1,4,2
+1,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 1}, 'goalsHomeTeam': 1}",788,165070,,Switzerland,2018-06-17T18:00:00Z,Brazil,FINISHED,764,1,1,1,1,25,0,1,1,2
+1,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 1}",772,165081,,Korea Republic,2018-06-18T12:00:00Z,Sweden,FINISHED,792,1,0,1,0,26,1,1,1,3
+1,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 3}",1836,165077,,Panama,2018-06-18T15:00:00Z,Belgium,FINISHED,805,3,0,3,0,29,3,1,1,4
+1,467,"{'goalsAwayTeam': 2, 'halfTime': {'goalsAwayTeam': 1, 'goalsHomeTeam': 1}, 'goalsHomeTeam': 1}",770,165078,,England,2018-06-18T18:00:00Z,Tunisia,FINISHED,802,1,2,1,2,32,3,1,3,2
+1,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 1}",766,165080,,Japan,2018-06-19T12:00:00Z,Colombia,FINISHED,818,1,2,1,2,35,2,1,1,2
+1,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 1}",804,165079,,Senegal,2018-06-19T15:00:00Z,Poland,FINISHED,794,1,2,1,2,38,2,1,4,3
+2,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 3}",825,165100,,Egypt,2018-06-19T18:00:00Z,Russia,FINISHED,808,3,1,8,1,47,0,0,2,4
+2,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 1}",815,165087,,Morocco,2018-06-20T12:00:00Z,Portugal,FINISHED,765,1,0,4,0,51,1,0,2,4
+2,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 1}",801,165086,,Saudi Arabia,2018-06-20T15:00:00Z,Uruguay,FINISHED,758,1,0,2,0,53,0,0,1,3
+2,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 0}",760,165085,,Spain,2018-06-20T18:00:00Z,Iran,FINISHED,840,0,1,1,4,58,1,0,3,1
+2,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 1}",779,165099,,Australia,2018-06-21T12:00:00Z,Denmark,FINISHED,782,1,1,2,2,62,2,0,2,4
+2,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 1}",832,165096,,Peru,2018-06-21T15:00:00Z,France,FINISHED,773,1,0,3,0,65,2,0,1,3
+2,467,"{'goalsAwayTeam': 3, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 0}",799,165094,,Croatia,2018-06-21T18:00:00Z,Argentina,FINISHED,762,0,3,1,5,71,3,0,2,1
+2,467,"{'goalsAwayTeam': 0, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 2}",793,165092,,Costa Rica,2018-06-22T12:00:00Z,Brazil,FINISHED,764,2,0,3,0,74,0,1,1,4
+2,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 2}",1066,165098,,Iceland,2018-06-22T15:00:00Z,Nigeria,FINISHED,776,2,0,2,1,77,3,0,3,4
+2,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 1}",788,165091,,Switzerland,2018-06-22T18:00:00Z,Serbia,FINISHED,780,1,2,2,3,82,0,1,3,2
+2,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 5}",802,165088,,Tunisia,2018-06-23T12:00:00Z,Belgium,FINISHED,805,5,2,8,3,93,3,1,1,3
+2,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 1}",769,165089,,Mexico,2018-06-23T15:00:00Z,Korea Republic,FINISHED,772,1,2,1,3,97,1,1,3,2
+2,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 2}",792,165090,,Sweden,2018-06-23T18:00:00Z,Germany,FINISHED,759,2,1,2,2,101,1,1,4,1
+2,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 6}",1836,165093,,Panama,2018-06-24T12:00:00Z,England,FINISHED,770,6,1,8,1,110,3,1,2,4
+2,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 2}",804,165095,,Senegal,2018-06-24T15:00:00Z,Japan,FINISHED,766,2,2,4,4,118,2,1,2,3
+2,467,"{'goalsAwayTeam': 3, 'goalsHomeTeam': 0}",818,165097,,Colombia,2018-06-24T18:00:00Z,Poland,FINISHED,794,0,3,1,4,123,2,1,4,1
+3,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 2}",825,165111,,Egypt,2018-06-25T14:00:00Z,Saudi Arabia,FINISHED,801,2,1,2,2,127,0,0,3,4
+3,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 3}",808,165101,,Russia,2018-06-25T14:00:00Z,Uruguay,FINISHED,758,3,0,5,8,140,0,0,1,2
+3,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 1}",765,165112,,Portugal,2018-06-25T18:00:00Z,Iran,FINISHED,840,1,1,2,5,147,1,0,3,2
+3,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 2}",815,165109,,Morocco,2018-06-25T18:00:00Z,Spain,FINISHED,760,2,2,6,2,155,1,0,1,4
+3,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 0}",773,165113,,France,2018-06-26T14:00:00Z,Denmark,FINISHED,782,0,0,2,3,160,2,0,2,1
+3,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 0}",832,165107,,Peru,2018-06-26T14:00:00Z,Australia,FINISHED,779,0,2,2,2,164,2,0,4,3
+3,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 1}",762,165115,,Argentina,2018-06-26T18:00:00Z,Nigeria,FINISHED,776,1,2,3,3,170,3,0,3,2
+3,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 1}",799,165114,,Croatia,2018-06-26T18:00:00Z,Iceland,FINISHED,1066,1,2,2,7,179,3,0,4,1
+3,467,"{'goalsAwayTeam': 3, 'goalsHomeTeam': 0}",792,165102,,Sweden,2018-06-27T14:00:00Z,Mexico,FINISHED,769,0,3,3,5,187,1,1,2,1
+3,467,"{'goalsAwayTeam': 0, 'goalsHomeTeam': 2}",759,165106,,Germany,2018-06-27T14:00:00Z,Korea Republic,FINISHED,772,2,0,3,2,192,1,1,3,4
+3,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 0}",764,165116,,Brazil,2018-06-27T18:00:00Z,Serbia,FINISHED,780,0,2,2,5,199,0,1,3,1
+3,467,"{'goalsAwayTeam': 2, 'goalsHomeTeam': 2}",793,165108,,Costa Rica,2018-06-27T18:00:00Z,Switzerland,FINISHED,788,2,2,5,2,206,0,1,2,4
+3,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 0}",794,165104,,Poland,2018-06-28T14:00:00Z,Japan,FINISHED,766,0,1,4,2,212,2,1,2,4
+3,467,"{'goalsAwayTeam': 1, 'goalsHomeTeam': 0}",818,165103,,Colombia,2018-06-28T14:00:00Z,Senegal,FINISHED,804,0,1,4,5,221,2,1,3,1
+3,467,"{'goalsAwayTeam': 2, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 1}, 'goalsHomeTeam': 1}",802,165110,,Tunisia,2018-06-28T18:00:00Z,Panama,FINISHED,1836,1,2,2,5,228,3,1,4,3
+3,467,"{'goalsAwayTeam': 1, 'halfTime': {'goalsAwayTeam': 0, 'goalsHomeTeam': 0}, 'goalsHomeTeam': 0}",805,165105,,Belgium,2018-06-28T18:00:00Z,England,FINISHED,770,0,1,8,9,245,3,1,2,1
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",762,165119,,Argentina,2018-06-30T14:00:00Z,France,TIMED,773,,,3,3,251,2,0,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",765,165123,,Portugal,2018-06-30T18:00:00Z,Uruguay,TIMED,758,,,5,5,261,0,0,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",808,165122,,Russia,2018-07-01T14:00:00Z,Spain,TIMED,760,,,6,8,275,1,0,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",782,165121,,Denmark,2018-07-01T18:00:00Z,Croatia,TIMED,799,,,7,2,284,3,0,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",769,165118,,Mexico,2018-07-02T14:00:00Z,Brazil,TIMED,764,,,5,3,292,0,1,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",766,165120,,Japan,2018-07-02T18:00:00Z,Belgium,TIMED,805,,,9,4,305,3,1,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",788,165117,,Switzerland,2018-07-03T14:00:00Z,Sweden,TIMED,792,,,5,5,315,1,1,1,2
+4,467,"{'goalsAwayTeam': None, 'goalsHomeTeam': None}",770,165124,,England,2018-07-03T18:00:00Z,Colombia,TIMED,818,,,5,8,328,2,1,1,2

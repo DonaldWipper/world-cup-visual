@@ -216,6 +216,27 @@
 
 
         
+        
+        
+        
+        
+        ///////////////////////////////////////////// 
+        ///////////////////// GROUPS//////////////////
+        /////////////////////////////////////////////
+        
+        var groups = [
+            {% for d in stand %} {
+            
+                "group": "{{d['group']}}",
+                "team": "{{d['team']}}",
+                "results": "{{d['results']}}"   
+        
+        
+            },
+            {% endfor %}
+            ]
+                
+                
 
         ////////////////////////////////////////////////////////////// 
         ///////////////////// Data &  Scales ///////////////////////// 
@@ -288,8 +309,8 @@
         
         var games = [
             {% for d in games_clear %} { 
-                 "teamAway": "{{d['teamAway']}}",
                  "teamHome": "{{d['teamHome']}}",
+                 "teamAway": "{{d['teamAway']}}",
                  "result": "{{d['result']}}",
                  "city": "{{d['city']}}", 
                  "stadium": "{{d['stadium']}}",  
@@ -472,7 +493,65 @@
 
             return table;
         }
+        
+             
+             
+        function playoff(data, columns) {
+            d3.select("#play").empty()
+            d3.select("#play").remove()
+            //d3.select("#table").empty()
+            //d3.select("#table").remove() 
+            var table = d3.select("#chart").append("table")
+                .attr("width", innerRadius)
+                .attr("style", "margin-left: " + (width - 1.50 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.3 * innerRadius) / 2 + "px")
+                .attr("id", "play");
 
+            thead = table.append("thead"),
+                tbody = table.append("tbody")
+            
+            stages = ["round of 16", "quarter-final", "semi-final"]
+            // append the header row
+            thead.append("tr")
+                .selectAll("th")
+                .data(stages)
+                .enter()
+                .append("th")
+                .attr("style", "font-family: dusha;font-size:" + fontSizeInside + "px")
+                .attr("colspan", "2")
+                .attr("style", "background:#f2f2f2;text-align:center;border:1px solid #aaa;font-family: dusha;font-size:" + fontSizeInside + "px")
+                .text(function(column) {
+                    return column;
+                });
+             
+            /*
+            // create a row for each object in the data
+            var rows = tbody.selectAll("tr")
+                .data(data)
+                .enter()
+                .append("tr");
+
+            // create a cell in each row for each column
+            var cells = rows.selectAll("td")
+                .data(function(row) {
+                    return columns.map(function(column) {
+                        return {
+                            column: column,
+                            value: row[column]
+                        };
+                    });
+                })
+                .enter()
+                .append("td")
+                .attr("style", "font-family: dusha;font-size:" + fontSizeInside + "px")
+                .html(function(d) {
+                    return d.value;
+                });
+            */
+            return table;
+        }
+
+             
+             
 
         getPartBounces();
    
@@ -695,6 +774,12 @@
                         document.getElementById("container").style.display = "block";
                         //$("#container").load(location.href + " #container");  
                     }
+                    if (d3.select(this).attr("id") == "outArc3") {
+                        playoff(function_get_games_array(show_games[i]), Object.keys(games[0])); 
+                        //document.getElementById("container").style.display = "block";
+                        //$("#container").load(location.href + " #container");  
+                    }
+                
                 })
                 .on("mouseout", function() {
                     restore_colors_outArcs();

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ndbx formatVersion="21" type="file" uuid="2cbcce82-652d-416f-bd16-9f43c1ed5b93">
+    <property name="canvasHeight" value="1000"/>
+    <property name="canvasWidth" value="1000"/>
+    <property name="canvasX" value="0"/>
+    <property name="canvasY" value="0"/>
+    <node name="root" prototype="core.network" renderedChild="filter_data2">
+        <node name="combine1" position="8.00,20.00" prototype="list.combine"/>
+        <node name="distinct1" position="-5.00,11.00" prototype="list.distinct"/>
+        <node name="distinct_groups" position="4.00,2.00" prototype="list.distinct"/>
+        <node name="filter_away" position="0.00,16.00" prototype="data.filter_data">
+            <port name="key" type="string" value="awayTeamId"/>
+        </node>
+        <node name="filter_data1" position="13.00,3.00" prototype="data.filter_data">
+            <port name="key" type="string" value="group"/>
+            <port name="value" type="string" value="A"/>
+        </node>
+        <node name="filter_data2" position="-9.00,7.00" prototype="data.filter_data">
+            <port name="key" type="string" value="date"/>
+            <port name="value" type="string" value="467"/>
+        </node>
+        <node name="filter_home" position="4.00,15.00" prototype="data.filter_data">
+            <port name="key" type="string" value="homeTeamId"/>
+        </node>
+        <node name="fit_size" position="8.00,12.00" prototype="corevector.fit">
+            <port name="width" type="float" value="30.0"/>
+            <port name="height" type="float" value="30.0"/>
+        </node>
+        <node name="fit_size1" position="11.00,12.00" prototype="corevector.fit">
+            <port name="width" type="float" value="30.0"/>
+            <port name="height" type="float" value="30.0"/>
+        </node>
+        <node name="frame1" position="-7.00,19.00" prototype="core.frame"/>
+        <node name="import_icon_team_east" position="8.00,9.00" prototype="corevector.import_svg"/>
+        <node name="import_icon_team_west" position="12.00,11.00" prototype="corevector.import_svg"/>
+        <node name="look_goals_away" position="-1.00,18.00" prototype="data.lookup">
+            <port name="key" type="string" value="goalsAwayTeam"/>
+        </node>
+        <node name="lookup_all_groups" position="4.00,1.00" prototype="data.lookup">
+            <port name="key" type="string" value="group"/>
+        </node>
+        <node name="lookup_date" position="-7.00,8.00" prototype="data.lookup">
+            <port name="key" type="string" value="date"/>
+        </node>
+        <node name="lookup_name" position="8.00,4.00" prototype="data.lookup">
+            <port name="key" type="string" value="team"/>
+        </node>
+        <node name="lookup_pics" position="14.00,6.00" prototype="data.lookup">
+            <port name="key" type="string" value="path"/>
+        </node>
+        <node name="lookup_teamId" position="4.00,9.00" prototype="data.lookup">
+            <port name="key" type="string" value="teamId"/>
+        </node>
+        <node name="matches_csv1" position="-5.00,6.00" prototype="data.import_csv">
+            <port name="file" type="string" value="csv/matches.csv"/>
+        </node>
+        <node name="matches_csv2" position="-1.00,8.00" prototype="data.import_csv">
+            <port name="file" type="string" value="csv/matches.csv"/>
+        </node>
+        <node name="slice1" position="-5.00,14.00" prototype="list.slice">
+            <port name="size" type="int" value="1"/>
+        </node>
+        <node name="slice2" position="-2.00,21.00" prototype="list.slice">
+            <port name="size" type="int" value="1"/>
+        </node>
+        <node name="sort_by_name" position="-2.00,5.00" prototype="list.sort"/>
+        <node name="stack1" position="7.00,16.00" prototype="corevector.stack"/>
+        <node name="stack2" position="10.00,16.00" prototype="corevector.stack">
+            <port name="direction" type="string" value="s"/>
+        </node>
+        <node name="standings_csv1" position="4.00,0.00" prototype="data.import_csv">
+            <port name="file" type="string" value="csv/standings.csv"/>
+        </node>
+        <node name="standings_csv2" position="11.00,0.00" prototype="data.import_csv">
+            <port name="file" type="string" value="csv/standings.csv"/>
+        </node>
+        <node name="take_every1" position="13.00,8.00" prototype="list.take_every"/>
+        <node name="text_on_path1" position="7.00,6.00" prototype="corevector.text_on_path">
+            <port name="font_name" type="string" value="Abyssinica SIL"/>
+        </node>
+        <node name="textpath1" position="-8.00,12.00" prototype="corevector.textpath"/>
+        <node name="textpath2" position="4.00,21.00" prototype="corevector.textpath"/>
+        <node name="translate_shift" position="11.00,14.00" prototype="corevector.translate">
+            <port name="translate" type="point" value="-30.00,30.00"/>
+        </node>
+        <conn input="lookup_all_groups.list" output="standings_csv1"/>
+        <conn input="distinct_groups.list" output="lookup_all_groups"/>
+        <conn input="sort_by_name.list" output="distinct_groups"/>
+        <conn input="filter_data1.data" output="standings_csv2"/>
+        <conn input="stack1.shapes" output="fit_size"/>
+        <conn input="fit_size.shape" output="import_icon_team_east"/>
+        <conn input="import_icon_team_east.file" output="take_every1"/>
+        <conn input="import_icon_team_west.file" output="take_every1"/>
+        <conn input="fit_size1.shape" output="import_icon_team_west"/>
+        <conn input="combine1.list2" output="stack2"/>
+        <conn input="translate_shift.shape" output="fit_size1"/>
+        <conn input="stack2.shapes" output="translate_shift"/>
+        <conn input="lookup_pics.list" output="filter_data1"/>
+        <conn input="take_every1.list" output="lookup_pics"/>
+        <conn input="lookup_name.list" output="filter_data1"/>
+        <conn input="lookup_teamId.list" output="filter_data1"/>
+        <conn input="text_on_path1.text" output="lookup_name"/>
+        <conn input="filter_home.value" output="lookup_teamId"/>
+        <conn input="filter_away.value" output="lookup_teamId"/>
+        <conn input="lookup_date.list" output="matches_csv1"/>
+        <conn input="distinct1.list" output="lookup_date"/>
+        <conn input="filter_away.data" output="filter_data2"/>
+        <conn input="filter_home.data" output="filter_data2"/>
+        <conn input="look_goals_away.list" output="filter_away"/>
+        <conn input="filter_data2.data" output="matches_csv2"/>
+        <conn input="slice2.list" output="look_goals_away"/>
+        <conn input="combine1.list1" output="stack1"/>
+        <conn input="slice1.list" output="distinct1"/>
+        <conn input="textpath1.text" output="slice1"/>
+        <conn input="slice1.start_index" output="frame1"/>
+        <conn input="textpath2.text" output="slice2"/>
+        <conn input="filter_data2.value" output="slice1"/>
+        <conn input="combine1.list3" output="textpath2"/>
+        <conn input="combine1.list4" output="textpath1"/>
+    </node>
+</ndbx>

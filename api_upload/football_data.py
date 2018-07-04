@@ -1,6 +1,8 @@
 import json
 import requests
 import csv
+import urllib.request, urllib.error
+
 
 token = 'efda008899e346f693efa9c75f9577ee'
 
@@ -83,32 +85,93 @@ def main():
         table = get_table_by_league_id(id)
         print(table)
         csvfile = open('../csv/standings.csv', 'w', newline='', encoding='utf-8')
-        headers = table["standings"]["A"][0].keys()  
+        headers = list(table["standings"]["A"][0].keys())
+        headers.append("path")  
+        headers.append("gdX") 
+        headers.append("gdY") 
+        posGroups = {"A":[0, 0], "B":[1, 0], "C":[2, 0],"D":[3, 0], "E":[0, 1], "F":[1, 1], "H":[2, 1],  "G":[3, 1]}
+        teamCoords = {}  
+ 
         writer = csv.DictWriter(csvfile, headers,  delimiter=',')
         writer.writeheader()    
         for l in table["standings"]:
             for pos_t in table["standings"][l]:
-                writer.writerow(pos_t)    
-                             
+                flag_img = pos_t["crestURI"]
+                reverse = flag_img[::-1]
+                name = reverse[0:reverse.find("/")][::-1] 
+                path = "flags/" +  pos_t["team"] + ".svg" 
+                #urllib.request.urlretrieve(flag_img, path) 
+                pos_t["path"] = path     
+                pos_t["gdX"] = posGroups[pos_t["group"]][0]
+                pos_t["gdY"] = posGroups[pos_t["group"]][1]
+                teamCoords [pos_t["teamId"]] = {}
+                teamCoords [pos_t["teamId"]]["gdX"] = pos_t["gdX"] 
+                teamCoords [pos_t["teamId"]]["gdY"] = pos_t["gdY"]
+                teamCoords [pos_t["teamId"]]["rank"] = pos_t["rank"]
+                writer.writerow(pos_t)   
+ 
         
                 
         teams = get_teams_by_league_id(id)
-        
         csvfile = open('../csv/teams_wc.csv', 'w', newline='', encoding='utf-8')
-        headers = teams["teams"][0].keys()
+        headers = list(teams["teams"][0].keys()) 
+        headers.append("path")
         writer = csv.DictWriter(csvfile, headers,  delimiter=',')
         writer.writeheader()
         for t in teams["teams"]:
+            flag_img = t["crestUrl"]
+            reverse = flag_img[::-1]
+            name = reverse[0:reverse.find("/")][::-1] 
+            path = "flags/" +  t["name"] + ".svg" 
+            urllib.request.urlretrieve(flag_img, path) 
+            t["path"] = path 
             writer.writerow(t)
             
         fixtures = get_fixtures_by_league_id(id)
         csvfile = open('../csv/matches.csv', 'w', newline='', encoding='utf-8')
-        headers = fixtures["fixtures"][0].keys()
+        headers = list(fixtures["fixtures"][0].keys())
+        headers.append('goalsHomeTeam')
+        headers.append('goalsAwayTeam')
+        headers.append('AccomGoalsHomeTeam')
+        headers.append('AccomGoalsAwayTeam')
+        headers.append('AccomTotalGoals')
+        headers.append('gdX')
+        headers.append('gdY')
+        headers.append('rankX')
+        headers.append('rankY')
+
+ 
         print(headers) 
         writer = csv.DictWriter(csvfile, headers,  delimiter=',')
         writer.writeheader()
+        teams = {}
+        total_goals = 0
         for f in fixtures["fixtures"]:
-            writer.writerow(f)  
+            x = dict(f["result"])
+            f['goalsHomeTeam'] = x['goalsHomeTeam']
+            f['goalsAwayTeam'] = x['goalsAwayTeam']
+            if x['goalsAwayTeam'] != None:
+                if f['awayTeamId'] in teams:
+                    teams[f['awayTeamId']] += int (x['goalsAwayTeam'])
+                else:
+                    teams[f['awayTeamId']] =  int(x['goalsAwayTeam'])
+         
+                if f['homeTeamId'] in teams:
+                    teams[f['homeTeamId']] +=  int(x['goalsHomeTeam'])
+                else:
+                    teams[f['homeTeamId']] =  int(x['goalsHomeTeam'])
 
-       
+            f['AccomGoalsHomeTeam'] = teams[f['homeTeamId']] 
+            f['AccomGoalsAwayTeam'] =  teams[f['awayTeamId']] 
+            f['gdX'] = teamCoords [f['homeTeamId']]["gdX"] 
+            f['gdY'] = teamCoords [f['homeTeamId']]["gdY"] 
+            f['rankX'] = teamCoords [f['homeTeamId']]["rank"]
+            f['rankY'] = teamCoords [f['awayTeamId']]["rank"]
+
+
+
+            total_goals += teams[f['homeTeamId']] + teams[f['awayTeamId']]
+            f['AccomTotalGoals'] =  total_goals
+            writer.writerow(f)
+              
 main()     

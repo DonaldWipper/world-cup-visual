@@ -24,10 +24,11 @@ places = []
 rounds = [] 
 groups = []
 games = []
+dates = []
 standings = []
 games_clear = []
 games_update = []
-games_update_playoff = []
+standings = []
 space = None
 
 teams_name_dic = {}
@@ -56,21 +57,22 @@ main_url = 'http://api.football-data.org'
 
 
 def get_update_data_by_league_id(Idleague):
-    global games, games_update, games_update_playoff
+    global games, games_update
     url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
     resp = requests.get(url, headers = myheaders)
     resp = resp.json()["fixtures"] 
     res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
-"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["goalsHomeTeam"] != None or r["result"]["goalsAwayTeam"] != None and r["result"]["status"]] 
+"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["status"] != "TIMED" and  r["result"]["status"] != "SCHEDULED"] 
     for r in res_update:
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
-            games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
-        if r["id2"] in games_update_playoff:
-            db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
-            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})           
+            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
+        if r["id2"] in games_update2:
+            db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"],  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"]})
+            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})  
+
+
     return res_update
-  
 
 
 
@@ -164,7 +166,7 @@ def getAllCorellByStage(id_stage):
 
 
 def init_data():
-    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, games_update_playoff 
+    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, dates
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -175,9 +177,13 @@ def init_data():
     rounds = db.getDictFromQueryRes("rounds", {"competitionId": competitionId})
     groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
     stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
-    games = db.getDictFromQueryRes("games", {"competitionId": competitionId}) 
+    games = db.getDictFromQueryRes("games", {"competitionId": competitionId})
+    dates = [str(r["date"]).strip()[0:10] for r in games] 
+    dates = list(set(dates))
+    print(dates)
+    print(dates.sort())
     games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
-    games_update_playoff = [str(g["date"]) for g in games if g["status"] != "FINISHED" and g["homeTeamId"] == 757]
+    games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and g["homeTeamId"] == 757]
     res_update = None
     try:
         get_update_data_by_league_id(competitionId)
@@ -217,18 +223,31 @@ def get_game_dic(g):
     if(g["goalsAwayTeam"] == None):     
         game["result"] = g["status"]
     else:
-        game["result"] = g["goalsAwayTeam"] + ":" + g["goalsHomeTeam"]
+        game["result"] = g["goalsHomeTeam"] + ":" + g["goalsAwayTeam"]
     game["date"] = g["date"][5:7] + "." + g["date"][8:10]
     game["time"] = g["date"][11:16]
     return game
 
 
+def get_standings():
+    groups = list(set([s["group_"] for s in standings]))
+    stand = []
+    for g in groups:
+        group = {}
+        group["group"] = g
+        teamIds = [[str(s["teamId"]), s["team"]] for s in  standings if s["group_"] == g]
+        for t in teamIds:
+            group["team"] = t
+            group["results"] = [ [ str(g["goalsHomeTeam"]) + ":" + str(g["goalsAwayTeam"]), g["awayTeamId"]] for g in games if g["homeTeamId"] == t[0]] + [ [str(g["goalsAwayTeam"]) + ":" + str(g["goalsHomeTeam"]), g["homeTeamId"]] for g in games if g["awayTeamId"] == t[0]]
+        stand.append(group)
+    return stand                   
+
 def render():
-    global stages, teams, places, rounds, groups, space, games, places, dic_slice_2_games
+    global stages, teams, places, rounds, groups, space, games, places, dic_slice_2_games, standings, dates
     sliceId = 0
     shares = {"teams":350, "calendar":600//3, "places":650//3, "stages":400 - 650//3}
     space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
-
+    calendar = []
     #список команд
     for t in teams:
         t["value"] =  shares["teams"] / len(teams)
@@ -243,19 +262,21 @@ def render():
 
     sliceId += 1 #для пространства
     #календарь игр
-    for date in rounds:
-        strTime =  getNormalDate(date["start_at"].strip())
-        Time =  datetime.strptime(date["start_at"].strip(), '%Y-%m-%d')
-        date["value"] =  shares["calendar"] / len(rounds)
-        date["name"] =  Time.strftime(" %d %B") + " " + Time.strftime("%A")[0:3] + "."    
-        date["color"] = "#ddea4f"
-        date["sliceId"] = sliceId
-        date["id_group"] = 1
+    for date in dates:
+        c = {}
+        strTime =  getNormalDate(date.strip())
+        Time =  datetime.strptime(strTime.strip(), '%Y-%m-%d')
+        c["value"] =  shares["calendar"] / len(rounds)
+        c["name"] =  Time.strftime(" %d %B") + " " + Time.strftime("%A")[0:3] + "."    
+        c["color"] = "#ddea4f"
+        c["sliceId"] = sliceId
+        c["id_group"] = 1
         dic_sliceId[sliceId] = 1
         dic_name2sliceId[strTime] = sliceId
         dic_sliceId2name[sliceId] = strTime
         sliceId += 1
-    
+        calendar.append(c)    
+
     sliceId += 1 #для пространства  
     #стадион + город
     for p in places:
@@ -291,10 +312,12 @@ def render():
     slice_name = []
     for d in dic_slice_2_games:
         slice_name.append ( {"key":d, "value":dic_slice_2_games[d]})
-    
-   
+       
     dic_slice_2_games = {}
-    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = rounds, places = places, stages = stages, space = space, outGroups = outGroups, click_events = click_events, games_clear = games_clear, slice_name = slice_name)
+    stand = get_standings()
+    print(stand)
+    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
+stand = stand, click_events = click_events, games_clear = games_clear, slice_name = slice_name)
 
 
 

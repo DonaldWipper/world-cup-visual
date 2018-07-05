@@ -28,6 +28,7 @@ dates = []
 standings = []
 games_clear = []
 games_update = []
+games_update2 = []
 standings = []
 space = None
 
@@ -57,20 +58,22 @@ main_url = 'http://api.football-data.org'
 
 
 def get_update_data_by_league_id(Idleague):
-    global games, games_update
+    global games, games_update, games_update2
     url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
     resp = requests.get(url, headers = myheaders)
     resp = resp.json()["fixtures"] 
     res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
-"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if r["result"]["status"] != "TIMED" and  r["result"]["status"] != "SCHEDULED"] 
+"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if (r["status"] != "TIMED" and  r["status"] != "SCHEDULED") or int(r["homeTeamId"]) != 757] 
     for r in res_update:
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
             games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
         if r["id2"] in games_update2:
-            db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"],  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"]})
-            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})  
-
+            if r["goalsHomeTeam"] != None:
+                db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"],  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"]})
+            else:
+                db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"]})
+            games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
 
     return res_update
 
@@ -122,7 +125,6 @@ def getAllCorellByTeamId(teamId):
 #по дате игры возвращаем
 #группы, команды, места
 def getAllCorellByDate(date):
-    print(date)
     places = [g["placeId"] for g in games if getNormalDate(g["date"]) == date]
     teams = [g["homeTeamId"] for g in games if getNormalDate(g["date"]) == date] + [g["awayTeamId"] for g in games if getNormalDate(g["date"]) == date]  
     _stages = ["s" + str(d["id_stage"]) for d in games if getNormalDate(d["date"]) == date]
@@ -166,7 +168,7 @@ def getAllCorellByStage(id_stage):
 
 
 def init_data():
-    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, dates
+    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, dates, games_update2
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -179,15 +181,14 @@ def init_data():
     stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
     games = db.getDictFromQueryRes("games", {"competitionId": competitionId})
     dates = [str(r["date"]).strip()[0:10] for r in games] 
-    dates = list(set(dates))
-    print(dates)
-    print(dates.sort())
+    dates = sorted(list(set(dates)))
     games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
-    games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and g["homeTeamId"] == 757]
+    games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and int(g["homeTeamId"]) == 757]
     res_update = None
     try:
         get_update_data_by_league_id(competitionId)
     except:
+        print("error of api request")
         res_update = None
     
     #установим id, чтоб потом ссылаться
@@ -221,7 +222,7 @@ def get_game_dic(g):
     except:
         game["teamAway"] = None
     if(g["goalsAwayTeam"] == None):     
-        game["result"] = g["status"]
+        game["result"] = g["status"][0:5]
     else:
         game["result"] = g["goalsHomeTeam"] + ":" + g["goalsAwayTeam"]
     game["date"] = g["date"][5:7] + "." + g["date"][8:10]
@@ -315,7 +316,6 @@ def render():
        
     dic_slice_2_games = {}
     stand = get_standings()
-    print(stand)
     return render_template("world_cup2.html", teams = teams, groups = groups, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
 stand = stand, click_events = click_events, games_clear = games_clear, slice_name = slice_name)
 

@@ -29,6 +29,7 @@ standings = []
 games_clear = []
 games_update = []
 games_update2 = []
+games_playoff = []
 standings = []
 space = None
 
@@ -62,8 +63,7 @@ def get_update_data_by_league_id(Idleague):
     url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
     resp = requests.get(url, headers = myheaders)
     resp = resp.json()["fixtures"] 
-    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"],
-"goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if (r["status"] != "TIMED" and  r["status"] != "SCHEDULED") or int(r["homeTeamId"]) != 757] 
+    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"], "goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if (r["status"] != "TIMED" and  r["status"] != "SCHEDULED") or int(r["homeTeamId"]) != 757] 
     for r in res_update:
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
@@ -164,11 +164,63 @@ def getAllCorellByStage(id_stage):
             sliceIds.append(dic_name2sliceId[name])
     return sliceIds
 
+'''
+def get_playoff_data():
+    global games_clear
+    games_playoff = []
+    for stage in range(20, 15, -1):
+        g_p = [g for g in games if g["id_stage"] = stage]
+        games_playoff.append[g_p]
+    for gps in games_playoff:
+        for gp in gps:
+        
+
+        
+
+        for g in games:
+            if g["id_stage"] == stage:
+                gs["key"] = 
+
+ levelGroups[i], parent: p, team1: p1, team2: p2, parentNumber: parentNumber 
+'''        
+         
 
 
+def get_playoff_data():
+    global games_clear,  games_playoff
+    result_playoff = []
+    playoff_games = {}
+    for stage in range(13, 8, -1):
+        pg = [g for g in games_clear if int(g["id_stage"]) == stage]
+        for g in pg:
+            g["pair"] = [g["teamHome"], g["teamAway"]]
+            g["key"] = None
+            g["parent"] = None
+        playoff_games[stage] = pg  
+    print(playoff_games)
+    for stage in range(13, 8, -1):
+        i = 0
+        for g in  playoff_games[stage]:
+            g["key"] = str(stage) + "-" + str(i)
+            i += 1
+            if stage == 9:
+                continue;
+            if stage == 11:
+                g["parent"] = "13-0"
+
+            for child in  playoff_games[stage-1]:
+                if (g["teamHome"] in child["pair"] or g["teamAway"] in child["pair"]) and child["parent"] == None :
+                    child["parent"] = g["key"]
+    
+    for p in playoff_games:
+        result_playoff = result_playoff + playoff_games[p]
+    del  playoff_games
+    del  games_playoff
+    games_playoff = result_playoff 			
+    del result_playoff 
 
 def init_data():
-    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, dates, games_update2
+    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, dates, games_update2, games_playoff, games_clear
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
@@ -193,13 +245,15 @@ def init_data():
     
     #установим id, чтоб потом ссылаться
     i = 0
+    del games_clear
+    games_clear = []
     for g in games:
         g_new = get_game_dic(g)
         g["id"] = i 
         g_new["id"] = g["id"]
         i += 1   
         games_clear.append (g_new)
-
+    get_playoff_data()
 
 def get_game_dic(g):
     game = {}
@@ -227,6 +281,9 @@ def get_game_dic(g):
         game["result"] = g["goalsHomeTeam"] + ":" + g["goalsAwayTeam"]
     game["date"] = g["date"][5:7] + "." + g["date"][8:10]
     game["time"] = g["date"][11:16]
+    game["goalsAwayTeam"] = g["goalsAwayTeam"]
+    game["goalsHomeTeam"] = g["goalsHomeTeam"]
+    game["id_stage"] = g["id_stage"]
     return game
 
 
@@ -317,7 +374,7 @@ def render():
     dic_slice_2_games = {}
     stand = get_standings()
     return render_template("world_cup2.html", teams = teams, groups = groups, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
-stand = stand, click_events = click_events, games_clear = games_clear, slice_name = slice_name)
+stand = stand, click_events = click_events, games_clear = games_clear, slice_name = slice_name, games_playoff  = games_playoff )
 
 
 

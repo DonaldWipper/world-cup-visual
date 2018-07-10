@@ -1,33 +1,33 @@
-playedGames,group,goalDifference,goalsAgainst,teamId,goals,team,points,crestURI,rank,path,gdX,gdY
-3,B,1,5,760,6,Spain,5,https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg,1,flags/Spain.svg,1,0
-3,B,1,4,765,5,Portugal,5,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg,2,flags/Portugal.svg,1,0
-3,B,0,2,840,2,Iran,4,https://upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg,3,flags/Iran.svg,1,0
-3,B,-2,4,815,2,Morocco,1,https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg,4,flags/Morocco.svg,1,0
-3,F,3,2,792,5,Sweden,6,https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg,1,flags/Sweden.svg,1,1
-3,F,-1,4,769,3,Mexico,6,https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg,2,flags/Mexico.svg,1,1
-3,F,0,3,772,3,Korea Republic,3,https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg,3,flags/Korea Republic.svg,1,1
-3,F,-2,4,759,2,Germany,3,https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg,4,flags/Germany.svg,1,1
-3,A,5,0,758,5,Uruguay,9,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg,1,flags/Uruguay.svg,0,0
-3,A,4,4,808,8,Russia,6,https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg,2,flags/Russia.svg,0,0
-3,A,-5,7,801,2,Saudi Arabia,3,https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg,3,flags/Saudi Arabia.svg,0,0
-3,A,-4,6,825,2,Egypt,0,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg,4,flags/Egypt.svg,0,0
-3,C,2,1,773,3,France,7,https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg,1,flags/France.svg,2,0
-3,C,1,1,782,2,Denmark,5,https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg,2,flags/Denmark.svg,2,0
-3,C,0,2,832,2,Peru,3,https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg,3,flags/Peru.svg,2,0
-3,C,-3,5,779,2,Australia,1,https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg,4,flags/Australia.svg,2,0
-3,H,3,2,818,5,Colombia,6,https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg,1,flags/Colombia.svg,2,1
-3,H,0,4,766,4,Japan,4,https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg,2,flags/Japan.svg,2,1
-3,H,0,4,804,4,Senegal,4,https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg,3,flags/Senegal.svg,2,1
-3,H,-3,5,794,2,Poland,3,https://upload.wikimedia.org/wikipedia/commons/1/12/Flag_of_Poland.svg,4,flags/Poland.svg,2,1
-3,G,7,2,805,9,Belgium,9,https://upload.wikimedia.org/wikipedia/commons/9/92/Flag_of_Belgium_%28civil%29.svg,1,flags/Belgium.svg,3,1
-3,G,5,3,770,8,England,6,https://upload.wikimedia.org/wikipedia/commons/b/be/Flag_of_England.svg,2,flags/England.svg,3,1
-3,G,-3,8,802,5,Tunisia,3,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg,3,flags/Tunisia.svg,3,1
-3,G,-9,11,1836,2,Panama,0,https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg,4,flags/Panama.svg,3,1
-3,E,4,1,764,5,Brazil,7,https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg,1,flags/Brazil.svg,0,1
-3,E,1,4,788,5,Switzerland,5,https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Switzerland_%28Pantone%29.svg,2,flags/Switzerland.svg,0,1
-3,E,-2,4,780,2,Serbia,3,https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg,3,flags/Serbia.svg,0,1
-3,E,-3,5,793,2,Costa Rica,1,https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_Costa_Rica_%28state%29.svg,4,flags/Costa Rica.svg,0,1
-3,D,6,1,799,7,Croatia,9,https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg,1,flags/Croatia.svg,3,0
-3,D,-2,5,762,3,Argentina,4,https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg,2,flags/Argentina.svg,3,0
-3,D,-1,4,776,3,Nigeria,3,https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg,3,flags/Nigeria.svg,3,0
-3,D,-3,5,1066,2,Iceland,1,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Iceland.svg,4,flags/Iceland.svg,3,0
+team,crestURI,group,teamId,points,goals,rank,playedGames,goalsAgainst,goalDifference,path,gdX,gdY
+France,https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg,C,773,7,3,1,3,1,2,flags/France.svg,2,0
+Denmark,https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg,C,782,5,2,2,3,1,1,flags/Denmark.svg,2,0
+Peru,https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg,C,832,3,2,3,3,2,0,flags/Peru.svg,2,0
+Australia,https://upload.wikimedia.org/wikipedia/commons/b/b9/Flag_of_Australia.svg,C,779,1,2,4,3,5,-3,flags/Australia.svg,2,0
+Sweden,https://upload.wikimedia.org/wikipedia/commons/4/4c/Flag_of_Sweden.svg,F,792,6,5,1,3,2,3,flags/Sweden.svg,1,1
+Mexico,https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg,F,769,6,3,2,3,4,-1,flags/Mexico.svg,1,1
+Korea Republic,https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg,F,772,3,3,3,3,3,0,flags/Korea Republic.svg,1,1
+Germany,https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg,F,759,3,2,4,3,4,-2,flags/Germany.svg,1,1
+Croatia,https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg,D,799,9,7,1,3,1,6,flags/Croatia.svg,3,0
+Argentina,https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg,D,762,4,3,2,3,5,-2,flags/Argentina.svg,3,0
+Nigeria,https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg,D,776,3,3,3,3,4,-1,flags/Nigeria.svg,3,0
+Iceland,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Iceland.svg,D,1066,1,2,4,3,5,-3,flags/Iceland.svg,3,0
+Spain,https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg,B,760,5,6,1,3,5,1,flags/Spain.svg,1,0
+Portugal,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Portugal.svg,B,765,5,5,2,3,4,1,flags/Portugal.svg,1,0
+Iran,https://upload.wikimedia.org/wikipedia/commons/c/ca/Flag_of_Iran.svg,B,840,4,2,3,3,2,0,flags/Iran.svg,1,0
+Morocco,https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg,B,815,1,2,4,3,4,-2,flags/Morocco.svg,1,0
+Brazil,https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg,E,764,7,5,1,3,1,4,flags/Brazil.svg,0,1
+Switzerland,https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Switzerland_%28Pantone%29.svg,E,788,5,5,2,3,4,1,flags/Switzerland.svg,0,1
+Serbia,https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg,E,780,3,2,3,3,4,-2,flags/Serbia.svg,0,1
+Costa Rica,https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_Costa_Rica_%28state%29.svg,E,793,1,2,4,3,5,-3,flags/Costa Rica.svg,0,1
+Colombia,https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg,H,818,6,5,1,3,2,3,flags/Colombia.svg,2,1
+Japan,https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg,H,766,4,4,2,3,4,0,flags/Japan.svg,2,1
+Senegal,https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg,H,804,4,4,3,3,4,0,flags/Senegal.svg,2,1
+Poland,https://upload.wikimedia.org/wikipedia/commons/1/12/Flag_of_Poland.svg,H,794,3,2,4,3,5,-3,flags/Poland.svg,2,1
+Belgium,https://upload.wikimedia.org/wikipedia/commons/9/92/Flag_of_Belgium_%28civil%29.svg,G,805,9,9,1,3,2,7,flags/Belgium.svg,3,1
+England,https://upload.wikimedia.org/wikipedia/commons/b/be/Flag_of_England.svg,G,770,6,8,2,3,3,5,flags/England.svg,3,1
+Tunisia,https://upload.wikimedia.org/wikipedia/commons/c/ce/Flag_of_Tunisia.svg,G,802,3,5,3,3,8,-3,flags/Tunisia.svg,3,1
+Panama,https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg,G,1836,0,2,4,3,11,-9,flags/Panama.svg,3,1
+Uruguay,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg,A,758,9,5,1,3,0,5,flags/Uruguay.svg,0,0
+Russia,https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg,A,808,6,8,2,3,4,4,flags/Russia.svg,0,0
+Saudi Arabia,https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg,A,801,3,2,3,3,7,-5,flags/Saudi Arabia.svg,0,0
+Egypt,https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg,A,825,0,2,4,3,6,-4,flags/Egypt.svg,0,0

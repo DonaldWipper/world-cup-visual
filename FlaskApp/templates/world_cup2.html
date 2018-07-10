@@ -23,8 +23,12 @@
     <script src="{{
   url_for('static', filename='js/datamaps.world.min.js') }}"></script>
 
+ <script src="{{
+  url_for('static', filename='js/go.js') }}"></script>
 
-      <link rel="icon" href="{{ url_for('static', filename= 'png/world-cup.png') }}">
+    
+
+      <link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
 
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
     <!-- Month names -->
@@ -38,7 +42,7 @@
 
     <div id="chart" style="position: absolute;"></div>
 
-
+  
 
     <script>
         ////////////////////////// //////////////////////////////////
@@ -93,10 +97,178 @@
         var fontSizeInside = fontInsideKoef * (outerRadius - innerRadius)
 
 
-
         var colors = d3.scale.category10();
-
-
+        
+     var iDiv = document.createElement('div');
+     iDiv.id = 'scheme';
+     iDiv.className = 'scheme';
+     document.getElementsByTagName('body')[0].appendChild(iDiv);
+     wd = 1.5 * innerRadius
+     document.getElementById("scheme").style.width =  wd + "px";
+     hd = 1.3 * innerRadius    
+     document.getElementById("scheme").style.height = hd  + "px"
+     document.getElementById("scheme").style.left = width / 2 - 1.5 / 2 *innerRadius + "px";
+     document.getElementById("scheme").style.top = height / 2 - 1.3 / 2 * innerRadius + "px";
+     document.getElementById("scheme").style.position = "relative";
+     //document.getElementById("scheme").style.zIndex = "-1"
+	 var column_width = wd / 4.0
+     var row_height = hd / 32.0
+     console.log("width:" + column_width)
+     var node_spacing = column_width  / 4.0
+     var layer_spacing = row_height  / 2.0
+     
+        
+     var $ = go.GraphObject.make;  // for conciseness in defining templates
+     myDiagram =
+      $(go.Diagram, "scheme",  // create a Diagram for the DIV HTML element
+        {
+          initialContentAlignment: go.Spot.Center,  // center the content
+          "textEditingTool.starting": go.TextEditingTool.SingleClick,
+          "textEditingTool.textValidation": isValidScore,
+          layout: $(go.TreeLayout, { angle: 180, nodeSpacing:node_spacing , layerSpacing: layer_spacing }),
+          "undoManager.isEnabled": true
+        });
+    // validation function for editing text
+    function isValidScore(textblock, oldstr, newstr) {
+      if (newstr === "") return true;
+      var num = parseInt(newstr, 10);
+      return !isNaN(num) && num >= 0 && num < 1000;
+    }
+    // define a simple Node template
+    myDiagram.nodeTemplate =
+      $(go.Node, "Auto",
+        { selectable: false },
+        $(go.Shape, "Rectangle",
+          { fill: '#8C8C8C', stroke: null },
+          // Shape.fill is bound to Node.data.color
+          new go.Binding("fill", "color")),
+        
+        $(go.Panel, "Table",
+          $(go.RowColumnDefinition, { column: 0, separatorStroke: "black", height:column_width * 3 / 4 }),
+          $(go.RowColumnDefinition, { column: 1, separatorStroke: "black",  height:column_width / 4, background: "#BABABA" }),
+          $(go.RowColumnDefinition, { row: 0, separatorStroke: "black", height:row_height  }),
+          $(go.RowColumnDefinition, { row: 1, separatorStroke: "black", height:row_height  }),
+          $(go.TextBlock, "",
+            { row: 0,
+              wrap: go.TextBlock.None, margin: 5, 
+              isMultiline: false, textAlign: 'left',
+              font: fontSizeInside + 'px  dusha', stroke: 'white' },
+            new go.Binding("text", "teamHome").makeTwoWay()),
+          $(go.TextBlock, "",
+            { row: 1,
+              wrap: go.TextBlock.None, margin: 5, 
+              isMultiline: false, textAlign: 'left',
+              font: fontSizeInside + 'px  dusha', stroke: 'black' },
+            new go.Binding("text", "teamAway").makeTwoWay()),
+  
+          $(go.TextBlock, "",
+            { column: 1, row: 0,
+              wrap: go.TextBlock.None, margin: 2, 
+              isMultiline: false, editable: true, textAlign: 'center',
+              font: fontSizeInside + 'px dusha;',  stroke: 'black' },
+            new go.Binding("text", "goalsHomeTeam").makeTwoWay()),
+          
+          $(go.TextBlock, "",
+            { column: 1, row: 1,
+              wrap: go.TextBlock.None, margin: 2,
+              isMultiline: false, editable: true, textAlign: 'center',
+              font: fontSizeInside + 'px  dusha', stroke: 'black' },
+            new go.Binding("text", "goalsAwayTeam").makeTwoWay())
+        )
+      );
+    // define the Link template
+    myDiagram.linkTemplate =
+      $(go.Link,
+        { routing: go.Link.Orthogonal,
+          selectable: false },
+        $(go.Shape, { strokeWidth: 1, stroke: 'black' }));
+    // Generates the original graph from an array of team names
+       
+    //    
+    function createPairs(teams) {
+      if (teams.length % 2 !== 0) teams.push('(empty)');
+      var startingGroups = teams.length / 2;
+      var currentLevel = Math.ceil(Math.log(startingGroups) / Math.log(2));
+      var levelGroups = [];
+      var currentLevel = Math.ceil(Math.log(startingGroups) / Math.log(2));
+      for (var i = 0; i < startingGroups; i++) {
+        levelGroups.push(currentLevel + '-' + i);
+      }
+      var totalGroups = [];
+      makeLevel(levelGroups, currentLevel, totalGroups, teams);
+      return totalGroups;
+    }
+        
+        
+    function makeLevel(levelGroups, currentLevel, totalGroups, teams) {
+      currentLevel--;
+      var len = levelGroups.length;
+      var parentKeys = [];
+      var parentNumber = 0;
+      var p = '';
+      for (var i = 0; i < len; i++) {
+        if (parentNumber === 0) {
+          p = currentLevel + '-' + parentKeys.length;
+          parentKeys.push(p);
+        }
+        if (teams !== null) {
+          var p1 = teams[i*2];
+          var p2 = teams[(i*2) + 1];
+          totalGroups.push({
+            key: levelGroups[i], parent: p, teamHome: p1, teamAway: p2, parentNumber: parentNumber
+          });
+        } else {
+          totalGroups.push({ key: levelGroups[i], parent: p, parentNumber: parentNumber });
+        }
+        parentNumber++;
+        if (parentNumber > 1) parentNumber = 0;
+      }
+      // after the first created level there are no team names
+      if (currentLevel >= 0) makeLevel(parentKeys, currentLevel, totalGroups, null)
+    }
+        
+    function makeModel(teams) {
+      var model = new go.TreeModel(teams);
+    
+      model.addChangedListener(function(e) {
+        if (e.propertyName !== 'goalsHomeTeam' && e.propertyName !== 'goalsAwayTeam') return;
+        var data = e.object;
+        if (isNaN(data.goalsHomeTeam) || isNaN(data.goalsAwayTeam)) return;
+        // TODO: What happens if goalsHomeTeam and goalsAwayTeam are the same number?
+        // both goalsHomeTeam and goalsAwayTeam are numbers,
+        // set the name of the higher-score'd team in the advancing (parent) node
+        // if the data.parentNumber is 0, then we set teamHome on the parent
+        // if the data.parentNumber is 1, then we set teamAway
+        var parent = myDiagram.findNodeForKey(data.parent);
+        if (parent === null) return;
+        var teamName = parseInt(data.goalsHomeTeam) > parseInt(data.goalsAwayTeam) ? data.teamHome : data.teamAway;
+        if (parseInt(data.goalsHomeTeam) === parseInt(data.goalsAwayTeam)) teamName = "";
+        myDiagram.model.setDataProperty(parent.data, (data.parentNumber === 0 ? "teamHome" : "teamAway"), teamName);
+      });
+      
+      myDiagram.model = model;
+      // provide initial scores for at most three pairings
+      /*
+      for (var i = 0; i < teams.length); i++) {
+        var d = model.nodeDataArray[i];
+        if (d.teamHome && d.teamAway) {
+          // TODO: doesn't prevent tie scores
+          model.setDataProperty(d, "goalsHomeTeam", Math.floor(Math.random() * 100));
+          model.setDataProperty(d, "goalsAwayTeam", Math.floor(Math.random() * 100));
+        }
+      }
+      */
+      
+    }
+        
+        
+    function show_scheme() {
+        
+        makeModel(games_playoff);
+    }
+       
+        
+   
         var iDiv = document.createElement('div');
         iDiv.id = 'container';
         iDiv.className = 'container';
@@ -306,6 +478,18 @@
             {{d['key']}}:{{d['value']}},
             {% endfor %} 
         }
+             
+          var games_playoff = [
+            {% for d in games_playoff%} { 
+			     "key": "{{d['key']}}",
+                 "parent": "{{d['parent']}}", 				 
+                 "teamHome": "{{d['teamHome']}}",
+				 "teamAway": "{{d['teamAway']}}",
+				 "goalsHomeTeam": "{{d['goalsHomeTeam']}}",
+				 "goalsAwayTeam": "{{d['goalsAwayTeam']}}"
+            },
+             {% endfor %} 
+            ]     
         
         var games = [
             {% for d in games_clear %} { 
@@ -315,7 +499,9 @@
                  "city": "{{d['city']}}", 
                  "stadium": "{{d['stadium']}}",  
                  "date": "{{d['date']}}",  
-                 "time": "{{d['time']}}"
+                 "time": "{{d['time']}}",
+                 "goalsHomeTeam": "{{d['goalsHomeTeam']}}",  
+                 "goalsAwayTeam": "{{d['goalsAwayTeam']}}"  
             },
              {% endfor %} 
             ]
@@ -451,6 +637,7 @@
             d3.select("#table").remove()
             d3.select("#play").empty()
             d3.select("#play").remove()
+            columns = columns.slice(0,6)
             var table = d3.select("#chart").append("table")
                .attr("width", 1.5 * innerRadius ) 
                //.attr("height", 1.3 * innerRadius ) 
@@ -459,7 +646,6 @@
                 .attr("style", "table-layout:fixed;margin-left: " + (width - 1.50 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.3 * innerRadius) / 2 + "px")
                 .attr("id", "table");
             
-            console.log("Width: " + document.getElementById('table').getBoundingClientRect().width + " " + innerRadius / 8)
             
             
             x = 100.0 / columns.length
@@ -516,12 +702,14 @@
         }
         
              
-             
+                    
         function playoff(data, columns) {
             d3.select("#play").empty()
             d3.select("#play").remove()
             d3.select("#table").empty()
             d3.select("#table").remove() 
+            
+           
             var table = d3.select("#chart").append("table")
                 .attr("width", innerRadius)
                 .attr("style", "margin-left: " + (width - 1.50 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.3 * innerRadius) / 2 + "px")
@@ -530,7 +718,7 @@
             thead = table.append("thead"),
                 tbody = table.append("tbody")
             
-            stages = ["round of 16", "quarter-final", "semi-final"]
+            stages = ["round of 16", "quarter-final", "semi-final", "final"]
             // append the header row
             thead.append("tr")
                 .selectAll("th")
@@ -543,6 +731,12 @@
                 .text(function(column) {
                     return column;
                 });
+            posX = (width - 1.50 * innerRadius) / 2
+            posY = (height + 1.3 * innerRadius) / 2 
+        
+            for (i = 0; i < 8; i++) {
+                match_item(i, games[i], posX, posY + i * innerRadius * 0.1, innerRadius * 0.5,  innerRadius * 0.5)
+            }
              
             /*
             // create a row for each object in the data
@@ -744,6 +938,7 @@
 
                     .on("mouseover", function() {
                         restore_colors()
+                        document.getElementById("scheme").style.display = "none";
                         d3.select(this).style("fill", "#debcd1");
                         cur_index = i
                         flag_response = 0
@@ -797,10 +992,18 @@
                         d3.select("#table").empty()
                         d3.select("#table").remove()  
                         document.getElementById("container").style.display = "block";
+                        document.getElementById("scheme").style.display = "none"; 
                         //$("#container").load(location.href + " #container");  
                     }
                     if (d3.select(this).attr("id") == "outArc3") {
-                        playoff(function_get_games_array(show_games[i]), Object.keys(games[0])); 
+                        d3.select("#play").empty()
+                        d3.select("#play").remove()
+                        d3.select("#table").empty()
+                        d3.select("#table").remove() 
+                        document.getElementById("container").style.display = "none";
+                        document.getElementById("scheme").style.display = "block"; 
+                        show_scheme() 
+                        //playoff(function_get_games_array(show_games[i]), Object.keys(games[0])); 
                         //document.getElementById("container").style.display = "block";
                         //$("#container").load(location.href + " #container");  
                     }
@@ -810,6 +1013,7 @@
                     restore_colors_outArcs();
                     console.log("hide national teams")
                     document.getElementById("container").style.display = "none";
+                    //document.getElementById("scheme").style.display = "none";
                     //$("#container").load(location.href + " #container"); 
                 });
            
@@ -826,7 +1030,7 @@
             svg.append("text")
                 .style("font-size", fontSizeOutterSlice + "px")
                 .append("textPath")
-                .attr("startOffset", "20%")
+                .attr("startOffset", "15%")
                 .attr("id", "outArcText" + i)
                 .attr("pointer-events", "none")
                 .attr("xlink:href", "#outArcPath" + i)

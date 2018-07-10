@@ -1,2 +1,2 @@
-lastUpdated,year,id,numberOfTeams,numberOfGames,numberOfMatchdays,currentMatchday,league,caption
-2018-06-28T19:58:01Z,2018,467,32,64,8,3,WC,World Cup 2018 Russia
+numberOfTeams,year,numberOfMatchdays,currentMatchday,numberOfGames,lastUpdated,id,league,caption
+32,2018,8,4,64,2018-06-28T19:58:01Z,467,WC,World Cup 2018 Russia

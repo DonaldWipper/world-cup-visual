@@ -58,21 +58,25 @@ myheaders = { 'X-Auth-Token': token, 'X-Response-Control': 'minified' }
 main_url = 'http://api.football-data.org'
 
 
+#extraTimeHomeGoals, extraTimeAwayGoals, penaltyShootoutHomeGoals, penaltyShootoutAwayGoals
+
 def get_update_data_by_league_id(Idleague):
     global games, games_update, games_update2
     url = main_url +  '/v1/competitions/' + str(Idleague) + '/fixtures'
     resp = requests.get(url, headers = myheaders)
     resp = resp.json()["fixtures"] 
-    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"], "goalsAwayTeam": r["result"]["goalsAwayTeam"]} for r in resp if (r["status"] != "TIMED" and  r["status"] != "SCHEDULED") or int(r["homeTeamId"]) != 757] 
+    res_update = [{"id":str(r["homeTeamId"]) + str(r["awayTeamId"]) + getNormalDate(r["date"]),"id2":str(r["date"]),"awayTeamId":r["awayTeamId"], "homeTeamId":r["homeTeamId"],"status":r["status"], "date":r["date"], "goalsHomeTeam": r["result"]["goalsHomeTeam"], "goalsAwayTeam": r["result"]["goalsAwayTeam"], "penaltyShootoutHomeGoals":r["result"].get("penaltyShootout", {}).get("goalsHomeTeam", None), "penaltyShootoutAwayGoals":r["result"].get("penaltyShootout", {}).get("goalsAwayTeam", None),
+"extraTimeHomeGoals":r["result"].get("extraTime", {}).get("goalsHomeTeam", None), "extraTimeAwayGoals":r["result"].get("extraTime", {}).get("goalsAwayTeam", None)} for r in resp if (r["status"] != "TIMED" and  r["status"] != "SCHEDULED") or int(r["homeTeamId"]) != 757] 
+
     for r in res_update:
         if r["id"] in games_update:
             db.updateTableFromConditions("games", {"competitionId": competitionId,  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"]})
             games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
         if r["id2"] in games_update2:
             if r["goalsHomeTeam"] != None:
-                db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"],  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"]})
+                db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "goalsHomeTeam":r["goalsHomeTeam"],  "goalsAwayTeam":r["goalsAwayTeam"],  "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"], "penaltyShootoutHomeGoals":r["penaltyShootoutHomeGoals"],"penaltyShootoutAwayGoals":r["penaltyShootoutAwayGoals"], "extraTimeHomeGoals":r["extraTimeHomeGoals"], "extraTimeAwayGoals":r["extraTimeAwayGoals"]})
             else:
-                db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"]})
+                db.updateTableFromConditions("games", {"competitionId": competitionId,  "date": r["date"]}, {"status":r["status"], "homeTeamId": r["homeTeamId"],  "awayTeamId": r["awayTeamId"],  "penaltyShootoutHomeGoals":r["penaltyShootoutHomeGoals"], "penaltyShootoutAwayGoals":r["penaltyShootoutAwayGoals"], "extraTimeHomeGoals":r["extraTimeHomeGoals"], "extraTimeAwayGoals":r["extraTimeAwayGoals"]})
             games = db.getDictFromQueryRes("games", {"competitionId": competitionId})    
 
     return res_update
@@ -197,7 +201,6 @@ def get_playoff_data():
             g["key"] = None
             g["parent"] = None
         playoff_games[stage] = pg  
-    print(playoff_games)
     for stage in range(13, 8, -1):
         i = 0
         for g in  playoff_games[stage]:
@@ -237,6 +240,7 @@ def init_data():
     games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
     games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and int(g["homeTeamId"]) == 757]
     res_update = None
+    get_update_data_by_league_id(competitionId)
     try:
         get_update_data_by_league_id(competitionId)
     except:
@@ -254,6 +258,18 @@ def init_data():
         i += 1   
         games_clear.append (g_new)
     get_playoff_data()
+
+def get_result_string(g):
+    if g["goalsHomeTeam"] is None:
+        return None
+    if g["extraTimeHomeGoals"] != None:
+        if g["penaltyShootoutHomeGoals"] != None:
+            return str(g["extraTimeHomeGoals"]) + "(" + str(g["penaltyShootoutHomeGoals"]) +  ")"  + ":" + str(g["extraTimeAwayGoals"]) + "(" + str(g["penaltyShootoutAwayGoals"])  + ")" 
+        else:
+            return str(g["extraTimeHomeGoals"]) +  ":" + str(g["extraTimeAwayGoals"]) 
+    else:  
+            return str(g["goalsHomeTeam"]) + ":" + str(g["goalsAwayTeam"])
+    
 
 def get_game_dic(g):
     game = {}
@@ -278,7 +294,7 @@ def get_game_dic(g):
     if(g["goalsAwayTeam"] == None):     
         game["result"] = g["status"][0:5]
     else:
-        game["result"] = g["goalsHomeTeam"] + ":" + g["goalsAwayTeam"]
+        game["result"] = get_result_string(g)
     game["date"] = g["date"][5:7] + "." + g["date"][8:10]
     game["time"] = g["date"][11:16]
     game["goalsAwayTeam"] = g["goalsAwayTeam"]

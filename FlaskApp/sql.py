@@ -19,7 +19,10 @@ def read_params(fn):
 
 
 
-
+def ifNoneNull(s):
+    if s is None:
+        return 'NULL'
+    return str(s)
 
 class database:
     def __init__(self, host_, user_, passwd_, db_):
@@ -113,7 +116,7 @@ class database:
         else:
             query += " SET "
             for r in update_fields:
-                s = str(r) + " = '" + str(update_fields[r]) + "',"
+                s = str(r) + " = '" + str(ifNoneNull(update_fields[r])) + "',"
                 if r not in ["date", "status"]:
                     s = s.strip().replace("'", "")
                 query += s 

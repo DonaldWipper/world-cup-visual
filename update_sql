@@ -44,7 +44,16 @@ where g.competitionId = 467
       and g.placeId is null
       
       
-
+select *
+from games g
+join matches m
+    on g.awayTeamId = m.awayTeamId
+    and g.homeTeamId = m.homeTeamId
+    and g.date = m.date
+where m.extraTimeHomeGoals is not null
+      or m.extraTimeAwayGoals is not null 
+      or m.penaltyShootoutHomeGoals  is not null
+      or m.penaltyShootoutAwayGoals is not null
 
       
       

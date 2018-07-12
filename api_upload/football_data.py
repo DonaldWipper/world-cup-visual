@@ -139,6 +139,10 @@ def main():
         headers.append('gdY')
         headers.append('rankX')
         headers.append('rankY')
+        headers.append('extraTimeHomeGoals')
+        headers.append('extraTimeAwayGoals') 
+        headers.append('penaltyShootoutHomeGoals') 
+        headers.append('penaltyShootoutAwayGoals')
 
  
         print(headers) 
@@ -150,6 +154,11 @@ def main():
             x = dict(f["result"])
             f['goalsHomeTeam'] = x['goalsHomeTeam']
             f['goalsAwayTeam'] = x['goalsAwayTeam']
+            f['extraTimeHomeGoals'] = x.get("extraTime", {}).get("goalsHomeTeam", "NULL")
+            f['extraTimeAwayGoals'] = x.get("extraTime", {}).get("goalsAwayTeam", "NULL")
+            f['penaltyShootoutHomeGoals'] =  x.get("penaltyShootout", {}).get("goalsHomeTeam", "NULL")
+            f['penaltyShootoutAwayGoals'] =  x.get("penaltyShootout", {}).get("goalsAwayTeam", "NULL")
+
             if x['goalsAwayTeam'] != None:
                 if f['awayTeamId'] in teams:
                     teams[f['awayTeamId']] += int (x['goalsAwayTeam'])

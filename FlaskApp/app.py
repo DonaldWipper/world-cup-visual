@@ -240,7 +240,6 @@ def init_data():
     games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
     games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and int(g["homeTeamId"]) == 757]
     res_update = None
-    get_update_data_by_league_id(competitionId)
     try:
         get_update_data_by_league_id(competitionId)
     except:

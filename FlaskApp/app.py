@@ -14,23 +14,21 @@ from datetime import datetime
 
 #mysql = MySQL()
 cursor = None
-competitionId = 467
+competitionId = 378
 
 db = None
-
+tournamentPos = 0
 stages = []
 teams = [] 
 places = []
 rounds = [] 
-groups = []
 games = []
 dates = []
-standings = []
 games_clear = []
 games_update = []
 games_update2 = []
 games_playoff = []
-standings = []
+tournaments = []
 space = None
 
 teams_name_dic = {}
@@ -186,7 +184,7 @@ def get_playoff_data():
                 gs["key"] = 
 
  levelGroups[i], parent: p, team1: p1, team2: p2, parentNumber: parentNumber 
-'''        
+'''       
          
 
 
@@ -222,30 +220,37 @@ def get_playoff_data():
     games_playoff = result_playoff 			
     del result_playoff 
 
-def init_data():
-    global stages, games, teams, places, games_update, rounds, groups, space, standings, stages, db, dates, games_update2, games_playoff, games_clear
+def init_data(_competitionId = competitionId):
+    global stages, games, teams, places, games_update, rounds,  space, stages, db, dates, games_update2, games_playoff, games_clear, tournaments, tournamentPos 
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
     db = FlaskApp.sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])
-    standings = db.getDictFromQueryRes("standings", {"competitionId": competitionId})
-    teams = [team for team in db.getDictFromQueryRes("teams_wc") if team["id"] in   [t["teamId"] for t in  standings] ]
-    places = db.getDictFromQueryRes("places", {"competitionId": competitionId})  
-    rounds = db.getDictFromQueryRes("rounds", {"competitionId": competitionId})
-    groups = db.getDictFromQueryRes("groups", {"competitionId": competitionId})
-    stages = db.getDictFromQueryRes("stages", {"competitionId": competitionId})    
-    games = db.getDictFromQueryRes("games", {"competitionId": competitionId})
+    places = db.getDictFromQueryRes("places", {"competitionId": _competitionId})  
+    rounds = db.getDictFromQueryRes("rounds", {"competitionId": _competitionId})
+    stages = db.getDictFromQueryRes("stages", {"competitionId": _competitionId})    
+    games = db.getDictFromQueryRes("games", {"competitionId": _competitionId})
+    tournaments = db.getDictFromQueryRes("tournaments")
+    i = 0
+    for t in tournaments:
+        t["position"] = i
+        if int(t["id"]) == int(_competitionId):
+            tournamentPos = i 
+        i += 1  
+    teams_ids = [g["homeTeamId"] for g in games] + [g["awayTeamId"] for g in games]  
+    teams = [team for team in db.getDictFromQueryRes("teams_wc") if str(team["id"]) in teams_ids] 
     dates = [str(r["date"]).strip()[0:10] for r in games] 
     dates = sorted(list(set(dates)))
-    games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
-    games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and int(g["homeTeamId"]) == 757]
+    #games_update = [str(g["homeTeamId"]) + str(g["awayTeamId"]) + getNormalDate(g["date"]) for g in games if g["status"] != "FINISHED" ]
+    #games_update2 = [str(g["date"])  for g in games if g["status"] != "FINISHED" and int(g["homeTeamId"]) == 757]
     res_update = None
+    '''
     try:
         get_update_data_by_league_id(competitionId)
     except:
         print("error of api request")
         res_update = None
-    
+    '''
     #установим id, чтоб потом ссылаться
     i = 0
     del games_clear
@@ -302,21 +307,10 @@ def get_game_dic(g):
     return game
 
 
-def get_standings():
-    groups = list(set([s["group_"] for s in standings]))
-    stand = []
-    for g in groups:
-        group = {}
-        group["group"] = g
-        teamIds = [[str(s["teamId"]), s["team"]] for s in  standings if s["group_"] == g]
-        for t in teamIds:
-            group["team"] = t
-            group["results"] = [ [ str(g["goalsHomeTeam"]) + ":" + str(g["goalsAwayTeam"]), g["awayTeamId"]] for g in games if g["homeTeamId"] == t[0]] + [ [str(g["goalsAwayTeam"]) + ":" + str(g["goalsHomeTeam"]), g["homeTeamId"]] for g in games if g["awayTeamId"] == t[0]]
-        stand.append(group)
-    return stand                   
+        
 
 def render():
-    global stages, teams, places, rounds, groups, space, games, places, dic_slice_2_games, standings, dates
+    global stages, teams, places, rounds,  space, games, places, dic_slice_2_games, dates, tournaments, tournamentPos 
     sliceId = 0
     shares = {"teams":350, "calendar":600//3, "places":650//3, "stages":400 - 650//3}
     space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
@@ -339,7 +333,7 @@ def render():
         c = {}
         strTime =  getNormalDate(date.strip())
         Time =  datetime.strptime(strTime.strip(), '%Y-%m-%d')
-        c["value"] =  shares["calendar"] / len(rounds)
+        c["value"] =  shares["calendar"] / len(dates)
         c["name"] =  Time.strftime(" %d %B") + " " + Time.strftime("%A")[0:3] + "."    
         c["color"] = "#ddea4f"
         c["sliceId"] = sliceId
@@ -387,9 +381,8 @@ def render():
         slice_name.append ( {"key":d, "value":dic_slice_2_games[d]})
        
     dic_slice_2_games = {}
-    stand = get_standings()
-    return render_template("world_cup2.html", teams = teams, groups = groups, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
-stand = stand, click_events = click_events, games_clear = games_clear, slice_name = slice_name, games_playoff  = games_playoff )
+    return render_template("world_cup2.html", teams = teams, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
+click_events = click_events, games_clear = games_clear, slice_name = slice_name, games_playoff  = games_playoff, tournaments = tournaments, tournamentPos = tournamentPos)
 
 
 
@@ -407,15 +400,23 @@ def read_params(fn):
     return d 
 
 
+@app.route("/worldcup", methods=['GET'])
+def update():
+    tournamentId = request.args.get('tournamentId')
+    init_data(tournamentId)
+    return render()
     
 
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def main():
     if request.method == 'POST':
         index = request.form['index']
         #del places
-        resp = make_response(json.dumps({index:getConnectionBySliceId(int(index))} ))
+        competitionId = index
+        init_data()
+        render()
+        resp = make_response(json.dumps({index:"succesfull"} ))
         resp.status_code = 200
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp

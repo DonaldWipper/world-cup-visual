@@ -26,6 +26,11 @@
  <script src="{{
   url_for('static', filename='js/go.js') }}"></script>
 
+    <script src="{{
+  url_for('static', filename='js/iconselect.js') }}"></script>
+   
+     <script src="{{
+  url_for('static', filename='js/jquery.ddslick.min.js') }}"></script>
     
 
       <link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
@@ -41,14 +46,26 @@
 
 
     <div id="chart" style="position: absolute;"></div>
-
-  
-
+    <div id="myDiv" style="position: absolute;"></div>
+   
+   
+    
     <script>
         ////////////////////////// //////////////////////////////////
         //////////////////////// Set-up ////////////////////////////
         ////////////////////////////////////////////////////////////
-
+        var tournaments = [
+             {% for t in tournaments %} {
+                text: "{{t['caption']}}",
+                value: {{t['id']}},
+                selected:true,
+                imageSrc: "{{t['Url']}}"  
+            },
+             {% endfor %}
+             
+        ]
+         
+        
         var screenWidth = window.innerWidth;
         var screenHeight = window.innerHeight;
         var margin = {
@@ -62,7 +79,6 @@
 
 
         var cur_index = 0
-        var ajax = null
         var flag_response = 1
         var last_click = new Date().getTime()
 
@@ -98,7 +114,42 @@
 
 
         var colors = d3.scale.category10();
-        
+    
+              
+              
+       var  myDiv2 = document.getElementById("myDiv");
+        myDiv2.id = "myDiv2";
+              
+     
+      wd = innerRadius
+              
+ 
+      //Create and append select list
+      var selectList = document.createElement("select");
+      selectList.id = "mySelect";
+      selectList.style.width =  wd + "px";    
+      selectList.style.fontSize = fontSizeInnerSlice * 1.5
+    
+      myDiv2.appendChild(selectList);
+
+     //Create and append the options
+     for (var i = 0; i < tournaments.length; i++) {
+         var option = document.createElement("option");
+         option.value = tournaments[i]['value'];
+         option.text = tournaments[i]['text'];
+         selectList.appendChild(option);
+     }
+      selectList.selectedIndex = {{tournamentPos}}            
+              
+      $('#mySelect').change(function () {
+          console.log("selected " )   
+          var optionSelected = document.getElementById('mySelect');;
+          console.log("selected2 " +  optionSelected.value)
+          getTournament(optionSelected.value)
+          //sendIndexToPython(optionSelected.value)
+    
+ });          
+              
      var iDiv = document.createElement('div');
      iDiv.id = 'scheme';
      iDiv.className = 'scheme';
@@ -200,6 +251,7 @@
       return totalGroups;
     }
         
+              
         
     function makeLevel(levelGroups, currentLevel, totalGroups, teams) {
       currentLevel--;
@@ -268,6 +320,7 @@
         makeModel(games_playoff);
     }
        
+    
         
    
         var iDiv = document.createElement('div');
@@ -393,21 +446,7 @@
         
         
         
-        ///////////////////////////////////////////// 
-        ///////////////////// GROUPS//////////////////
-        /////////////////////////////////////////////
-        
-        var groups = [
-            {% for d in stand %} {
-            
-                "group": "{{d['group']}}",
-                "team": "{{d['team']}}",
-                "results": "{{d['results']}}"   
-        
-        
-            },
-            {% endfor %}
-            ]
+      
                 
                 
 
@@ -563,14 +602,18 @@
             }
         }
 
-
+        function getTournament(index) {
+           window.location.href = window.location.protocol + '//' + window.location.host + "/worldcup?tournamentId="+index;           
+            
+        }
+             
+             
 
         function sendIndexToPython(index) {
-            var qurl = "/";
+            var qurl = "/update_wc";
 
 
-
-            $.ajax({
+            jQuery.ajax({
                 type: "POST",
                 cache: false,
                 url: qurl,
@@ -581,27 +624,17 @@
                 dataType: "json",
                 success: function(response) {
                     console.log(index + ": " + "debug" + response[index]);
-                    if (response[index] === null) {
-                        console.log("nothing found");
-                    } else {
-                        if (index == cur_index) {
-                            setClicked(response[index]);
-                            //addTextInCentre(response["res"]) 
-                        }
-                    }
-                    flag_response = 1
+                    window.location.href = '...';
                 },
                 error: function(error) {
                     console.log(error);
-                    flag_response = 1
+                    //flag_response = 1
                 }
             })
 
         }
 
-        function kill_ajax() {
-            ajax.abort()
-        }
+      
 
         function restore_colors() {
             for (i = 0; i < donutData.length; i++) {

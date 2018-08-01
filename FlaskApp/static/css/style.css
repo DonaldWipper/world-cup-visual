@@ -18,3 +18,8 @@ font-weight: bold;}
 font-family: dusha;
 src: url('dusha.ttf');
 }
+
+
+select {
+  font-family: dusha;
+}

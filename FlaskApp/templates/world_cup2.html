@@ -137,6 +137,7 @@
          var option = document.createElement("option");
          option.value = tournaments[i]['value'];
          option.text = tournaments[i]['text'];
+         option.style.backgroundImage.url= tournaments[i]['imageSrc']
          selectList.appendChild(option);
      }
       selectList.selectedIndex = {{tournamentPos}}            

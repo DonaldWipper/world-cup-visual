@@ -198,6 +198,9 @@ def get_playoff_data():
             g["pair"] = [g["teamHome"], g["teamAway"]]
             g["key"] = None
             g["parent"] = None
+            g["goalsHomeTeam"] = g["goalsHomeTeamExtra"] 	
+            g["goalsAwayTeam"] = g["goalsAwayTeamExtra"] 
+           	
         playoff_games[stage] = pg  
     for stage in range(13, 8, -1):
         i = 0
@@ -217,7 +220,8 @@ def get_playoff_data():
         result_playoff = result_playoff + playoff_games[p]
     del  playoff_games
     del  games_playoff
-    games_playoff = result_playoff 			
+    games_playoff = result_playoff 
+    	
     del result_playoff 
 
 def init_data(_competitionId = competitionId):
@@ -274,6 +278,41 @@ def get_result_string(g):
     else:  
             return str(g["goalsHomeTeam"]) + ":" + str(g["goalsAwayTeam"])
     
+def get_result_home(g):
+    if g["goalsHomeTeam"] is None:
+        return None
+    if g["extraTimeHomeGoals"] != None:
+        if g["penaltyShootoutHomeGoals"] != None:
+            return str(g["extraTimeHomeGoals"]) + "(" + str(g["penaltyShootoutHomeGoals"]) +  ")" 
+        else:
+            return str(g["extraTimeHomeGoals"]) 
+    else:  
+            return str(g["goalsHomeTeam"]) 
+
+def get_result_away(g):
+    if g["goalsHomeTeam"] is None:
+        return None
+    if g["extraTimeHomeGoals"] != None:
+        if g["penaltyShootoutHomeGoals"] != None:
+            return str(g["extraTimeAwayGoals"]) + "(" + str(g["penaltyShootoutAwayGoals"])  + ")" 
+        else:
+            return str(g["extraTimeAwayGoals"]) 
+    else:  
+            return str(g["goalsAwayTeam"])
+    
+
+
+def get_result_string(g):
+    if g["goalsHomeTeam"] is None:
+        return None
+    if g["extraTimeHomeGoals"] != None:
+        if g["penaltyShootoutHomeGoals"] != None:
+            return str(g["extraTimeHomeGoals"]) + "(" + str(g["penaltyShootoutHomeGoals"]) +  ")"  + ":" + str(g["extraTimeAwayGoals"]) + "(" + str(g["penaltyShootoutAwayGoals"])  + ")" 
+        else:
+            return str(g["extraTimeHomeGoals"]) +  ":" + str(g["extraTimeAwayGoals"]) 
+    else:  
+            return str(g["goalsHomeTeam"]) + ":" + str(g["goalsAwayTeam"])
+
 
 def get_game_dic(g):
     game = {}
@@ -303,6 +342,8 @@ def get_game_dic(g):
     game["time"] = g["date"][11:16]
     game["goalsAwayTeam"] = g["goalsAwayTeam"]
     game["goalsHomeTeam"] = g["goalsHomeTeam"]
+    game["goalsHomeTeamExtra"] = get_result_home(g)	
+    game["goalsAwayTeamExtra"] = get_result_away(g)
     game["id_stage"] = g["id_stage"]
     return game
 

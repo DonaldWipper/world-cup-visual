@@ -14,7 +14,7 @@ from datetime import datetime
 
 #mysql = MySQL()
 cursor = None
-competitionId = 378
+competitionId = 467
 
 db = None
 tournamentPos = 0

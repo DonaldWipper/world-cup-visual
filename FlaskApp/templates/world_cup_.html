@@ -5,51 +5,111 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>World-cup-visual</title>
 
-    <!-- D3.js -->
+<!-- D3.js -->
 
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/d3.min.js') }}"></script>
 
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/d3pie.min.js') }}"></script>
 
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/jquery-1.9.0.js') }}"></script>
 
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/topojson.min.js') }}"></script>
 
 
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/datamaps.world.min.js') }}"></script>
 
- <script src="{{
+<script src="{{
   url_for('static', filename='js/go.js') }}"></script>
 
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/iconselect.js') }}"></script>
-   
-     <script src="{{
-  url_for('static', filename='js/jquery.ddslick.min.js') }}"></script>
-    
 
-      <link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-    <!-- Month names -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/normalize.min.css') }}">
+
+<link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+<!-- Month names -->
 
 
 
 </head>
 
 <body>
+    
+<nav class="nav">
+    <div class="burger">
+        <div class="burger__patty"></div>
+    </div>
 
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a href="#1" class="nav__link c-blue"><i class="fa fa-camera-retro"><span>About</span></i></a>
+        </li>
+        <li class="nav__item">
+            <a href="#2" class="nav__link c-yellow scrolly"><i class="fa fa-bolt"><span>Результаты</span></i></a>
+        </li>
+        <li class="nav__item">
+            <a href="#3" class="nav__link c-red"><i class="fa fa-music"><span>Чемпионаты в лицах</span></i></a>
+        </li>
+        <li class="nav__item">
+            <a href="#4" class="nav__link c-green"><i class="fa fa-paper-plane"><span>Выбор чемпионата</span></i></a>
+        </li>
+    </ul>
+</nav>
+    
+   
+<section class="panel b-blue" id="1">
+    <article class="panel__wrapper">
+        <div class="panel__content">
+            <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>О проекте</h1>
+            <div class="panel__block"></div>
+            <p>Вашему вниманию представлен проект "Визуализация истории чемпионатов мира по футболу FIFA", на создание которого вдохновил последний на данный момент турнир, проходивший в России летом 2018 года. </p>
+            <p>
+                Проект представляет собой наглядную демонстрацию и представление всей основной информации о чемпионатах мира по футболу, начиная с самого первого официального мундиаля fifa, который состоялся в 1930 году в Уругвае. Здесь можно узнать о времени и местах проведения, странах-участницах, результатах матчей. Помимо этого, в проекте содержатся подробности о каждой отдельно взятой игре, в частности время, в которое были забиты мячи, составы команд их тренеры и отличившиеся голами или карточками игроки.
+            </p>
+        </div>
+    </article>
+</section>
+    
+    <script src="{{ url_for('static', filename='js/jquery.min.js.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+    
+    <section class="panel b-red" id="3">
+  <article class="panel__wrapper">
+    <div class="panel__content">
+      <h1 class="panel__headline"><i class="fa fa-music"></i>&nbsp;Music</h1>
+      <div class="panel__block"></div>
+      <p>Beard sriracha kitsch literally, taxidermy normcore aesthetic wayfarers salvia keffiyeh farm-to-table sartorial gluten-free mlkshk. Selvage normcore 3 wolf moon, umami Kickstarter artisan meggings cardigan drinking vinegar bicycle rights.</p>
+    </div>
+  </article>
+</section>
+<section class="panel b-green" id="4">
+  <article class="panel__wrapper">
+    <div class="panel__content">
+      <h1 class="panel__headline"><i class="fa fa-paper-plane"></i>&nbsp;Paper Planes</h1>
+      <div class="panel__block"></div>
+      <p>90's wayfarers lomo you probably haven't heard of them trust fund banh mi. Flannel Shoreditch dreamcatcher, quinoa flexitarian Banksy pickled post-ironic lo-fi. Photo booth asymmetrical tousled letterpress.</p>
+    </div>
+  </article>
+</section>
 
     <div id="chart" style="position: absolute;"></div>
     <div id="myDiv" style="position: absolute;"></div>
-   
-   
-    
+
+    <h1 id="2">  </h1>
     <script>
         ////////////////////////// //////////////////////////////////
         //////////////////////// Set-up ////////////////////////////
@@ -76,12 +136,9 @@
             },
             width = Math.min(screenWidth, 1000) - margin.left - margin.right,
             height = Math.min(screenHeight, 1000) - margin.top - margin.bottom;
-
-
         var cur_index = 0
         var flag_response = 1
         var last_click = new Date().getTime()
-
         var ellipse_koefX = 1.2
         var ellipse_koefY = 1.0
         var global_arc_koefX = ellipse_koefX * 1.1
@@ -100,7 +157,6 @@
             secSmallLoc: "",
             radSmallLoc: ""
         }
-
         //параметры отрисовки
         var outerRadius = Math.min(height / (2 * global_arc_koefY), width / (2 * ellipse_koefX * global_arc_koefX))
         var innerRadius = outerRadius * 0.75
@@ -111,8 +167,6 @@
         var fontSizeInnerSlice = fontKoef * (outerRadius - innerRadius)
         var fontSizeOutterSlice = (global_arc_koefX - 1) * innerRadius * fontKoefOut
         var fontSizeInside = fontInsideKoef * (outerRadius - innerRadius)
-
-
         var colors = d3.scale.category10();
     
               
@@ -124,33 +178,7 @@
       wd = innerRadius
               
  
-      //Create and append select list
-      var selectList = document.createElement("select");
-      selectList.id = "mySelect";
-      selectList.style.width =  wd + "px";    
-      selectList.style.fontSize = fontSizeInnerSlice * 1.5
-    
-      myDiv2.appendChild(selectList);
-
-     //Create and append the options
-     for (var i = 0; i < tournaments.length; i++) {
-         var option = document.createElement("option");
-         option.value = tournaments[i]['value'];
-         option.text = tournaments[i]['text'];
-         option.style.backgroundImage.url= tournaments[i]['imageSrc']
-         selectList.appendChild(option);
-     }
-      selectList.selectedIndex = {{tournamentPos}}            
-              
-      $('#mySelect').change(function () {
-          console.log("selected " )   
-          var optionSelected = document.getElementById('mySelect');;
-          console.log("selected2 " +  optionSelected.value)
-          getTournament(optionSelected.value)
-          //sendIndexToPython(optionSelected.value)
-    
- });          
-              
+      
      var iDiv = document.createElement('div');
      iDiv.id = 'scheme';
      iDiv.className = 'scheme';
@@ -160,13 +188,15 @@
      hd = 1.3 * innerRadius    
      document.getElementById("scheme").style.height = hd  + "px"
      document.getElementById("scheme").style.left = width / 2 - 1.5 / 2 *innerRadius + "px";
-     document.getElementById("scheme").style.top = height / 2 - 1.3 / 2 * innerRadius + "px";
+     document.getElementById("scheme").style.top =  height / 2  - 1.3 / 2 * innerRadius + "px";
+     console.log("top scheme:" + document.getElementById("scheme").style.top)    
+     console.log("height:" + height)     
      document.getElementById("scheme").style.position = "relative";
      document.getElementById("scheme").style.display = "none";    
      //document.getElementById("scheme").style.zIndex = "-1"
 	 var column_width = wd / 4.0
      var row_height = hd / 32.0
-     console.log("width:" + column_width)
+    
      var node_spacing = column_width  / 4.0
      var layer_spacing = row_height  / 2.0
      
@@ -237,7 +267,7 @@
         $(go.Shape, { strokeWidth: 1, stroke: 'black' }));
     // Generates the original graph from an array of team names
        
-    //    
+     
     function createPairs(teams) {
       if (teams.length % 2 !== 0) teams.push('(empty)');
       var startingGroups = teams.length / 2;
@@ -337,15 +367,12 @@
         document.getElementById("container").style.zIndex = "-1"
         document.getElementById("container").style.display = "block";
         //console.log("display " + document.getElementById("container").style.display)
-
         ////////////////////////////////////////////////////////////// 
         ///////////////////// MAP            ///////////////////////// 
         ////////////////////////////////////////////////////////////// 
-        /* 
         var basic_choropleth = new Datamap({
             element: document.getElementById("container"),
             projection: 'mercator',
-
             fills: {
                 defaultFill: "#ABDDA4",
                 authorHasTraveledTo: "#fa0fa0"
@@ -356,7 +383,6 @@
                 {% endfor %}
             }
         });
-
       window.setInterval(function () {
        basic_choropleth.updateChoropleth({
             {% for t in teams %} 
@@ -365,85 +391,15 @@
              {% endfor %}            
           });
        }, 2000);
-   */
+   
  
- var stadiums = [
-            {% for d in places %} 
-            "{{d['stadium']}}   {{d['city']}}  ",
-             {% endfor %}
-       
-     ]
-             
-        
- 
-       var zoom = new Datamap({
-  element: document.getElementById("container"),
-  scope: 'world',
-  // Zoom in on Africa
-  setProjection: function(element) {
-    var projection = d3.geo.equirectangular()
-      .center([{{geodata['centreX']}}, {{geodata['centreY']}}])
-      .rotate([4.4, 0])
-      .scale(15 * {{geodata['width']}})
-      .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
-    var path = d3.geo.path()
-      .projection(projection);
-
-    return {path: path, projection: projection};
-  },
-  fills: {
-    defaultFill: "#ABDDA4",
-    gt50: colors(Math.random() * 20),
-    eq50: colors(Math.random() * 20),
-    lt25: colors(Math.random() * 10),
-    gt75: colors(Math.random() * 200),
-    lt50: colors(Math.random() * 20),
-    eq0: colors(Math.random() * 1),
-    pink: '#0fa0fa',
-    gt500: colors(Math.random() * 1)
-  },
-  data: {
-    'ZAF': { fillKey: 'gt50' },
-    'ZWE': { fillKey: 'lt25' },
-    'NGA': { fillKey: 'lt50' },
-    'MOZ': { fillKey: 'eq50' },
-    'MDG': { fillKey: 'eq50' },
-    'EGY': { fillKey: 'gt75' },
-    'TZA': { fillKey: 'gt75' },
-    'LBY': { fillKey: 'eq0' },
-    'DZA': { fillKey: 'gt500' },
-    'SSD': { fillKey: 'pink' },
-    'SOM': { fillKey: 'gt50' },
-    'GIB': { fillKey: 'eq50' },
-    'AGO': { fillKey: 'lt50' }
-  }
-});
-zoom.bubbles(
-    [{% for d in places %} {
-         name: "{{d['stadium']}}",
-         latitude: {{d['lat']}},
-         longitude: {{d['lng']}},
-         radius: 10
-    },
-    {% endfor %}
-    ], {
- popupTemplate: function(geo, data) {
-   return "<div class='hoverinfo'>Bubble for " + data.name + "</div>";
- }
-});
-        
-        
-zoom.labels({'customLabelText': stadiums});        
         //basic_choropleth.labels()
-
-
         var svg = d3.select("#chart").append("svg")
             .attr("width", (width + margin.left + margin.right))
             .attr("height", (height + margin.top + margin.bottom))
             .attr("color", "#debcd1")
             .append("g").attr("class", "wrapper")
             .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
-
         function getEllipseCoords(coorX, coorY, koefX, koefY, radius) {
             //console.log(Math.sqrt(ellipse_koef * ellipse_koef * coorY * coorY +  coorX * coorX ))
             //console.log(ellipse_koef * coorX)
@@ -494,9 +450,6 @@ zoom.labels({'customLabelText': stadiums});
         var arc = d3.svg.arc()
             .innerRadius(innerRadius)
             .outerRadius(outerRadius);
-
-
-
         //Turn the pie chart 90 degrees counter clockwise, so it starts at the left	
         var pie = d3.layout.pie()
             .startAngle(-180 * Math.PI / 180 + Math.PI / 6)
@@ -506,8 +459,6 @@ zoom.labels({'customLabelText': stadiums});
             })
             .padAngle(.01)
             .sort(null);
-
-
         
         
         
@@ -516,11 +467,9 @@ zoom.labels({'customLabelText': stadiums});
       
                 
                 
-
         ////////////////////////////////////////////////////////////// 
         ///////////////////// Data &  Scales ///////////////////////// 
         ////////////////////////////////////////////////////////////// 
-
         //Some random data
            var donutData = [
             {% for d in teams %} {
@@ -630,19 +579,13 @@ zoom.labels({'customLabelText': stadiums});
             {% endfor %} 
             }
                
-
-
-
         function function_get_games_array(Array) {
             var gms = []
             for (i = 0; i < Array.length; i++) {
                 gms.push(games[Array[i]])
             }
             return gms;
-
         }
-
-
         function sleep(milliseconds) {
             var start = new Date().getTime();
             for (var i = 0; i < 1e7; i++) {
@@ -668,18 +611,14 @@ zoom.labels({'customLabelText': stadiums});
                 }
             }
         }
-
         function getTournament(index) {
            window.location.href = window.location.protocol + '//' + window.location.host + "/worldcup?tournamentId="+index;           
             
         }
              
              
-
         function sendIndexToPython(index) {
             var qurl = "/update_wc";
-
-
             jQuery.ajax({
                 type: "POST",
                 cache: false,
@@ -698,40 +637,23 @@ zoom.labels({'customLabelText': stadiums});
                     //flag_response = 1
                 }
             })
-
         }
-
       
-
         function restore_colors() {
             for (i = 0; i < donutData.length; i++) {
                 d3.select("#ArcEllipse" + i).style("fill", donutData[i]["color"]);
-
             }
-
         }
-
-
-
         function restore_colors_outArcs() {
             for (i = 0; i < outArcsData.length; i++) {
                 d3.select("#outArc" + i).style("fill", outArcsData[i]["color"]);
-
             }
-
         }
-
-
-
         function setClicked(Array) {
             for (i = 0; i < Array.length; i++) {
                 d3.select("#ArcEllipse" + Array[i]).style("fill", "#debcd1");
-
             }
-
         }
-
-
         //таблица результатов            
         function tabulate(data, columns) {
             d3.select("#table").empty()
@@ -759,7 +681,6 @@ zoom.labels({'customLabelText': stadiums});
             
             thead = table.append("thead"),
                 tbody = table.append("tbody")
-
              
             
         
@@ -775,13 +696,11 @@ zoom.labels({'customLabelText': stadiums});
                 .text(function(column) {
                     return column;
                 });
-
             // create a row for each object in the data
             var rows = tbody.selectAll("tr")
                 .data(data)
                 .enter()
                 .append("tr");
-
             // create a cell in each row for each column
             var cells = rows.selectAll("td")
                 .data(function(row) {
@@ -798,7 +717,6 @@ zoom.labels({'customLabelText': stadiums});
                 .html(function(d) {
                     return d.value;
                 });
-
             return table;
         }
         
@@ -815,7 +733,6 @@ zoom.labels({'customLabelText': stadiums});
                 .attr("width", innerRadius)
                 .attr("style", "margin-left: " + (width - 1.50 * innerRadius) / 2 + "px; margin-top:-" + (height + 1.3 * innerRadius) / 2 + "px")
                 .attr("id", "play");
-
             thead = table.append("thead"),
                 tbody = table.append("tbody")
             
@@ -845,7 +762,6 @@ zoom.labels({'customLabelText': stadiums});
                 .data(data)
                 .enter()
                 .append("tr");
-
             // create a cell in each row for each column
             var cells = rows.selectAll("td")
                 .data(function(row) {
@@ -865,25 +781,18 @@ zoom.labels({'customLabelText': stadiums});
             */
             return table;
         }
-
              
              
-
         getPartBounces();
    
-
-
         var imgs = svg.select("#chart")
             .append("text")
             .attr("x", "0")
             .attr("y", "0")
             .text("text for text")
-
-
         ////////////////////////////////////////////////////////////// 
         //////////////////// Create Donut Chart ////////////////////// 
         ////////////////////////////////////////////////////////////// 
-
         //Create the donut slices and also the invisible arcs for the text 
         svg.selectAll(".donutArcs")
             .data(pie(donutData))
@@ -893,21 +802,15 @@ zoom.labels({'customLabelText': stadiums});
             .attr("id", "donutArcs")
             .style("fill", function(d, i) {
                 return "none";
-
             })
             .each(function(d, i) {
                 //Search pattern for everything between the start and the first capital L
                 var firstArcSection = /(^.+?)L/;
                 var lastArcSection = /L(.*?)Z/;
                 //console.log((width / 2 + margin.left))
-
-
-
                 //между М и A -->  преобразуем
                 //между A и 0 0, 1 по X увеличивам на K
                 //между 0 0,1 и L  преобразуем
-
-
                 //M -1.2879629948845253, 221.49625538894287       //первая точка на внешнем радиусе
                 //A 221.5, 221.5                                  //внешний радиус
                 //0 0,1 -14.203496816146563, 221.04413739837958   //вторая точка на внешнем радиусе
@@ -920,25 +823,16 @@ zoom.labels({'customLabelText': stadiums});
                 var firstSmallDotEx = /L(.*?)A/;
                 var radSmallElEx = /A(.*?)0 0,0/
                 var secondSmallDotEx = /0 0,0(.*?)Z/;
-
-
                 //newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
-
-
-
-
                 firstLoc = firstDotEx.exec(d3.select(this).attr("d"))[1]
                 radLoc = radEll.exec(d3.select(this).attr("d"))[1]
                 secLoc = secondDotEx.exec(d3.select(this).attr("d"))[1]
-
                 firstSmallLoc = firstSmallDotEx.exec(d3.select(this).attr("d"))[1]
                 secSmallLoc = secondSmallDotEx.exec(d3.select(this).attr("d"))[1]
                 radSmallLoc = radSmallElEx.exec(d3.select(this).attr("d"))[1]
-
                 var first = firstLoc.split(",");
                 newFirsts = getEllipseCoords(parseFloat(first[0]), parseFloat(first[1]), ellipse_koefX, ellipse_koefY, outerRadius) 
                 newFirst = newFirsts.join(",")
-
                 var second = secLoc.split(",");
                 newSeconds = getEllipseCoords(parseFloat(second[0]), parseFloat(second[1]), ellipse_koefX, ellipse_koefY, outerRadius)
                 newLast = newSeconds.join(",")
@@ -946,8 +840,6 @@ zoom.labels({'customLabelText': stadiums});
                 newRad = [rad[0] * ellipse_koefX, rad[1] * ellipse_koefY].join(",")
                 FirstPath = "M" + newFirst + "A" + newRad + " 0 0, 1" + newLast
                 ellipseArc = FirstPath + "L" + firstSmallLoc + "A" + radSmallLoc + "0 0,0" + secSmallLoc + "Z"
-
-
                 if (donutData[i]["id_group"] != 0) {
                     textArc = "M" + newLast + "L" + firstSmallLoc + "Z"
                     centreSec =  getCentres(newLast.split(","), newFirst.split(",")).join(",")
@@ -971,18 +863,15 @@ zoom.labels({'customLabelText': stadiums});
              
                 //если текущий кусок самый крайний в группе
                 cur_group = donutData[i]["id_group"]
-
                 if (cur_group != -1) {
                     if (part_bounces[cur_group][0] == i) {
                         var a = Object.assign({}, arcOut)
-
                         a["firstLoc"] = newFirstOut
                         a["radLoc"] = newRadOut
                         a["firstSmallLoc"] = newFirst
                         a["radSmallLoc"] = newRad
                         out_arcs.push(a)
                     }
-
                     if (part_bounces[cur_group][1] == i) {
                         //console.log("part " + i) 
                         //console.log("sec out before " + newSecOut)  
@@ -1023,20 +912,16 @@ zoom.labels({'customLabelText': stadiums});
                     .attr("id", "donutArcCentre" + i)
                     .attr("d", textArcCentre)
                     .style("fill", "none");
-
-
                 svg.append("path")
                     .attr("class", "hiddenDonutArcs")
                     .attr("id", "donutArc" + i)
                     .attr("d", textArc)
                     .style("fill", "none");
-
                 svg.append("path")
                     .attr("class", "ellipse")
                     .attr("id", "ArcEllipse" + i)
                     .attr("d", ellipseArc)
                     .style("fill", donutData[i]["color"])
-
                     .on("mouseover", function() {
                         restore_colors()
                         document.getElementById("scheme").style.display = "none";
@@ -1046,8 +931,6 @@ zoom.labels({'customLabelText': stadiums});
                         x = new Date().getTime() - last_click
                         setClicked(click_events[i]);
                         tabulate(function_get_games_array(show_games[i]), Object.keys(games[0]));
-
-
                     })
                     .on("mouseout", function(d, i) {
                         cur_index = -1
@@ -1058,9 +941,6 @@ zoom.labels({'customLabelText': stadiums});
                         //d3.select(this).style("fill", donutData[i]["color"]);
                     });
             });
-
-
-
         for (i = 0; i < out_arcs.length; i++) {
           
             pathOutArc = "M" + out_arcs[i]["firstLoc"] +
@@ -1075,9 +955,6 @@ zoom.labels({'customLabelText': stadiums});
             pathText = "M" + out_arcs[i]["firstSmallLoc"] +
                 "A" + out_arcs[i]["radSmallLoc"] +
                 " 0 0,1" + out_arcs[i]["secSmallLoc"] + "Z"
-
-
-
             //console.log("new path " + pathText)
             svg.append("path")
                 .attr("class", "outArc")
@@ -1120,14 +997,11 @@ zoom.labels({'customLabelText': stadiums});
            
             
             
-
             svg.append("path")
                 .attr("class", "outArcPath")
                 .attr("id", "outArcPath" + i)
                 .attr("d", pathText)
                 .style("fill", "none")
-
-
             svg.append("text")
                 .style("font-size", fontSizeOutterSlice + "px")
                 .append("textPath")
@@ -1140,7 +1014,6 @@ zoom.labels({'customLabelText': stadiums});
                 .style("font-weight", "bold")
                 .style("fill", "#black")
         }
-
         //Append the label names on the outside
         svg.selectAll(".donutTextCentre")
             .data(pie(donutData))
@@ -1154,7 +1027,6 @@ zoom.labels({'customLabelText': stadiums});
             .attr("href", function(d, i) {
                 return "#donutArcCentre" + i;
             })
-
             .attr("startOffset", function(d, i) {
                 if (d.data.id_group == 0) {
                     return "100%";
@@ -1169,7 +1041,6 @@ zoom.labels({'customLabelText': stadiums});
                     return "start";
                 }
             })
-
             //.attr("xlink:href",function(d) {return d.data.image;})
             .text(function(d, i) {
                 if (d.data.id_group == 2) {
@@ -1180,8 +1051,6 @@ zoom.labels({'customLabelText': stadiums});
             })
              
              
-
-
         //Append the label names on the outside
         svg.selectAll(".donutText")
             .data(pie(donutData))
@@ -1203,7 +1072,6 @@ zoom.labels({'customLabelText': stadiums});
             .attr("href", function(d, i) {
                 return "#donutArc" + i;
             })
-
             .attr("startOffset", function(d, i) {
                 if (d.data.id_group == 0) {
                     return "100%";
@@ -1218,7 +1086,6 @@ zoom.labels({'customLabelText': stadiums});
                     return "start";
                 }
             })
-
             //.attr("xlink:href",function(d) {return d.data.image;})
             .text(function(d, i) {
                 if (d.data.id_group == 2) {
@@ -1227,9 +1094,12 @@ zoom.labels({'customLabelText': stadiums});
                     return d.data.name;
                 }
              })
-
     </script>
-
+   
+    
+    
 </body>
 
 </html>
+
+

@@ -422,7 +422,7 @@ def render():
         slice_name.append ( {"key":d, "value":dic_slice_2_games[d]})
        
     dic_slice_2_games = {}
-    return render_template("world_cup2.html", teams = teams, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
+    return render_template("world_cup_.html", teams = teams, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
 click_events = click_events, games_clear = games_clear, slice_name = slice_name, games_playoff  = games_playoff, tournaments = tournaments, tournamentPos = tournamentPos)
 
 
@@ -468,3 +468,4 @@ def main():
 
 if __name__ == "__main__":
     app.run(debug = True)
+

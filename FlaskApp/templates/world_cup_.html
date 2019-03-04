@@ -5,44 +5,44 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>World-cup-visual</title>
 
-<!-- D3.js -->
+    <!-- D3.js -->
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/d3.min.js') }}"></script>
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/d3pie.min.js') }}"></script>
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/jquery-1.9.0.js') }}"></script>
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/topojson.min.js') }}"></script>
 
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/datamaps.world.min.js') }}"></script>
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/go.js') }}"></script>
 
-<script src="{{
+    <script src="{{
   url_for('static', filename='js/iconselect.js') }}"></script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/normalize.min.css') }}">
 
-<meta name="viewport" content="width=device-width">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename= 'css/normalize.min.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
 
-<link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
-
-<link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-<!-- Month names -->
-
-
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <!-- Month names -->
+    <script src="{{url_for('static', filename='js/images-grid.js' ) }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/images-grid.css') }}">
 
 </head>
 
@@ -55,16 +55,17 @@
 
     <ul class="nav__list">
         <li class="nav__item">
-            <a href="#1" class="nav__link c-blue"><i class="fa fa-camera-retro"><span>About</span></i></a>
+            <a href="#1" class="nav__link c-blue"><i class="fa fa-camera-retro"></i></a>
         </li>
         <li class="nav__item">
-            <a href="#2" class="nav__link c-yellow scrolly"><i class="fa fa-bolt"><span>Результаты</span></i></a>
+            <a href="#visual" class="nav__link c-yellow scrolly"><i class="fas fa-futbol"></i></a>
         </li>
         <li class="nav__item">
-            <a href="#3" class="nav__link c-red"><i class="fa fa-music"><span>Чемпионаты в лицах</span></i></a>
+            <a href="#statistics" class="nav__link c-red"><i class="fas fa-chart-bar"></i></a>
         </li>
         <li class="nav__item">
-            <a href="#4" class="nav__link c-green"><i class="fa fa-paper-plane"><span>Выбор чемпионата</span></i></a>
+            <a href="#4" class="nav__link c-green"><i class="fa fa-paper-plane"></i></a>
+            
         </li>
     </ul>
 </nav>
@@ -83,33 +84,19 @@
     </article>
 </section>
     
-    <script src="{{ url_for('static', filename='js/jquery.min.js.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-
+  
     
-    <section class="panel b-red" id="3">
-  <article class="panel__wrapper">
-    <div class="panel__content">
-      <h1 class="panel__headline"><i class="fa fa-music"></i>&nbsp;Music</h1>
-      <div class="panel__block"></div>
-      <p>Beard sriracha kitsch literally, taxidermy normcore aesthetic wayfarers salvia keffiyeh farm-to-table sartorial gluten-free mlkshk. Selvage normcore 3 wolf moon, umami Kickstarter artisan meggings cardigan drinking vinegar bicycle rights.</p>
-    </div>
-  </article>
-</section>
-<section class="panel b-green" id="4">
-  <article class="panel__wrapper">
-    <div class="panel__content">
-      <h1 class="panel__headline"><i class="fa fa-paper-plane"></i>&nbsp;Paper Planes</h1>
-      <div class="panel__block"></div>
-      <p>90's wayfarers lomo you probably haven't heard of them trust fund banh mi. Flannel Shoreditch dreamcatcher, quinoa flexitarian Banksy pickled post-ironic lo-fi. Photo booth asymmetrical tousled letterpress.</p>
-    </div>
-  </article>
-</section>
-
+    
     <div id="chart" style="position: absolute;"></div>
     <div id="myDiv" style="position: absolute;"></div>
-
-    <h1 id="2">  </h1>
+    <div id="map" style="position: absolute;"></div>
+    
+  
+    
+    <section class="panel b-green" id="visual">
+        <article class="panel__wrapper">
+       
+    </article>
     <script>
         ////////////////////////// //////////////////////////////////
         //////////////////////// Set-up ////////////////////////////
@@ -134,8 +121,8 @@
                 right: 0,
                 bottom: 0
             },
-            width = Math.min(screenWidth, 1000) - margin.left - margin.right,
-            height = Math.min(screenHeight, 1000) - margin.top - margin.bottom;
+            width = screenWidth - margin.left - margin.right,
+            height = screenHeight - margin.top - margin.bottom;
         var cur_index = 0
         var flag_response = 1
         var last_click = new Date().getTime()
@@ -182,7 +169,8 @@
      var iDiv = document.createElement('div');
      iDiv.id = 'scheme';
      iDiv.className = 'scheme';
-     document.getElementsByTagName('body')[0].appendChild(iDiv);
+     console.log(document.getElementsByTagName('myDiv2'))          
+     document.getElementById("myDiv2").appendChild(iDiv);
      wd = 1.5 * innerRadius
      document.getElementById("scheme").style.width =  wd + "px";
      hd = 1.3 * innerRadius    
@@ -353,11 +341,14 @@
        
     
         
-   
-        var iDiv = document.createElement('div');
+        var  myDiv2 = document.getElementById("map");
+        myDiv2.id = "mapDiv";
+        var iDiv = document.createElement('div2');
         iDiv.id = 'container';
         iDiv.className = 'container';
-        document.getElementsByTagName('body')[0].appendChild(iDiv);
+        
+        //document.getElementsByTagName('body')[0].appendChild(iDiv);
+        document.getElementById("mapDiv").appendChild(iDiv);
         document.getElementById("container").style.width = 2 * innerRadius + "px";
         wd = document.getElementById("container").style.width
         document.getElementById("container").style.height = 2 * innerRadius + "px"
@@ -1095,8 +1086,35 @@
                 }
              })
     </script>
-   
+   </section>
     
+     <section class="panel b-red" id="statistics">
+  <article class="panel__wrapper">
+      
+      
+    <div class="panel__content">
+      <h1 class="panel__headline"><i class="fa fa-music"></i>Статистика</h1>
+      <div class="panel__block"></div>
+      <p>Beard sriracha kitsch literally, taxidermy normcore aesthetic wayfarers salvia keffiyeh farm-to-table sartorial gluten-free mlkshk. Selvage normcore 3 wolf moon, umami Kickstarter artisan meggings cardigan drinking vinegar bicycle rights.</p>
+    </div>
+  </article>
+</section>
+<section class="panel b-green" id="4">
+  <article class="panel__wrapper">
+        <div class="panel__content">
+            <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>Авторы</h1>
+            <div class="panel__block"></div>
+            <p> Автор проекта: Утиралов Дмитрий. Разработчик, аналитик, дата-журналист </p>
+            <p>
+                
+                
+            </p>
+        </div>
+    </article>
+</section>
+    
+          <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
     
 </body>
 

@@ -6,47 +6,59 @@
     <title>World-cup-visual</title>
 
     <!-- D3.js -->
+<script src="{{
+  url_for('static', filename='js/d3.min.js') }}">
+</script>
 
-    <script src="{{
-  url_for('static', filename='js/d3.min.js') }}"></script>
-
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/d3pie.min.js') }}"></script>
-
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/jquery-1.9.0.js') }}"></script>
 
-    <script src="{{
+<script src="{{
+  url_for('static', filename='js/jquery-1.10.2.js') }}"></script>
+
+<script src="{{
   url_for('static', filename='js/topojson.min.js') }}"></script>
 
-
-    <script src="{{
-  url_for('static', filename='js/datamaps.world.min.js') }}"></script>
-
-    <script src="{{
+<script src="{{
   url_for('static', filename='js/go.js') }}"></script>
 
-    <script src="{{
-  url_for('static', filename='js/iconselect.js') }}"></script>
+<script src="{{
+  url_for('static', filename='js/datamaps.world.min.js') }}"></script>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
-    <meta name="viewport" content="width=device-width">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/normalize.min.css') }}">
+<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/normalize.min.css') }}">
 
-    <link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
+<link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-    <!-- Month names -->
-    <script src="{{url_for('static', filename='js/images-grid.js' ) }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/images-grid.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/styles.css') }}">
 
+
+<script src="{{url_for('static', filename='js/globalize.min.js' ) }}"></script>
+<script src="{{url_for('static', filename='js/dx.chartjs.js' ) }}"></script>
+<script src="{{url_for('static', filename='js/knockout-3.0.0.js' ) }}"></script>
+
+//iconselector    
+<link rel="stylesheet" href="{{ url_for('static', filename= 'css/iconselector/iconselect.css') }}"> 
+<script src="{{url_for('static', filename='js/iconselector/iconselect.js' ) }}"></script>
+<script src="{{url_for('static', filename='js/iconselector/iscroll.js' ) }}"></script>
+    
+
+  
+ 
+    
 </head>
 
 <body>
+    
+        
     
 <nav class="nav">
     <div class="burger">
@@ -1089,22 +1101,97 @@
    </section>
     
      <section class="panel b-red" id="statistics">
-  <article class="panel__wrapper">
+  
+    
+<script>
+  	 jQuery(function ($)   
+				{
+         
+          var dataSource = [
+            {% for d in goals %} {
+                "match": "{{d['teamHome']}}:{{d['teamAway']}}",
+                "minute": "{{d['minute']}}" ,  
+                "image": "{{d['image']}}" ,  
+                "player_name":  "{{d['player_name']}}"
+            },
+               {% endfor %}
+  ]
+
+$("#chartContainer").dxChart({
+    dataSource: dataSource,
+    commonSeriesSettings: {
+        argumentField: "match",
+        valueField: 'minute',
+        type: "scatter"
+   
+       
+    },
+    customizePoint: function(obj) {
+            console.log( dataSource[obj['index']]["image"])
+            return { image: { url: dataSource[obj['index']]["image"], width: 30, height: 30}, visible: true };
+       
+    },
+    series: {},
+    title: {
+        text: "World cup"
+    },
+    legend: {
+        visible: false
+    },
+    tooltip:{
+        enabled: true,
+        customizeTooltip: function (obj) {
+            console.log("test " + obj.seriesName) 
+            var country = args.point.tag[0];
+            return {
+                html: "<div style=\"width:100%;\"> country : " + country + " </div> " 
+                        
+            };
+        }         
+
+
+        
+    },
+
+    argumentAxis: {
+        grid: {
+            visible: true
+        }
+    },
+    valueAxis: {
+        grid: {
+            visible: false
+        },
+        label: {
+            customizeText: function() {
+       
+                    return this.valueText + ' minute';
+              
+            }
+        }
+    }
+});
+}
+
+			);
+		</script>
+
+        <div id="chartContainer" style="width: 100%; height: 200%; user-select: none;">
+            <div class="credits"></div>
+        </div>
+    
+
+   
+
       
-      
-    <div class="panel__content">
-      <h1 class="panel__headline"><i class="fa fa-music"></i>Статистика</h1>
-      <div class="panel__block"></div>
-      <p>Beard sriracha kitsch literally, taxidermy normcore aesthetic wayfarers salvia keffiyeh farm-to-table sartorial gluten-free mlkshk. Selvage normcore 3 wolf moon, umami Kickstarter artisan meggings cardigan drinking vinegar bicycle rights.</p>
-    </div>
-  </article>
+
 </section>
 <section class="panel b-green" id="4">
   <article class="panel__wrapper">
         <div class="panel__content">
             <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>Авторы</h1>
             <div class="panel__block"></div>
-            <p> Автор проекта: Утиралов Дмитрий. Разработчик, аналитик, дата-журналист </p>
+            <p>  </p>
             <p>
                 
                 
@@ -1113,8 +1200,61 @@
     </article>
 </section>
     
-          <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    
+  
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    
+    
+    <h2>Icon/Image Select: Basic Example (Javascript)</h2>
+    <div id="my-icon-select"></div>
+    <input type="text" id="selected-text" name="selected-text" style="width:65px;">
+   
+          <script>
+            
+        var iconSelect;
+        var selectedText;
+
+        window.onload = function(){
+            
+            selectedText = document.getElementById('selected-text');
+            
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+               console.log("here")
+               selectedText.value = iconSelect.getSelectedValue();
+            });
+             
+               iconSelect = new IconSelect("my-icon-select", 
+                {'selectedIconWidth':48,
+                'selectedIconHeight':48,
+                'selectedBoxPadding':5,
+                'iconsWidth':48,
+                'iconsHeight':48,
+                'boxIconSpace':3,
+                'vectoralIconNumber':8,
+                'horizontalIconNumber':1});
+            
+            iconSelect = new IconSelect("my-icon-select");
+
+            var icons = [];
+            for (var i = 0; i < tournaments.length; i++) {
+                src_image =  "{{url_for('static', filename='png') }}" + "/wc_icons/" + tournaments[i]["value"] + ".png" 
+                icons.push({'iconFilePath':src_image, 'iconValue':tournaments[i]["value"]});    
+            }
+            
+            iconSelect.refresh(icons);
+            
+
+
+        };
+            
+            
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+               selectedText.value = iconSelect.getSelectedValue();
+            });
+                  
+        </script>
+    
     
 </body>
 

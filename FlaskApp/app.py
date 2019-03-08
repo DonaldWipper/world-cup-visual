@@ -14,7 +14,7 @@ from datetime import datetime
 
 #mysql = MySQL()
 cursor = None
-competitionId = 467
+competitionId = 406
 
 db = None
 tournamentPos = 0
@@ -29,6 +29,7 @@ games_update = []
 games_update2 = []
 games_playoff = []
 tournaments = []
+goals = []
 space = None
 
 teams_name_dic = {}
@@ -45,11 +46,19 @@ dic_slice_2_games = {} #связь кусочка с играми
 
 dic_games = {} #все игры для вывода
 
+'''
 settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net", 
             "sql_user":"b1df3776b2b56c",
             "sql_passwd":"2153543acdac76f",
             "sql_db":"heroku_0c1d0ea4e380413"
            }
+'''
+
+settings = { "sql_host":"localhost", 
+"sql_user":"root",
+"sql_passwd":"111",
+"sql_db":"world_cup"
+}
 
 token = 'efda008899e346f693efa9c75f9577ee'
 myheaders = { 'X-Auth-Token': token, 'X-Response-Control': 'minified' }
@@ -225,15 +234,17 @@ def get_playoff_data():
     del result_playoff 
 
 def init_data(_competitionId = competitionId):
-    global stages, games, teams, places, games_update, rounds,  space, stages, db, dates, games_update2, games_playoff, games_clear, tournaments, tournamentPos 
+    global stages, goals, games, teams, places, games_update, rounds,  space, stages, db, dates, games_update2, games_playoff, games_clear, tournaments, tournamentPos 
     #initSQL()
     #settings  = read_params("settings2.json")
     #print(settings)
-    db = FlaskApp.sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db'])
     places = db.getDictFromQueryRes("places", {"competitionId": _competitionId})  
     rounds = db.getDictFromQueryRes("rounds", {"competitionId": _competitionId})
     stages = db.getDictFromQueryRes("stages", {"competitionId": _competitionId})    
     games = db.getDictFromQueryRes("games", {"competitionId": _competitionId})
+    goals = db.getDictFromQueryText(None, {"g.tournamentId": _competitionId})
+    print(goals)
+    
     tournaments = db.getDictFromQueryRes("tournaments")
     i = 0
     for t in tournaments:
@@ -351,7 +362,7 @@ def get_game_dic(g):
         
 
 def render():
-    global stages, teams, places, rounds,  space, games, places, dic_slice_2_games, dates, tournaments, tournamentPos 
+    global stages, teams, places, rounds,  space, games, places, dic_slice_2_games, dates, tournaments, tournamentPos, goals 
     sliceId = 0
     shares = {"teams":350, "calendar":600//3, "places":650//3, "stages":400 - 650//3}
     space  = (1000 - (shares["teams"] + shares["calendar"] +  shares["places"] + shares["stages"])) // 4
@@ -422,8 +433,8 @@ def render():
         slice_name.append ( {"key":d, "value":dic_slice_2_games[d]})
        
     dic_slice_2_games = {}
-    return render_template("world_cup_.html", teams = teams, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
-click_events = click_events, games_clear = games_clear, slice_name = slice_name, games_playoff  = games_playoff, tournaments = tournaments, tournamentPos = tournamentPos)
+    return render_template("world_cup2.html", teams = teams, rounds = calendar, places = places, stages = stages, space = space, outGroups = outGroups, 
+click_events = click_events, games_clear = games_clear, slice_name = slice_name, games_playoff  = games_playoff, tournaments = tournaments, tournamentPos = tournamentPos,  goals =  goals )
 
 
 
@@ -451,19 +462,24 @@ def update():
 
 @app.route("/", methods=['GET'])
 def main():
-    if request.method == 'POST':
-        index = request.form['index']
-        #del places
-        competitionId = index
-        init_data()
-        render()
-        resp = make_response(json.dumps({index:"succesfull"} ))
-        resp.status_code = 200
-        resp.headers['Access-Control-Allow-Origin'] = '*'
-        return resp
-    else:
-       init_data()
-    return render()
+    global db
+    db = FlaskApp.sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db']) 
+    try:
+        if request.method == 'POST':
+            index = request.form['index']
+            #del places
+            competitionId = index
+            init_data()
+            render()
+            resp = make_response(json.dumps({index:"succesfull"} ))
+            resp.status_code = 200
+            resp.headers['Access-Control-Allow-Origin'] = '*'
+            return resp
+        else:
+            init_data()
+        return render()
+    finally:
+        db.db.close()
     
 
 if __name__ == "__main__":

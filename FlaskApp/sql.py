@@ -105,6 +105,24 @@ class database:
         cur.execute(query)
         return list (cur.fetchall())
     
+    def getDictFromQueryText(self, query = None, condition = None):
+        #csvfile = requests.get(name).csv
+        cur = self.db.cursor(MySQLdb.cursors.DictCursor)
+        if query == None:
+            query =  "select distinct g.minute, p.name as player_name, f.datetime, f.stadium, f.city, f.group_name, f.teamHome, f.teamAway, p.number, p.image, p.position, p.birthdate from world_cup.goals g join world_cup.games_fifa_all f on g.matchId = f.match_fifa_id join world_cup.players p on p.playerId = g.playerId "
+ 
+        if condition != None:
+            query += " WHERE "
+            for q in condition:
+                query += " " + str(q) + " = " + str(condition[q]) + " AND"
+            query += "="
+            query = query.strip().replace("AND=", "")
+        print(query)
+        cur.execute(query)
+        return list (cur.fetchall())
+    
+    
+    
     def updateTableFromConditions(self, table_name, condition = None, update_fields = None):
         #csvfile = requests.get(name).csv
         cur = self.db.cursor(MySQLdb.cursors.DictCursor)

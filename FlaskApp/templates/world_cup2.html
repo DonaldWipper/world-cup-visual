@@ -25,29 +25,25 @@
     <script src="{{
   url_for('static', filename='js/go.js') }}"></script>
 
-    <script src="{{
-  url_for('static', filename='js/iconselect.js') }}"></script>
-
+ 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 
     <meta name="viewport" content="width=device-width">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
+   
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/normalize.min.css') }}">
 
     <link rel="icon" href="{{ url_for('static', filename= 'png/world_cup.png') }}">
 
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-    <!-- Month names -->
-    <script src="{{url_for('static', filename='js/images-grid.js' ) }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/images-grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_menu.css') }}">
     
     <script src="{{url_for('static', filename='js/globalize.min.js' ) }}"></script>
     <script src="{{url_for('static', filename='js/dx.chartjs.js' ) }}"></script>
     <script src="{{url_for('static', filename='js/knockout-3.0.0.js' ) }}"></script>
     
-    //iconselector    
+    
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/iconselector/iconselect.css') }}"> 
     <script src="{{url_for('static', filename='js/iconselector/iconselect.js' ) }}"></script>
     <script src="{{url_for('static', filename='js/iconselector/iscroll.js' ) }}"></script>
@@ -79,7 +75,7 @@
 </nav>
     
    
-<section class="panel b-blue" id="1">
+<section class="panel b-2018" id="1">
     <article class="panel__wrapper">
         <div class="panel__content">
             <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>О проекте</h1>
@@ -1179,7 +1175,7 @@
     );
 </script>
 
-        <div id="chartContainer" style="width: 100%; height: 200%; user-select: none;">
+        <div id="chartContainer" style="width: 100%; height: 70%; user-select: none;">
             <div class="credits"></div>
         </div>
     
@@ -1187,7 +1183,7 @@
 <section class="panel b-green" id="4">
   <article class="panel__wrapper">
         <div class="panel__content">
-            <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>Авторы</h1>
+            <h1 class="panel__headline"><i class="fa fa-paper-plane"></i>Авторы</h1>
             <div class="panel__block"></div>
             <p> Автор проекта: Утиралов Дмитрий. Разработчик, аналитик, дата-журналист </p>
             <p>
@@ -1200,49 +1196,52 @@
     
           <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-<h2>Icon/Image Select: Basic Example (Javascript)</h2>
-<div id="my-icon-select"></div>
-<input type="text" id="selected-text" name="selected-text" style="width:65px;">
+<style>
+div.fixed {
+  position: fixed;
+  top:0;
+  right:0    
+}
+</style>
+    
+    
+<div id="my-icon-select" class="fixed"></div>
+
+
 
 <script>
-    var iconSelect;
-    var selectedText;
+     var  myDiv2 = document.getElementById("my-icon-select");
+        myDiv2.id = "myDiv2";  
+    //Create and append select list
+      var selectList = document.createElement("select");
+      selectList.id = "mySelect";
+      selectList.style.width =  wd + "px";    
+      selectList.style.fontSize = fontSizeInnerSlice * 1.5
+    
+      myDiv2.appendChild(selectList);
 
-    window.onload = function() {
-
-        selectedText = document.getElementById('selected-text');
-
-        document.getElementById('my-icon-select').addEventListener('changed', function(e) {
-            console.log("here")
-            selectedText.value = iconSelect.getSelectedValue();
-        });
-
-        iconSelect = new IconSelect("my-icon-select", {
-            'selectedIconWidth': 48,
-            'selectedIconHeight': 48,
-            'selectedBoxPadding': 5,
-            'iconsWidth': 48,
-            'iconsHeight': 48,
-            'boxIconSpace': 3,
-            'vectoralIconNumber': 8,
-            'horizontalIconNumber': 1
-        });
-
-        iconSelect = new IconSelect("my-icon-select");
-
-        var icons = [];
-        for (var i = 0; i < tournaments.length; i++) {
-            src_image = "{{url_for('static', filename='png') }}" + "/wc_icons/" + tournaments[i]["value"] + ".png"
-            icons.push({
-                'iconFilePath': src_image,
-                'iconValue': tournaments[i]["value"]
-            });
-        }
-
-        iconSelect.refresh(icons);
-
-    };
+     //Create and append the options
+     for (var i = 0; i < tournaments.length; i++) {
+         var option = document.createElement("option");
+         option.value = tournaments[i]['value'];
+         option.text = tournaments[i]['text'];
+         img = "{{ url_for('static', filename= 'png/wc_icons/') }}" + option.value + ".png";
+         console.log(img)
+         option.style = img;
+         selectList.appendChild(option);
+     }
+      selectList.selectedIndex = {{tournamentPos}}            
+              
+      $('#mySelect').change(function () {
+          console.log("selected " )   
+          var optionSelected = document.getElementById('mySelect');;
+          console.log("selected2 " +  optionSelected.value)
+          getTournament(optionSelected.value)
+          //sendIndexToPython(optionSelected.value)
+    
+ });        
 </script>
+
 </body>
 
 </html>

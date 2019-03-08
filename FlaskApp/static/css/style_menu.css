@@ -223,6 +223,14 @@ ul {
   background: #e6d068;
 }
 
+.b-2018 {
+   opacity: 0.5;    
+   background-image: url("/static/png/russia.jpg");
+}
+
+
+
+
 .logo {
   position: fixed;
   bottom: 3vh;

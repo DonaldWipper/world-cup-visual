@@ -14,7 +14,7 @@ and open the template in the editor.
 
  .icon-select .selected-box {
 
-     position: relative;z
+     position: fixed;
      margin: 0px;
      padding: 0px;
      width: 70px; /* sil */
@@ -45,7 +45,7 @@ and open the template in the editor.
 
  .icon-select .selected-icon {
 
-     position: absolute;
+     position: fixed;
      margin: 0px;
      padding: 0px;
      top:5px;
@@ -67,7 +67,7 @@ and open the template in the editor.
 
  .icon-select .box {
 
-     position: absolute;
+     position: fixed;
      top:0px;
      left:71px;
      margin: 0px;
@@ -90,7 +90,7 @@ and open the template in the editor.
  }
 
  .icon-select .icon {
-     position: relative;
+     position: fixed;
      margin: 5px 0px 0px 5px;
      padding: 0px;
      width: 48px; /* sil */
@@ -111,7 +111,7 @@ and open the template in the editor.
  }
 
  .icon-select .icon.selected {
-     position: relative;
+     position: fixed;
      margin: 5px 0px 0px 5px;
      padding: 0px;
      width: 48px; /* sil */

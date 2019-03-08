@@ -46,19 +46,21 @@ dic_slice_2_games = {} #связь кусочка с играми
 
 dic_games = {} #все игры для вывода
 
-'''
+
 settings = {"sql_host":"us-iron-auto-dca-04-a.cleardb.net", 
             "sql_user":"b1df3776b2b56c",
             "sql_passwd":"2153543acdac76f",
             "sql_db":"heroku_0c1d0ea4e380413"
            }
-'''
 
+
+'''
 settings = { "sql_host":"localhost", 
 "sql_user":"root",
 "sql_passwd":"111",
 "sql_db":"world_cup"
 }
+'''
 
 token = 'efda008899e346f693efa9c75f9577ee'
 myheaders = { 'X-Auth-Token': token, 'X-Response-Control': 'minified' }
@@ -454,10 +456,14 @@ def read_params(fn):
 
 @app.route("/worldcup", methods=['GET'])
 def update():
-    tournamentId = request.args.get('tournamentId')
-    init_data(tournamentId)
-    return render()
-    
+    global db
+    db =  FlaskApp.sql.database(settings['sql_host'],  settings['sql_user'],  settings['sql_passwd'], settings['sql_db']) 
+    try:
+        tournamentId = request.args.get('tournamentId')
+        init_data(tournamentId)
+        return render()
+    finally:
+        db.db.close()    
 
 
 @app.route("/", methods=['GET'])

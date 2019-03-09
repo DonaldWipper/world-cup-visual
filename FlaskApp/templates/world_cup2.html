@@ -27,7 +27,8 @@
 
  
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    
 
     <meta name="viewport" content="width=device-width">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -44,10 +45,7 @@
     <script src="{{url_for('static', filename='js/knockout-3.0.0.js' ) }}"></script>
     
     
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/iconselector/iconselect.css') }}"> 
-    <script src="{{url_for('static', filename='js/iconselector/iconselect.js' ) }}"></script>
-    <script src="{{url_for('static', filename='js/iconselector/iscroll.js' ) }}"></script>
-    
+
 </head>
 
 <body>
@@ -75,7 +73,7 @@
 </nav>
     
    
-<section class="panel b-2018" id="1">
+<section class="panel b-yellow" id="1">
     <article class="panel__wrapper">
         <div class="panel__content">
             <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>О проекте</h1>
@@ -359,7 +357,7 @@
         document.getElementById("container").style.left = width / 2 - innerRadius + "px";
         document.getElementById("container").style.top = height / 2 - innerRadius + "px";
         document.getElementById("container").style.position = "relative";
-        document.getElementById("container").style.zIndex = "-1"
+        document.getElementById("container").style.zIndex = "0"
         document.getElementById("container").style.display = "block";
         //console.log("display " + document.getElementById("container").style.display)
         ////////////////////////////////////////////////////////////// 
@@ -378,6 +376,7 @@
                 {% endfor %}
             }
         });
+        
       window.setInterval(function () {
        basic_choropleth.updateChoropleth({
             {% for t in teams %} 
@@ -386,7 +385,7 @@
              {% endfor %}            
           });
        }, 2000);
-   
+       
  
         //basic_choropleth.labels()
         var svg = d3.select("#chart").append("svg")
@@ -1093,16 +1092,53 @@
    </section>
     
      <section class="panel b-red" id="statistics">
-  
+  <style>
+    div.fixed {
+        position: fixed;
+        top: 0;
+        right: 0
+    }
+
+    div.card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        max-width: 300px;
+        margin: auto;
+        text-align: center;
+    }
+
+    div.title {
+        color: grey;
+        font-size: 18px;
+    }
+</style>
 <script>
+    
+
+    
+    function setHtmlProfile (match, minute, image, player_name, position, stadium, city, number, group_name, birth_date, datetime) {
+        html = "<div>"
+             + "<br>" + player_name + "</br>"
+             + "<br>" + "match: " + match + "</br>"
+             + "<br>" + "goal at minute : " + minute + "</br>"
+             + "<br>" + "position: " + position + "</br>" 
+             + "<br>" + "number: " + number + "</br>"
+             + "<br>" + "birth_date: " + birth_date + "</br>"
+             + "<br>" + "match time: " + datetime + "</br>"
+             + "<br>" + "round: " + group_name + "</br>"
+             + "<br>" + "city: " + city + "</br>"
+             + "</div>"
+        return html;    
+    }
+    
+    
     jQuery(function($) {
 
             var dataSource = [{% for d in goals %} 
                               {
-                    "match": "{{d['teamHome']}}:{{d['teamAway']}}",
-                    "minute": "{{d['minute']}}",
+                    "match": "{{d['teamHome']}}-{{d['teamAway']}}",
+                    "minute": {{d['minute']}},
                     "image": "{{d['image']}}",
-                    "player_name": "{{d['player_name']}}"
+                    "tags":  ["{{d['player_name']}}", "{{d['position']}}",  "{{d['stadium']}}",  "{{d['city']}}", "{{d['number']}}", "{{d['group_name']}}",  "{{d['birthdate']}}", "{{d['datetime']}}", "{{d['image']}}", "{{d['goal_time']}}"]
                 },
                 {% endfor %}
             ]
@@ -1114,12 +1150,13 @@
                 commonSeriesSettings: {
                     argumentField: "match",
                     valueField: 'minute',
+                    tagField: 'tags',
                     type: "scatter"
-
-
                 },
+               
+                 
+
                 customizePoint: function(obj) {
-                    console.log(dataSource[obj['index']]["image"])
                     return {
                         image: {
                             url: dataSource[obj['index']]["image"],
@@ -1132,20 +1169,32 @@
                 },
                 series: {},
                 title: {
-                    text: "World cup"
+                    text: tournaments[{{tournamentPos}}]["text"] + ", all goals" ,
+                    font: {
+                        family: "dusha"
+                    }
+           
                 },
                 legend: {
                     visible: false
                 },
                 tooltip: {
                     enabled: true,
-                    customizeTooltip: function(obj) {
-                        console.log("test " + obj.seriesName)
-                        var country = args.point.tag[0];
-                        return {
-                            html: "<div style=\"width:100%;\"> country : " + country + " </div> "
+                     font: {
+                        family: "dusha"
+                    },
+                    customizeText: function(arg) {
+                        console.log("test " + this.point.tag)
+                        
+                       
+                        x = setHtmlProfile (arg.argumentText, this.point.tag[9], this.point.tag[8], this.point.tag[0],  this.point.tag[1],  this.point.tag[2],  this.point.tag[3],  this.point.tag[4],  this.point.tag[5],  this.point.tag[6],  this.point.tag[7])
+                        console.log(x)
+                        return x
+                        //var country = args.point.tag[0];
+                        //return {
+                          //  html: "<div style=\"width:100%;\"> country : " + country + " </div> "
 
-                        };
+                        //};
                     }
 
 
@@ -1153,15 +1202,28 @@
                 },
 
                 argumentAxis: {
+                    label: {
+                        font: {
+                            family: "dusha",
+                            color: "#000000"
+                         }
+                       },
                     grid: {
                         visible: true
                     }
+                 
                 },
                 valueAxis: {
+                                     
                     grid: {
-                        visible: false
+                        visible: true
                     },
                     label: {
+                         font: {
+                            family: "dusha",
+                            color: "#000000"
+                        
+                       }, 
                         customizeText: function() {
 
                             return this.valueText + ' minute';
@@ -1185,11 +1247,10 @@
         <div class="panel__content">
             <h1 class="panel__headline"><i class="fa fa-paper-plane"></i>Авторы</h1>
             <div class="panel__block"></div>
-            <p> Автор проекта: Утиралов Дмитрий. Разработчик, аналитик, дата-журналист </p>
-            <p>
-                
-                
-            </p>
+            <p> Автор проекта: Утиралов Дмитрий.   </p>
+            <p> Разработчик, аналитик, немного дата-журналист. Мечтаю связать IT и журналистику, чтобы пойти по стопам деда-писателя </p>
+            <p> По вопросам сотрудничества писать в www.facebook.com/utiralov </p>
+            <p> Мое путешествие по Бразилии в предверии домашнего мунидаля https://t.me/notquasibrazil </p>
         </div>
     </article>
 </section>
@@ -1201,6 +1262,17 @@ div.fixed {
   position: fixed;
   top:0;
   right:0    
+}
+div.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+}
+
+div.title {
+  color: grey;
+  font-size: 18px;
 }
 </style>
     

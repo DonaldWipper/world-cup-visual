@@ -1,8 +1,13 @@
+@font-face{
+font-family: dusha;
+src: url('dusha.ttf');
+}
+
 html, body
 {
     margin: 0px;
     padding: 0px;
-    font-family: 'Segoe UI', Helvetica, 'Droid Sans', Tahoma, Geneva, sans-serif;
+    font-family: dusha;
     font-weight: 400;
     font-size: 12px;
     color: #565656;
@@ -15,7 +20,7 @@ body
 
 h1, h2, h3, h4, h5, h6
 {
-    font-family:'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', Helvetica, 'Trebuchet MS', 'Droid Sans', Tahoma, Geneva, sans-serif;
+    font-family: dusha;
     font-weight: 200;
     font-size: 18px;
     margin: 0px;
@@ -121,7 +126,7 @@ h1, h2, h3, h4, h5, h6
 
         .menu-content .democase-menu h6
         {
-            font-family: 'Segoe UI', Helvetica, 'Droid Sans', Tahoma, Geneva, sans-serif;
+            font-family: dusha;
             font-weight: 700;
             font-size: 12px;
             padding: 0;

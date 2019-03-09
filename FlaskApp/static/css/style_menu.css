@@ -2,8 +2,13 @@
   box-sizing: border-box;
 }
 
+@font-face{
+font-family: dusha;
+src: url('dusha.ttf');
+}
+
 body {
-  font-family: 'Montserrat';
+  font-family: dusha;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -216,7 +221,10 @@ ul {
 }
 
 .b-green {
-  background: #68e6ac;
+   background-image: url("/static/png/2018.png");
+   background-size: cover;
+   z-index: -1;    
+
 }
 
 .b-yellow {
@@ -224,8 +232,7 @@ ul {
 }
 
 .b-2018 {
-   opacity: 0.5;    
-   background-image: url("/static/png/russia.jpg");
+ 
 }
 
 

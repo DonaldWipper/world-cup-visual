@@ -209,15 +209,16 @@ ul {
 }
 
 .c-yellow {
-  color: #e6d068;
+ color: #e6d068;
 }
 
 .b-blue {
-  background: #5fc7ea;
+  background-image: url("/static/png/1970.png");
+  background-size: cover;
 }
 
 .b-red {
-  background: #e68568;
+  color: #e68568;
 }
 
 .b-green {
@@ -228,11 +229,11 @@ ul {
 }
 
 .b-yellow {
-  background: #e6d068;
+   color: #e6d068;
 }
 
 .b-2018 {
- 
+   color: #3fbc6a;
 }
 
 

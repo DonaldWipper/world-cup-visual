@@ -57,7 +57,7 @@
 
     <ul class="nav__list">
         <li class="nav__item">
-            <a href="#1" class="nav__link c-blue"><i class="fa fa-camera-retro"></i></a>
+            <a href="#1" class="nav__link c-blue"><i class="fas fa-sort-amount-down"></i></a>
         </li>
         <li class="nav__item">
             <a href="#visual" class="nav__link c-yellow scrolly"><i class="fas fa-futbol"></i></a>
@@ -73,10 +73,10 @@
 </nav>
     
    
-<section class="panel b-yellow" id="1">
+<section class="panel b-blue" id="1">
     <article class="panel__wrapper">
         <div class="panel__content">
-            <h1 class="panel__headline"><i class="fa fa-camera-retro"></i>О проекте</h1>
+            <h1 class="panel__headline"><i class="fas fa-sort-amount-down"></i>О проекте</h1>
             <div class="panel__block"></div>
             <p>Вашему вниманию представлен проект "Визуализация истории чемпионатов мира по футболу FIFA", на создание которого вдохновил последний на данный момент турнир, проходивший в России летом 2018 года. </p>
             <p>
@@ -95,11 +95,12 @@
     
   
     
-    <section class="panel b-green" id="visual">
+    <section class="panel b-yellow" id="visual">
         <article class="panel__wrapper">
        
     </article>
     <script>
+        window.onresize = function(){ location.reload(); }
         ////////////////////////// //////////////////////////////////
         //////////////////////// Set-up ////////////////////////////
         ////////////////////////////////////////////////////////////
@@ -183,7 +184,7 @@
      console.log("height:" + height)     
      document.getElementById("scheme").style.position = "relative";
      document.getElementById("scheme").style.display = "none";    
-     //document.getElementById("scheme").style.zIndex = "-1"
+     document.getElementById("scheme").style.zIndex = "1"
 	 var column_width = wd / 4.0
      var row_height = hd / 32.0
     
@@ -1135,10 +1136,10 @@
 
             var dataSource = [{% for d in goals %} 
                               {
-                    "match": "{{d['teamHome']}}-{{d['teamAway']}}",
+                    "match": "{{d['shortHomeTeam']}}-{{d['shortAwayTeam']}}",
                     "minute": {{d['minute']}},
                     "image": "{{d['image']}}",
-                    "tags":  ["{{d['player_name']}}", "{{d['position']}}",  "{{d['stadium']}}",  "{{d['city']}}", "{{d['number']}}", "{{d['group_name']}}",  "{{d['birthdate']}}", "{{d['datetime']}}", "{{d['image']}}", "{{d['goal_time']}}"]
+                    "tags":  ["{{d['player_name']}}", "{{d['position']}}",  "{{d['stadium']}}",  "{{d['city']}}", "{{d['number']}}", "{{d['group_name']}}",  "{{d['birthdate']}}", "{{d['datetime']}}", "{{d['image']}}", "{{d['goal_time']}}", "{{d['teamHome']}}-{{d['teamAway']}}"]
                 },
                 {% endfor %}
             ]
@@ -1157,17 +1158,29 @@
                  
 
                 customizePoint: function(obj) {
+                    console.log(obj.width)
+                    var img = dataSource[obj['index']]["image"]
+                    if (img == "None") {
+                        img = "https://ya-webdesign.com/images/png-football-games-6.png"
+                    }
                     return {
+                      
                         image: {
-                            url: dataSource[obj['index']]["image"],
-                            width: 30,
-                            height: 30
+                            url: img,
+                            width: Math.min(screenWidth / 32, 30),
+                            height: Math.min(screenWidth / 32, 30)
                         },
-                        visible: true
+                        visible: true,
+                        radius:  Math.min(screenWidth / 32, 30)
                     };
 
                 },
-                series: {},
+                series: {point: {
+			symbol: "triangle",
+            size: Math.min(screenWidth / 32, 30)        
+		}
+},
+                
                 title: {
                     text: tournaments[{{tournamentPos}}]["text"] + ", all goals" ,
                     font: {
@@ -1184,10 +1197,9 @@
                         family: "dusha"
                     },
                     customizeText: function(arg) {
-                        console.log("test " + this.point.tag)
-                        
                        
-                        x = setHtmlProfile (arg.argumentText, this.point.tag[9], this.point.tag[8], this.point.tag[0],  this.point.tag[1],  this.point.tag[2],  this.point.tag[3],  this.point.tag[4],  this.point.tag[5],  this.point.tag[6],  this.point.tag[7])
+                       
+                        x = setHtmlProfile (this.point.tag[10], this.point.tag[9], this.point.tag[8], this.point.tag[0],  this.point.tag[1],  this.point.tag[2],  this.point.tag[3],  this.point.tag[4],  this.point.tag[5],  this.point.tag[6],  this.point.tag[7])
                         console.log(x)
                         return x
                         //var country = args.point.tag[0];
@@ -1205,7 +1217,8 @@
                     label: {
                         font: {
                             family: "dusha",
-                            color: "#000000"
+                            color: "#000000",
+                            size: fontSizeInnerSlice / 1.2 + "px"
                          }
                        },
                     grid: {
@@ -1221,7 +1234,8 @@
                     label: {
                          font: {
                             family: "dusha",
-                            color: "#000000"
+                            color: "#000000",
+                            size: fontSizeInnerSlice / 1.2 + "px"                         
                         
                        }, 
                         customizeText: function() {
@@ -1237,7 +1251,7 @@
     );
 </script>
 
-        <div id="chartContainer" style="width: 100%; height: 70%; user-select: none;">
+        <div id="chartContainer" style="width: 100%; user-select: none;">
             <div class="credits"></div>
         </div>
     
@@ -1249,8 +1263,8 @@
             <div class="panel__block"></div>
             <p> Автор проекта: Утиралов Дмитрий.   </p>
             <p> Разработчик, аналитик, немного дата-журналист. Мечтаю связать IT и журналистику, чтобы пойти по стопам деда-писателя </p>
-            <p> По вопросам сотрудничества писать в www.facebook.com/utiralov </p>
-            <p> Мое путешествие по Бразилии в предверии домашнего мунидаля https://t.me/notquasibrazil </p>
+            <p> По вопросам сотрудничества писать в <a href="www.facebook.com/utiralov">www.facebook.com/utiralov</a>  </p>
+            <p> Мое путешествие по Бразилии в предверии домашнего мунидаля  <a href="https://t.me/notquasibrazil"> https://t.me/notquasibrazil</a>  </p>
         </div>
     </article>
 </section>

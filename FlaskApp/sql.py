@@ -109,7 +109,7 @@ class database:
         #csvfile = requests.get(name).csv
         cur = self.db.cursor(MySQLdb.cursors.DictCursor)
         if query == None:
-            query =  "select distinct cast(replace(replace(g.minute, 'PEN', ''), 'OG', '') as signed) as minute, g.minute as goal_time, p.name as player_name, f.datetime, f.stadium, f.city, f.group_name, f.teamHome, f.teamAway, p.number, p.image, p.position, p.birthdate from goals g join games_fifa_all f on g.matchId = f.match_fifa_id join players p on p.playerId = g.playerId "
+            query =  "select distinct cast(replace(replace(g.minute, 'PEN', ''), 'OG', '') as signed) as minute, g.minute as goal_time, p.name as player_name, f.datetime, f.stadium, f.city, f.group_name, f.teamHome, f.shortHomeTeam,  f.shortAwayTeam, f.teamAway, p.number, p.image, p.position, p.birthdate from goals g join games_fifa_all f on g.matchId = f.match_fifa_id join players p on p.playerId = g.playerId "
  
         if condition != None:
             query += " WHERE "

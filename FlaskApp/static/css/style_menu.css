@@ -229,11 +229,12 @@ ul {
 }
 
 .b-yellow {
-   color: #e6d068;
+   background-color: #3fbc6a;
+   z-index: -1;    
 }
 
 .b-2018 {
-   color: #3fbc6a;
+   background-color: #3fbc6a;
 }
 
 

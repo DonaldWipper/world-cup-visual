@@ -344,21 +344,20 @@
        
     
         
-        var  myDiv2 = document.getElementById("map");
-        myDiv2.id = "mapDiv";
+
         var iDiv = document.createElement('div2');
         iDiv.id = 'container';
         iDiv.className = 'container';
         
         //document.getElementsByTagName('body')[0].appendChild(iDiv);
-        document.getElementById("mapDiv").appendChild(iDiv);
-        document.getElementById("container").style.width = 2 * innerRadius + "px";
+        document.getElementById("myDiv2").appendChild(iDiv);
+        document.getElementById("container").style.width = 1.5 * innerRadius + "px";
         wd = document.getElementById("container").style.width
-        document.getElementById("container").style.height = 2 * innerRadius + "px"
-        document.getElementById("container").style.left = width / 2 - innerRadius + "px";
-        document.getElementById("container").style.top = height / 2 - innerRadius + "px";
+        document.getElementById("container").style.height = 1.5 * innerRadius + "px"
+        document.getElementById("container").style.left = width / 2 - 0.75 * innerRadius + "px";
+        document.getElementById("container").style.top = height / 2 - 0.75 * innerRadius + "px";
         document.getElementById("container").style.position = "relative";
-        document.getElementById("container").style.zIndex = "0"
+        document.getElementById("container").style.zIndex = "-1"
         document.getElementById("container").style.display = "block";
         //console.log("display " + document.getElementById("container").style.display)
         ////////////////////////////////////////////////////////////// 
@@ -963,7 +962,10 @@
                         d3.select("#play").empty()
                         d3.select("#play").remove()
                         d3.select("#table").empty()
-                        d3.select("#table").remove()  
+                        d3.select("#table").remove()
+                        if (document.getElementById("container").style.display == "none") {
+                            document.getElementById("container").style.display == "block"    
+                        }
                         document.getElementById("container").style.display = "block";
                         document.getElementById("scheme").style.display = "none"; 
                         //$("#container").load(location.href + " #container");  
@@ -985,7 +987,7 @@
                 .on("mouseout", function() {
                     restore_colors_outArcs();
                     console.log("hide national teams")
-                    document.getElementById("container").style.display = "none";
+                    //document.getElementById("container").style.display = "none";
                     //document.getElementById("scheme").style.display = "none";
                     //$("#container").load(location.href + " #container"); 
                 });
@@ -1111,7 +1113,15 @@
         color: grey;
         font-size: 18px;
     }
+      
+    div.image {
+       position: absolute;
+       top:0;
+       content:url(http://placehold.it/150x150);
+     }  
 </style>
+         
+  
 <script>
     
 
@@ -1134,8 +1144,12 @@
     
     jQuery(function($) {
 
-            var dataSource = [{% for d in goals %} 
-                              {
+            var dataSource = [
+                 
+                
+                {% for d in goals %} 
+                             
+                    {
                     "match": "{{d['shortHomeTeam']}}-{{d['shortAwayTeam']}}",
                     "minute": {{d['minute']}},
                     "image": "{{d['image']}}",
@@ -1158,7 +1172,6 @@
                  
 
                 customizePoint: function(obj) {
-                    console.log(obj.width)
                     var img = dataSource[obj['index']]["image"]
                     if (img == "None") {
                         img = "https://ya-webdesign.com/images/png-football-games-6.png"
@@ -1196,12 +1209,14 @@
                      font: {
                         family: "dusha"
                     },
+                    
+                   
                     customizeText: function(arg) {
                        
                        
                         x = setHtmlProfile (this.point.tag[10], this.point.tag[9], this.point.tag[8], this.point.tag[0],  this.point.tag[1],  this.point.tag[2],  this.point.tag[3],  this.point.tag[4],  this.point.tag[5],  this.point.tag[6],  this.point.tag[7])
                         console.log(x)
-                        return x
+                        return x;
                         //var country = args.point.tag[0];
                         //return {
                           //  html: "<div style=\"width:100%;\"> country : " + country + " </div> "
@@ -1249,7 +1264,9 @@
         }
 
     );
+ 
 </script>
+      
 
         <div id="chartContainer" style="width: 100%; user-select: none;">
             <div class="credits"></div>
